@@ -218,15 +218,6 @@
 	height="252px"
 	widget={BarChart({
 		data,
-		title: 'no designed'
-	})}
-/>
-
-<Widget
-	width="470px"
-	height="252px"
-	widget={BarChart({
-		data,
 		custom: {
 			layout: Layout,
 			bar: Bar,

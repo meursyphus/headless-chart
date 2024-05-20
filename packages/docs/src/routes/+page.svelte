@@ -1,7 +1,6 @@
 <script lang="ts">
 	import SvelteWidget from '@meursyphus/flitter-svelte';
 	import BarChart from '$lib/charts/bar-chart';
-	import Chart from '$lib/showcases/bar-chart/chartjs/Chart.svelte';
 
 	const data = {
 		title: 'Title',
@@ -23,10 +22,13 @@
 	};
 </script>
 
-<!-- <SvelteWidget
+<SvelteWidget
 	widget={BarChart({ data, direction: 'vertical', title: 'Vertical' })}
 	width="400px"
 	height="300px"
-/> -->
-
-<Chart />
+/>
+<SvelteWidget
+	widget={BarChart({ data, direction: 'horizontal', title: 'Horizontal' })}
+	width="400px"
+	height="300px"
+/>
