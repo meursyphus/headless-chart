@@ -5,8 +5,8 @@ type ConfigArgs<T = undefined> = (args: T, context: BarChartConfig) => Widget;
 export type BarChartCustom = {
 	barGroup: ConfigArgs<{ bars: Widget[]; index: number; label: string; values: number[] }>;
 	bar: ConfigArgs<{ value: number; label: string; legend: string; index: number }>;
-	xAxis: ConfigArgs<{ labels: Widget[]; tick: Widget }>;
-	yAxis: ConfigArgs<{ labels: Widget[]; tick: Widget }>;
+	xAxis: ConfigArgs<{ line: Widget; labels: Widget[]; tick: Widget }>;
+	yAxis: ConfigArgs<{ line: Widget; labels: Widget[]; tick: Widget }>;
 	xAxisLabel: ConfigArgs<{ name: string; index: number }>;
 	yAxisLabel: ConfigArgs<{ name: string; index: number }>;
 	xAxisTick: ConfigArgs;
@@ -17,6 +17,8 @@ export type BarChartCustom = {
 	legend: ConfigArgs<{ name: string; index: number }>;
 	title: ConfigArgs<{ name: string }>;
 	dataLabel: ConfigArgs<{ value: number; label: string; legend: string }>;
+	xAxisLine: ConfigArgs;
+	yAxisLine: ConfigArgs;
 };
 
 export type BarChartData = {

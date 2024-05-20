@@ -27,7 +27,9 @@ class BarChart extends StatelessWidget {
 			legend = Default.Legend,
 			title: titleWidget = Default.Title,
 			dataLabel = Default.DataLabel,
-			bar = Default.Bar
+			bar = Default.Bar,
+			xAxisLine = Default.XAxisLine,
+			yAxisLine = Default.YAxisLine
 		} = {},
 		getScale = Default.getScale,
 		data,
@@ -51,9 +53,11 @@ class BarChart extends StatelessWidget {
 			xAxis,
 			xAxisLabel,
 			xAxisTick,
+			xAxisLine,
 			yAxis,
 			yAxisLabel,
 			yAxisTick,
+			yAxisLine,
 			series,
 			layout,
 			plot,

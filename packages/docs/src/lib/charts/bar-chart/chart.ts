@@ -93,10 +93,19 @@ class XAxis extends Axis {
 		return custom.xAxis(
 			{
 				labels: labels.map((label, index) => new XAxisLabel({ index, name: label })),
-				tick: new XAxisTick()
+				tick: new XAxisTick(),
+				line: new XAxisLine()
 			},
 			config
 		);
+	}
+}
+
+class XAxisLine extends StatelessWidget {
+	override build(context: BuildContext): Widget {
+		const config = BarChartConfigProvider.of(context);
+		const { custom } = config;
+		return custom.xAxisLine(undefined, config);
 	}
 }
 
@@ -119,10 +128,19 @@ class YAxis extends Axis {
 				labels: this.#getLabels(context).map(
 					(label, index) => new YAxisLabel({ index, name: label })
 				),
-				tick: new YAxisTick()
+				tick: new YAxisTick(),
+				line: new YAxisLine()
 			},
 			config
 		);
+	}
+}
+
+class YAxisLine extends StatelessWidget {
+	override build(context: BuildContext): Widget {
+		const config = BarChartConfigProvider.of(context);
+		const { custom } = config;
+		return custom.yAxisLine(undefined, config);
 	}
 }
 
@@ -200,9 +218,9 @@ class BarGroup extends StatelessWidget {
 					(value, index) =>
 						new Bar({
 							value,
-							index,
+							index: this.#index,
 							legend: data.datasets[index].legend,
-							label: data.labels[index]
+							label: data.labels[this.#index]
 						})
 				)
 			},

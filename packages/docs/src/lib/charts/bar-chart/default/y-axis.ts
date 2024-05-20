@@ -12,29 +12,31 @@ import {
 } from '@meursyphus/flitter';
 import { IgnoreSize } from '$lib/utils';
 
-export function YAxis({ labels, tick }: Parameters<BarChartCustom['yAxis']>[0]) {
-	return Row({
-		mainAxisSize: MainAxisSize.min,
-		children: [
-			Column({
-				verticalDirection: VerticalDirection.up,
-				mainAxisAlignment: MainAxisAlignment.spaceBetween,
-				crossAxisAlignment: CrossAxisAlignment.end,
-				children: labels.map((label, index) =>
-					Transform.translate({
-						offset: new Offset({ x: 0, y: index === labels.length - 1 ? 0 : 1 }),
-						child: Row({
+export function YAxis({ labels, tick, line }: Parameters<BarChartCustom['yAxis']>[0]) {
+	return Container({
+		height: Infinity,
+		child: Row({
+			mainAxisSize: MainAxisSize.min,
+			children: [
+				Column({
+					verticalDirection: VerticalDirection.up,
+					mainAxisAlignment: MainAxisAlignment.spaceBetween,
+					crossAxisAlignment: CrossAxisAlignment.end,
+					children: labels.map((label, index) =>
+						Row({
 							mainAxisSize: MainAxisSize.min,
-							children: [IgnoreSize({ child: label, ignoreHeight: true }), tick]
+							children: [
+								IgnoreSize({ child: label, ignoreHeight: true }),
+								Transform.translate({
+									offset: new Offset({ x: 0, y: index !== 0 ? 0 : 1 }),
+									child: tick
+								})
+							]
 						})
-					})
-				)
-			}),
-			Container({
-				color: 'black',
-				width: 1,
-				height: Infinity
-			})
-		]
+					)
+				}),
+				line
+			]
+		})
 	});
 }

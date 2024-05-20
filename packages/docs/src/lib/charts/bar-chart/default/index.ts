@@ -13,4 +13,6 @@ export * from './y-axis-label'
 export * from './y-axis-tick'
 export * from './y-axis'
 export * from './bar-group'
+export * from './x-axis-line'
+export * from './y-axis-line'
 

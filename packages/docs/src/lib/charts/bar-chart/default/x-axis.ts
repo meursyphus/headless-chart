@@ -1,7 +1,6 @@
 import type { BarChartCustom } from '../types';
 import {
 	Column,
-	Container,
 	MainAxisAlignment,
 	MainAxisSize,
 	Offset,
@@ -10,15 +9,11 @@ import {
 } from '@meursyphus/flitter';
 import { IgnoreSize } from '$lib/utils';
 
-export function XAxis({ labels, tick }: Parameters<BarChartCustom['xAxis']>[0]) {
+export function XAxis({ labels, tick, line }: Parameters<BarChartCustom['xAxis']>[0]) {
 	return Column({
 		mainAxisSize: MainAxisSize.min,
 		children: [
-			Container({
-				color: 'black',
-				height: 1,
-				width: Infinity
-			}),
+			line,
 			Row({
 				mainAxisAlignment: MainAxisAlignment.spaceBetween,
 				children: Array.from({ length: labels.length + 1 }, (_, index) =>
