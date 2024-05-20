@@ -56,10 +56,11 @@
 					Positioned({
 						top: 0,
 						right: 0,
-						child: Text('made by moon', {
+						child: Text('chartjs 따라하기', {
 							style: new TextStyle({
 								fontSize: 14,
-								color: '#999999'
+								color: '#999999',
+								fontFamily: 'Noto Sans JP'
 							})
 						})
 					}),
@@ -211,6 +212,15 @@
 		});
 	}
 </script>
+
+<Widget
+	width="470px"
+	height="252px"
+	widget={BarChart({
+		data,
+		title: 'no designed'
+	})}
+/>
 
 <Widget
 	width="470px"

@@ -3,11 +3,11 @@ import {
 	Column,
 	Container,
 	CrossAxisAlignment,
+	FractionalTranslation,
 	MainAxisAlignment,
 	MainAxisSize,
 	Offset,
 	Row,
-	Transform,
 	VerticalDirection
 } from '@meursyphus/flitter';
 import { IgnoreSize } from '$lib/utils';
@@ -27,8 +27,8 @@ export function YAxis({ labels, tick, line }: Parameters<BarChartCustom['yAxis']
 							mainAxisSize: MainAxisSize.min,
 							children: [
 								IgnoreSize({ child: label, ignoreHeight: true }),
-								Transform.translate({
-									offset: new Offset({ x: 0, y: index !== 0 ? 0 : 1 }),
+								FractionalTranslation({
+									translation: new Offset({ x: 0, y: index !== 0 ? 0 : 1 }),
 									child: tick
 								})
 							]
