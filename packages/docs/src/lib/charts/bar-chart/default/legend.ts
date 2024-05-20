@@ -1,10 +1,13 @@
 import type { BarChartCustom } from '../types';
-import { Text, TextStyle } from '@meursyphus/flitter';
+import { EdgeInsets, Padding, Text, TextStyle } from '@meursyphus/flitter';
 
 export function Legend(...[{ name }]: Parameters<BarChartCustom['legend']>) {
-	return Text(name, {
-		style: new TextStyle({
-			fontSize: 14
+	return Padding({
+		padding: EdgeInsets.only({ right: 5 }),
+		child: Text(name, {
+			style: new TextStyle({
+				fontSize: 12
+			})
 		})
 	});
 }
