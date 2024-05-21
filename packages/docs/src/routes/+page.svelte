@@ -1,6 +1,6 @@
 <script lang="ts">
 	import SvelteWidget from '@meursyphus/flitter-svelte';
-	import BarChart from '$lib/charts/bar-chart';
+	import { BarChart } from '@meursyphus/headless-chart';
 
 	const data = {
 		title: 'Title',

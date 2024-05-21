@@ -1,7 +1,6 @@
 <script lang="ts">
 	import Widget from '@meursyphus/flitter-svelte';
-	import BarChart from '$lib/charts/bar-chart';
-	import type { BarChartCustom } from '$lib/charts/bar-chart/types';
+	import { BarChart, type BarChartCustom } from '@meursyphus/headless-chart';
 	import {
 		Text,
 		Column,

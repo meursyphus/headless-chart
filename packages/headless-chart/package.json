@@ -18,7 +18,5 @@
     "typescript": "^5.2.2",
     "vite": "^5.2.0"
   },
-  "exports": {
-    ".": "src/lib/index.ts"
-  }
+  "main": "./src/index.ts"
 }
