@@ -1,0 +1,19 @@
+{
+  "name": "headless-chart-workspace",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm run dev --workspace=docs"
+  },
+  "author": "meursyphus",
+  "license": "ISC",
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "@meursyphus/flitter": "^2.0.0-alpha.2",
+    "@meursyphus/flitter-svelte": "^2.0.0-alpha.1"
+  }
+}
