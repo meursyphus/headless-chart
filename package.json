@@ -1,11 +1,11 @@
 {
   "name": "headless-chart-workspace",
-  "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm run dev --workspace=docs"
+    "start": "npm run dev --workspace=docs",
+    "dev": "npm run dev --workspace=docs"
   },
   "author": "meursyphus",
   "license": "ISC",

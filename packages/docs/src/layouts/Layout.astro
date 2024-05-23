@@ -37,15 +37,23 @@ const { title } = Astro.props;
     background: #13151a;
     background-size: 224px;
   }
-  code {
-    font-family:
-      Menlo,
-      Monaco,
-      Lucida Console,
-      Liberation Mono,
-      DejaVu Sans Mono,
-      Bitstream Vera Sans Mono,
-      Courier New,
-      monospace;
+  * {
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: rgba(128, 128, 128, 0.8) transparent; /* Firefox */
+  }
+  /* 스크롤바 스타일 추가 */
+  ::-webkit-scrollbar {
+    width: 5px; /* 스크롤바의 너비 */
+    height: 5px; /* 스크롤바의 높이 */
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent; /* 스크롤 트랙 배경 투명 */
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(128, 128, 128, 0.8); /* 스크롤바 썸의 배경색 */
+    border-radius: 10px; /* 스크롤바 썸의 모서리 둥글게 */
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(128, 128, 128, 1); /* 스크롤바 썸의 배경색 (호버 시) */
   }
 </style>

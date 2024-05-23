@@ -30,7 +30,7 @@ const { title } = Astro.props;
 <style>
   aside {
     scrollbar-width: thin; /* Firefox */
-    scrollbar-color: #4caf50 #e0e0e0; /* Firefox */
+    scrollbar-color: #4caf50 transparent; /* Firefox */
   }
 
   aside::-webkit-scrollbar {
@@ -38,7 +38,7 @@ const { title } = Astro.props;
   }
 
   aside::-webkit-scrollbar-track {
-    background: #e0e0e0;
+    background: transparent;
   }
 
   aside::-webkit-scrollbar-thumb {
