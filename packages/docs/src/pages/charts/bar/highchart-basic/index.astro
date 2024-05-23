@@ -1,0 +1,12 @@
+---
+import Page from "../BarPage.astro";
+import Chart from "$content/showcases/bar/highchart/basic/index.svelte";
+const [{ Content: Code }] = await Astro.glob(
+  "$content/showcases/bar/highchart/basic/index.md"
+);
+---
+
+<Page>
+  <Chart slot="chart" client:load />
+  <Code slot="code" />
+</Page>

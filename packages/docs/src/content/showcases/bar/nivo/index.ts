@@ -1,4 +1,4 @@
-import basic from "./basic/index.ts";
+import basic from "./basic/index.svelte";
 
 export default {
   basic: {

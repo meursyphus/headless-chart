@@ -34,7 +34,6 @@ const { title } = Astro.props;
   }
   html {
     font-family: system-ui, sans-serif;
-    background: #13151a;
     background-size: 224px;
   }
   * {
@@ -50,10 +49,14 @@ const { title } = Astro.props;
     background: transparent; /* 스크롤 트랙 배경 투명 */
   }
   ::-webkit-scrollbar-thumb {
-    background: rgba(128, 128, 128, 0.8); /* 스크롤바 썸의 배경색 */
+    background: rgba(128, 128, 128, 0.5); /* 스크롤바 썸의 배경색 */
     border-radius: 10px; /* 스크롤바 썸의 모서리 둥글게 */
   }
   ::-webkit-scrollbar-thumb:hover {
     background: rgba(128, 128, 128, 1); /* 스크롤바 썸의 배경색 (호버 시) */
+  }
+
+  .astro-code {
+    padding: 16px;
   }
 </style>

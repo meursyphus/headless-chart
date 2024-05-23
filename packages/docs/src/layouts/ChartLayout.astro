@@ -11,16 +11,16 @@ const { title } = Astro.props;
 <Layout title={title}>
   <Header />
   <div class="flex relative pt-[60px]" role="presentation">
-    <aside
-      class="w-[60px] shrink-0 bg-green-500 overflow-y-scroll fixed-screen"
-    >
-      hi
+    <aside class="w-[60px] shrink-0 pt-2 overflow-y-scroll fixed-screen">
+      <nav class="w-full pl-2">
+        <a href="/charts/bar/chartjs-basic" class="box block bg-red-200">Bar</a>
+      </nav>
     </aside>
     <main class="grid grid-cols-[3fr_4fr] w-full">
-      <section class="h-[3000px] bg-blue-200 min-w-[300px]">
+      <section class="min-w-[300px] flex flex-col">
         <slot name="description" />
       </section>
-      <section class="fixed-screen bg-slate-500 min-w-[400px]">
+      <section class="fixed-screen min-w-[400px]">
         <slot name="presentation" />
       </section>
     </main>
@@ -28,6 +28,11 @@ const { title } = Astro.props;
 </Layout>
 
 <style>
+  .box {
+    width: 100%;
+    aspect-ratio: 1/1;
+    flex-shrink: 0;
+  }
   aside {
     scrollbar-width: thin; /* Firefox */
     scrollbar-color: #4caf50 transparent; /* Firefox */
