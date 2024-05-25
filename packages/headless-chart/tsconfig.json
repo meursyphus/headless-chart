@@ -23,5 +23,7 @@
       "@shared/*": ["./src/shared/*"],
       "@utils/*": ["./src/utils/*"]
     },
+    "declaration": true,
+    "outDir": "./dist"
   },
 }

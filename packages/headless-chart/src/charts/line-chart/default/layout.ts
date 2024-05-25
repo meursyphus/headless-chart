@@ -10,14 +10,11 @@ import {
 } from "@meursyphus/flitter";
 
 export function Layout(
-  ...[{ title, legends, plot }, { data, direction }]: Parameters<
-    LineChartCustom["layout"]
-  >
+  ...[{ title, legends, plot }, { data }]: Parameters<LineChartCustom["layout"]>
 ) {
-  const maxLabelLength = Math.max(...data.labels.map((label) => label.length));
   return Container({
     padding: EdgeInsets.only({
-      left: 20 + (direction === "horizontal" ? maxLabelLength * 3 : 0),
+      left: 20,
       bottom: 60,
       right: 10,
     }),

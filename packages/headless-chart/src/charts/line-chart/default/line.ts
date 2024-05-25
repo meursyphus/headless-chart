@@ -1,5 +1,5 @@
 import type { LineChartCustom, LineChartScale } from "../types";
-import { Container, CustomPaint, Path } from "@meursyphus/flitter";
+import { CustomPaint, Path } from "@meursyphus/flitter";
 
 export function Line(
   ...[{ values }, { scale }]: Parameters<LineChartCustom["line"]>
@@ -14,6 +14,7 @@ export function Line(
         },
         paint: ({ line }, { width, height }) => {
           const path = createLinePath({ values, scale, width, height });
+          line.setAttribute("fill", "none");
           line.setAttribute("stroke", "black");
           line.setAttribute("stroke-width", "1");
           line.setAttribute("d", path.getD());
@@ -31,7 +32,12 @@ export function Line(
   });
 }
 
-function createLinePath({ values, scale, width, height }: {
+function createLinePath({
+  values,
+  scale,
+  width,
+  height,
+}: {
   values: number[];
   scale: LineChartScale;
   width: number;
@@ -39,7 +45,7 @@ function createLinePath({ values, scale, width, height }: {
 }) {
   const path = new Path();
   const points = values.map((value, index) => {
-    const y = (height * value) / (scale.max - scale.min);
+    const y = height - (height * value) / (scale.max - scale.min);
     const x = (index * width) / (values.length - 1);
     return { x, y };
   });
