@@ -1,6 +1,6 @@
 import type { Widget } from "@meursyphus/flitter";
 
-type ConfigArgs<T = undefined, OPTION = undefined> = (args: T, option: OPTION) => Widget;
+type ConfigArgs<T = undefined, OPTION = void> = (args: T, option: OPTION) => Widget;
 
 export type CartesianProps = {
   xAxis: ConfigArgs<{ line: Widget; labels: Widget[]; tick: Widget }, { type: 'value' | 'label' }>;

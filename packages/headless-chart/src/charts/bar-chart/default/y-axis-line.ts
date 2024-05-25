@@ -1,9 +1,5 @@
-import { Container } from '@meursyphus/flitter';
+import * as Cartesian from '@shared/cartesian/index'
 
 export function YAxisLine() {
-	return Container({
-		color: 'black',
-		width: 1,
-		height: Infinity
-	});
+	return Cartesian.YAxisLine();
 }

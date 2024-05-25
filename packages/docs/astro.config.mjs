@@ -11,11 +11,11 @@ import mdx from "@astrojs/mdx";
 export default defineConfig({
   integrations: [react(), svelte(), tailwind(), mdx()],
   style: {
-    global: ["./src/styles/global.css"]
+    global: ["./src/styles/global.css"],
   },
   vite: {
     ssr: {
-      noExternal: ["@meursyphus/flitter-svelte"]
-    }
-  }
+      noExternal: ["@meursyphus/flitter-svelte"],
+    },
+  },
 });

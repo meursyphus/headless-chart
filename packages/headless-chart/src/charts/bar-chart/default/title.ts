@@ -1,6 +1,6 @@
 import type { BarChartCustom } from '../types';
-import { Text } from '@meursyphus/flitter';
+import * as Cartesian from '@shared/cartesian/index'
 
-export function Title({ name }: Parameters<BarChartCustom['title']>[0]) {
-	return Text(name);
+export function Title(...args: Parameters<BarChartCustom['title']>) {
+	return Cartesian.Title(args[0]);
 }

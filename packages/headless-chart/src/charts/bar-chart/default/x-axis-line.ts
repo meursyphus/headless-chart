@@ -1,10 +1,6 @@
-import { Container } from "@meursyphus/flitter";
+import * as Cartesian from '@shared/cartesian/index'
 
 export function XAxisLine() {
-	return Container({
-		color: 'black',
-		height: 1,
-		width: Infinity
-	});
+	return Cartesian.XAxisLine();
 }
 
