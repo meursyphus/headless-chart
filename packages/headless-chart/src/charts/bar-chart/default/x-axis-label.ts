@@ -1,6 +1,6 @@
 import type { BarChartCustom } from '../types';
-import { Text, TextStyle } from '@meursyphus/flitter';
+import * as Cartesian from '@shared/cartesian/index'
 
-export function XAxisLabel({ name }: Parameters<BarChartCustom['xAxisLabel']>[0]) {
-	return Text(name, { style: new TextStyle({ fontSize: 12, color: 'black' }) });
+export function XAxisLabel(...args: Parameters<BarChartCustom['xAxisLabel']>) {
+	return Cartesian.XAxisLabel(args[0]);
 }

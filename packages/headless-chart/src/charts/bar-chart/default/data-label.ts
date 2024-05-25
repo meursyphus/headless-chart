@@ -1,6 +1,6 @@
 import type { BarChartCustom } from '../types';
-import { SizedBox } from '@meursyphus/flitter';
+import * as Cartesian from '@shared/cartesian/index'
 
-export function DataLabel(config: Parameters<BarChartCustom['dataLabel']>[0]) {
-	return SizedBox.shrink();
+export function DataLabel(...args: Parameters<BarChartCustom['dataLabel']>) {
+	return Cartesian.DataLabel(args[0]);
 }

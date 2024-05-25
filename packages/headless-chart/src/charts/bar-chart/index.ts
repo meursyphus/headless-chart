@@ -3,7 +3,7 @@ import type { BarChartCustom, BarChartData, BarChartScale } from './types';
 import { BarChartConfigProvider } from './provider';
 import * as Default from './default';
 import Chart from './chart';
-import { classToFn } from '$lib/utils';
+import { classToFn } from '@utils/index';
 
 class BarChart extends StatelessWidget {
 	#config: BarChartCustom;

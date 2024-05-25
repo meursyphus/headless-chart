@@ -1,10 +1,6 @@
 import type { BarChartCustom } from '../types';
-import { Container } from '@meursyphus/flitter';
+import * as Cartesian from '@shared/cartesian/index'
 
-export function XAxisTick(_: Parameters<BarChartCustom['xAxisTick']>[0]) {
-	return Container({
-		width: 1,
-		height: 4,
-		color: 'black'
-	});
+export function XAxisTick(...args: Parameters<BarChartCustom['xAxisTick']>) {
+	return Cartesian.XAxisTick(args[0]);
 }

@@ -1,10 +1,6 @@
 import type { BarChartCustom } from '../types';
-import { Container } from '@meursyphus/flitter';
+import * as Cartesian from '@shared/cartesian/index'
 
-export function YAxisTick(_: Parameters<BarChartCustom['yAxisTick']>[0]) {
-	return Container({
-		width: 4,
-		height: 1,
-		color: 'black'
-	});
+export function YAxisTick(...args: Parameters<BarChartCustom['yAxisTick']>) {
+	return Cartesian.YAxisTick(args[0]);
 }

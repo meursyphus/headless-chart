@@ -20,7 +20,10 @@
     "noFallthroughCasesInSwitch": true,
     "baseUrl": "./",
     "paths": {
-      "$lib/*": ["../docs/src/lib/*"]
+      "@shared/*": ["./src/shared/*"],
+      "@utils/*": ["./src/utils/*"]
     },
+    "declaration": true,
+    "outDir": "./dist"
   },
 }

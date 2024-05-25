@@ -1,13 +1,6 @@
 import type { BarChartCustom } from '../types';
-import { EdgeInsets, Padding, Text, TextStyle } from '@meursyphus/flitter';
+import * as Cartesian from '@shared/cartesian/index'
 
-export function Legend(...[{ name }]: Parameters<BarChartCustom['legend']>) {
-	return Padding({
-		padding: EdgeInsets.only({ right: 5 }),
-		child: Text(name, {
-			style: new TextStyle({
-				fontSize: 12
-			})
-		})
-	});
+export function Legend(...args: Parameters<BarChartCustom['legend']>) {
+	return Cartesian.Legend(args[0]);
 }

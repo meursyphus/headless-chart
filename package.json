@@ -5,7 +5,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npm run dev --workspace=docs",
-    "dev": "npm run dev --workspace=docs"
+    "dev": "npm run dev --workspace=docs",
+    "build": "npm run build --workspace=@meursyphus/headless-chart"
   },
   "author": "meursyphus",
   "license": "ISC",
