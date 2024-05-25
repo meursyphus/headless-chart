@@ -17,12 +17,8 @@ import {
   Positioned,
   FractionalTranslation,
   Offset,
-  Alignment,
   CustomPaint,
-  Path,
-  Radius,
 } from "@meursyphus/flitter";
-import {IgnoreSize} from '$lib/utils'
 
 const colors = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "red", "pink", "black"];
 const data = {

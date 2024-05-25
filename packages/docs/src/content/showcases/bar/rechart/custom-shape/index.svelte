@@ -3,4 +3,4 @@
   import bar from "./index";
 </script>
 
-<Widget width="100%" height="300px" widget={bar} />
+<Widget width="100%" height="100%" widget={bar} />
