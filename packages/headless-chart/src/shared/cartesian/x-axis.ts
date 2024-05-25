@@ -7,7 +7,7 @@ import {
   Offset,
   Row,
 } from "@meursyphus/flitter";
-import { IgnoreSize } from "$lib/utils";
+import { IgnoreSize } from "@utils/index";
 
 export function XAxis(
   ...[{ labels, tick, line }, {  type }]: Parameters<

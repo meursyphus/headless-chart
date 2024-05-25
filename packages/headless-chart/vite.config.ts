@@ -1,15 +1,11 @@
 import { defineConfig } from "vite";
+import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
-  base: "./",
-  resolve: {
-    alias: {
-      "$lib/*": "src/lib/*",
-    },
-  },
+  plugins: [tsconfigPaths()],
   build: {
     lib: {
-      entry: "src/lib/index.ts",
+      entry: "src/index.ts",
       name: "@meursyphus/headless-chart",
       fileName: (format) => `headless-chart.${format}.js`,
     },

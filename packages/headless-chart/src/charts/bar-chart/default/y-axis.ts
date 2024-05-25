@@ -9,7 +9,7 @@ import {
 	Row,
 	VerticalDirection
 } from '@meursyphus/flitter';
-import { IgnoreSize } from '$lib/utils';
+import { IgnoreSize } from '@utils/index';
 
 export function YAxis(
 	...[{ labels, tick, line }, { direction }]: Parameters<BarChartCustom['yAxis']>

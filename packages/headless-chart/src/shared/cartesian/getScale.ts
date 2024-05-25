@@ -1,9 +1,9 @@
-import type { CartesianData, BarChartScale } from "./types";
+import type { CartesianData, CartesianScale } from "./types";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function getScale({
   datasets,
-}: Omit<CartesianData, "title" | "labels">): BarChartScale {
+}: Omit<CartesianData, "labels">): CartesianScale {
   const valueEdge = getValueEdge(datasets.map(({ values }) => values));
 
   const roughEdge = {
