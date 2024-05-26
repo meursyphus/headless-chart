@@ -12,12 +12,15 @@ export type LineChartCustom = {
   series: ConfigArgs<{ lines: Widget[] }>;
   line: ConfigArgs<{ values: number[]; legend: string; index: number }>;
   layout: ConfigArgs<{ title: Widget; legends: Widget[]; plot: Widget }>;
-  plot: ConfigArgs<{ xAxis: Widget; yAxis: Widget; series: Widget }>;
+  plot: ConfigArgs<{ xAxis: Widget; yAxis: Widget; series: Widget; grid: Widget }>;
   legend: ConfigArgs<{ name: string; index: number }>;
   title: ConfigArgs<{ name: string }>;
   dataLabel: ConfigArgs<{ value: number; label: string; legend: string }>;
   xAxisLine: ConfigArgs;
   yAxisLine: ConfigArgs;
+	grid: ConfigArgs<{ xLine: Widget; yLine: Widget }>;
+	gridXLine: ConfigArgs;
+	gridYLine: ConfigArgs;
 };
 
 export type LineChartData = {

@@ -55,9 +55,10 @@ export default BarChart({
     yAxisTick: () => SizedBox.shrink(),
     xAxisTick: () => SizedBox.shrink(),
     legend: Legend,
-    series: Series,
     yAxisLine: () => SizedBox.shrink(),
     bar: Bar,
+    gridYLine: () => SizedBox.shrink(),
+    gridXLine: () => Container({ height: 1, color: "#DDDDDD" }),
   },
 });
 
@@ -164,36 +165,6 @@ function xAxisLine(...[,]: Parameters<BarChartCustom["xAxisLine"]>) {
     color: "#BBBBBB",
     height: 1,
     width: Infinity,
-  });
-}
-function Series(
-  ...[
-    { barGroups },
-    {
-      data: { labels },
-    },
-  ]: Parameters<BarChartCustom["series"]>
-) {
-  const count = labels.length;
-  return Stack({
-    children: [
-      Column({
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          ...Array.from({ length: count + 1 }, (_, index) =>
-            Container({
-              height: 1,
-              color: index !== count ? "#DDDDDD" : "transparent",
-            })
-          ),
-        ],
-      }),
-      Column({
-        children: barGroups.map((barGroup) =>
-          Flexible({ flex: 1, child: barGroup })
-        ),
-      }),
-    ],
   });
 }
 function Legend(...[{ name, index }]: Parameters<BarChartCustom["legend"]>) {

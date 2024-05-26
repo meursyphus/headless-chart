@@ -20,13 +20,29 @@ import {
   CustomPaint,
 } from "@meursyphus/flitter";
 
-const colors = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "red", "pink", "black"];
+const colors = [
+  "#0088FE",
+  "#00C49F",
+  "#FFBB28",
+  "#FF8042",
+  "red",
+  "pink",
+  "black",
+];
 const data = {
-  labels: ["Page A", "Page B", "Page C", "Page D", "Page E", "Page F", "Page G"],
+  labels: [
+    "Page A",
+    "Page B",
+    "Page C",
+    "Page D",
+    "Page E",
+    "Page F",
+    "Page G",
+  ],
   datasets: [
     {
       legend: "",
-      values: [4000,3000,2000,2780,1890,2390,3490]
+      values: [4000, 3000, 2000, 2780, 1890, 2390, 3490],
     },
   ],
 };
@@ -47,7 +63,8 @@ export default BarChart({
     yAxisLabel: YAxisLabel,
     xAxisTick: () => SizedBox.shrink(),
     legend: Legend,
-    series: Series,
+    gridXLine: () => Container({ height: 1, color: "#DDDDDD" }),
+    gridYLine: () => Container({ width: 1, color: "#DDDDDD" }),
   },
 });
 
@@ -71,8 +88,8 @@ function Layout(
         }),
         Padding({
           padding: EdgeInsets.only({ top: 20, left: 30 }),
-          child: plot
-        })
+          child: plot,
+        }),
       ],
     }),
   });
@@ -106,48 +123,6 @@ function YAxisLabel(...[{ name }]: Parameters<BarChartCustom["yAxisLabel"]>) {
         color: "#666666",
       }),
     }),
-  });
-}
-function Series(
-  ...[
-    { barGroups },
-    {
-      scale,
-      data: { labels },
-    },
-  ]: Parameters<BarChartCustom["series"]>
-) {
-  const count = (scale.max - scale.min) / scale.step;
-  return Stack({
-    children: [
-      Row({
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          ...Array.from({ length: labels.length + 1 }, (_, index) =>
-            Container({
-              width: 1,
-              color: index !== 0 ? "#DDDDDD" : "transparent",
-            })
-          ),
-        ],
-      }),
-      Column({
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          ...Array.from({ length: count + 1 }, (_, index) =>
-            Container({
-              height: 1,
-              color: index !== count ? "#DDDDDD" : "transparent",
-            })
-          ),
-        ],
-      }),
-      Row({
-        children: barGroups.map((barGroup) =>
-          Flexible({ flex: 1, child: barGroup })
-        ),
-      }),
-    ],
   });
 }
 function Legend(...[{ name }]: Parameters<BarChartCustom["legend"]>) {
@@ -190,15 +165,15 @@ function Bar(...[{ label, value }]: Parameters<BarChartCustom["bar"]>) {
         left: 0,
         right: 0,
         child: FractionalTranslation({
-          translation: new Offset({x: 0, y: -1}),
+          translation: new Offset({ x: 0, y: -1 }),
           child: Row({
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(`${value}`, {
                 style: new TextStyle({
                   fontSize: 14,
-                  color
-                })
+                  color,
+                }),
               }),
             ],
           }),
@@ -207,22 +182,22 @@ function Bar(...[{ label, value }]: Parameters<BarChartCustom["bar"]>) {
       Container({
         width: Infinity,
         height: Infinity,
-        margin: EdgeInsets.symmetric({horizontal: 5}),
+        margin: EdgeInsets.symmetric({ horizontal: 5 }),
         child: CustomPaint({
           painter: {
             svg: {
               createDefaultSvgEl(context) {
                 return {
-                  bar: context.createSvgEl('path')
-                }
+                  bar: context.createSvgEl("path"),
+                };
               },
-              paint({bar}, {width, height}) {
-                bar.setAttribute("fill", color)
-                bar.setAttribute('d',getPath(0, 0, width, height))
+              paint({ bar }, { width, height }) {
+                bar.setAttribute("fill", color);
+                bar.setAttribute("d", getPath(0, 0, width, height));
               },
-            }
-          }
-        })
+            },
+          },
+        }),
       }),
     ],
   });

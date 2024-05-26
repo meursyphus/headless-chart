@@ -57,7 +57,8 @@ export default BarChart({
     legend: Legend,
     xAxisLine: xAxisLine,
     yAxisLine: YAxisLine,
-    series: Series,
+    gridXLine: () => Container({ height: 1, color: "#EEEEEE" }),
+    gridYLine: () => Container({ width: 1, color: "#EEEEEE" }),
   },
 });
 
@@ -143,48 +144,6 @@ function xAxisLine(...[,]: Parameters<BarChartCustom["xAxisLine"]>) {
     color: "#BBBBBB",
     height: 1,
     width: Infinity,
-  });
-}
-function Series(
-  ...[
-    { barGroups },
-    {
-      scale,
-      data: { labels },
-    },
-  ]: Parameters<BarChartCustom["series"]>
-) {
-  const count = (scale.max - scale.min) / scale.step;
-  return Stack({
-    children: [
-      Row({
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          ...Array.from({ length: labels.length + 1 }, (_, index) =>
-            Container({
-              width: 1,
-              color: index !== 0 ? "#DDDDDD" : "transparent",
-            })
-          ),
-        ],
-      }),
-      Column({
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          ...Array.from({ length: count + 1 }, (_, index) =>
-            Container({
-              height: 1,
-              color: index !== count ? "#DDDDDD" : "transparent",
-            })
-          ),
-        ],
-      }),
-      Row({
-        children: barGroups.map((barGroup) =>
-          Flexible({ flex: 1, child: barGroup })
-        ),
-      }),
-    ],
   });
 }
 function Legend(...[{ name }]: Parameters<BarChartCustom["legend"]>) {

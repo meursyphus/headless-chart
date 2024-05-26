@@ -1,16 +1,18 @@
-import type { CartesianProps } from "./types";
+import type { CartesianCustom } from "./types";
 import {
   Container,
   FractionalTranslation,
   Stack,
   Positioned,
+  type Widget,
 } from "@meursyphus/flitter";
 
 export function Plot({
   series,
   xAxis,
   yAxis,
-}: Parameters<CartesianProps["plot"]>[0]) {
+  grid,
+}: Parameters<CartesianCustom["plot"]>[0]): Widget {
   return Stack({
     children: [
       Positioned({
@@ -43,6 +45,7 @@ export function Plot({
           }),
         }),
       }),
+      grid,
       series,
     ],
   });

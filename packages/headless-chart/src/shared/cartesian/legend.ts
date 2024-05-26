@@ -1,7 +1,7 @@
-import type { CartesianProps } from "./types";
-import { EdgeInsets, Padding, Text, TextStyle } from "@meursyphus/flitter";
+import type { CartesianCustom } from "./types";
+import { EdgeInsets, Padding, Text, TextStyle, type Widget } from "@meursyphus/flitter";
 
-export function Legend(...[{ name }]: Parameters<CartesianProps["legend"]>) {
+export function Legend(...[{ name }]: Parameters<CartesianCustom["legend"]>): Widget {
   return Padding({
     padding: EdgeInsets.only({ right: 5 }),
     child: Text(name, {

@@ -1,4 +1,4 @@
-import type { CartesianProps } from "./types";
+import type { CartesianCustom } from "./types";
 import {
   Column,
   FractionalTranslation,
@@ -6,14 +6,13 @@ import {
   MainAxisSize,
   Offset,
   Row,
+  type Widget,
 } from "@meursyphus/flitter";
 import { IgnoreSize } from "@utils/index";
 
 export function XAxis(
-  ...[{ labels, tick, line }, {  type }]: Parameters<
-    CartesianProps["xAxis"]
-  >
-) {
+  ...[{ labels, tick, line }, { type }]: Parameters<CartesianCustom["xAxis"]>
+): Widget {
   return Column({
     mainAxisSize: MainAxisSize.min,
     children: [
