@@ -11,6 +11,6 @@ export function Grid(
     xLine,
     yLine,
     y: valueCount,
-    x: labelCount,
+    x: labelCount - 1,
   });
 }

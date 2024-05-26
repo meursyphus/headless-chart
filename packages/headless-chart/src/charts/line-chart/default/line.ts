@@ -45,7 +45,7 @@ function createLinePath({
 }) {
   const path = new Path();
   const points = values.map((value, index) => {
-    const y = height - (height * value) / (scale.max - scale.min);
+    const y = height - (height * (value - scale.min)) / (scale.max - scale.min);
     const x = (index * width) / (values.length - 1);
     return { x, y };
   });

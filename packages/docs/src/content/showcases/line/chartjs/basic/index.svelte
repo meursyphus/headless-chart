@@ -3,4 +3,4 @@
   import line from "./index";
 </script>
 
-<Widget width="100%" height="300px" widget={line} />
+<Widget width="100%" height="100%" widget={line} />
