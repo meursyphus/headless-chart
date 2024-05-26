@@ -14,3 +14,6 @@ export * from "./y-axis-tick";
 export * from "./y-axis";
 export * from "./x-axis-line";
 export * from "./y-axis-line";
+export * from "./grid";
+export * from "./gridXLine";
+export * from "./gridYLine";

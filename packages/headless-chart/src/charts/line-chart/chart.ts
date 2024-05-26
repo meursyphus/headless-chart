@@ -231,7 +231,12 @@ class Plot extends StatelessWidget {
     const config = LineChartConfigProvider.of(context);
     const { custom } = config;
     return custom.plot(
-      { xAxis: new XAxis(), yAxis: new YAxis(), series: new Series() },
+      {
+        xAxis: new XAxis(),
+        yAxis: new YAxis(),
+        series: new Series(),
+        grid: new Grid(),
+      },
       config,
     );
   }
@@ -254,5 +259,32 @@ class Series extends StatelessWidget {
       },
       config,
     );
+  }
+}
+
+class Grid extends StatelessWidget {
+  override build(context: BuildContext): Widget {
+    const config = LineChartConfigProvider.of(context);
+    const { custom } = config;
+    return custom.grid(
+      { xLine: new GridXLine(), yLine: new GridYLine() },
+      config,
+    );
+  }
+}
+
+class GridXLine extends StatelessWidget {
+  override build(context: BuildContext): Widget {
+    const config = LineChartConfigProvider.of(context);
+    const { custom } = config;
+    return custom.gridXLine(undefined, config);
+  }
+}
+
+class GridYLine extends StatelessWidget {
+  override build(context: BuildContext): Widget {
+    const config = LineChartConfigProvider.of(context);
+    const { custom } = config;
+    return custom.gridYLine(undefined, config);
   }
 }

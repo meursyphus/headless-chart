@@ -1,4 +1,4 @@
-import type { CartesianProps } from "./types";
+import type { CartesianCustom } from "./types";
 import {
   Column,
   CrossAxisAlignment,
@@ -8,14 +8,13 @@ import {
   Offset,
   Row,
   VerticalDirection,
+  type Widget,
 } from "@meursyphus/flitter";
 import { IgnoreSize } from "@utils/index";
 
 export function YAxis(
-  ...[{ labels, tick, line }, { type }]: Parameters<
-    CartesianProps["yAxis"]
-  >
-) {
+  ...[{ labels, tick, line }, { type }]: Parameters<CartesianCustom["yAxis"]>
+): Widget {
   const tickCount = labels.length + (type === "label" ? 1 : 0);
   return Row({
     mainAxisSize: MainAxisSize.min,
@@ -23,9 +22,7 @@ export function YAxis(
       Column({
         crossAxisAlignment: CrossAxisAlignment.end,
         verticalDirection:
-          type === "value"
-            ? VerticalDirection.up
-            : VerticalDirection.down,
+          type === "value" ? VerticalDirection.up : VerticalDirection.down,
         mainAxisAlignment:
           type === "label"
             ? MainAxisAlignment.spaceAround

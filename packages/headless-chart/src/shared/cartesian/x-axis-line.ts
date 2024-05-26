@@ -1,6 +1,6 @@
-import { Container } from "@meursyphus/flitter";
+import { Container, type Widget } from "@meursyphus/flitter";
 
-export function XAxisLine() {
+export function XAxisLine(): Widget {
 	return Container({
 		color: 'black',
 		height: 1,

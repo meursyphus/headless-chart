@@ -419,5 +419,6 @@ export default BarChart({
     yAxis: YAxis,
     series: Series,
     barGroup: BarGroup,
+    grid: () => SizedBox.shrink(),
   },
 });

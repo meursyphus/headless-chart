@@ -28,16 +28,17 @@ class BarChart extends StatelessWidget {
       line = Default.Line,
       xAxisLine = Default.XAxisLine,
       yAxisLine = Default.YAxisLine,
+      grid = Default.Grid,
+      gridXLine = Default.GridXLine,
+      gridYLine = Default.GridYLine,
     } = {},
     getScale = Default.getScale,
     data,
     title = "",
-    direction = "vertical",
   }: {
     custom?: Partial<LineChartCustom>;
     title?: string;
     data: LineChartData;
-    direction?: "vertical" | "horizontal";
     getScale?: (data: LineChartData) => LineChartScale;
   }) {
     super();
@@ -60,6 +61,9 @@ class BarChart extends StatelessWidget {
       legend,
       title: titleWidget,
       dataLabel,
+      grid,
+      gridXLine,
+      gridYLine,
     };
   }
 

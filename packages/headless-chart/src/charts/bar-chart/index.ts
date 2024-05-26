@@ -29,7 +29,10 @@ class BarChart extends StatelessWidget {
 			dataLabel = Default.DataLabel,
 			bar = Default.Bar,
 			xAxisLine = Default.XAxisLine,
-			yAxisLine = Default.YAxisLine
+			yAxisLine = Default.YAxisLine,
+			grid = Default.Grid,
+			gridXLine = Default.GridXLine,
+			gridYLine = Default.GridYLine
 		} = {},
 		getScale = Default.getScale,
 		data,
@@ -63,7 +66,10 @@ class BarChart extends StatelessWidget {
 			plot,
 			legend,
 			title: titleWidget,
-			dataLabel
+			dataLabel,
+			grid,
+			gridXLine,
+			gridYLine
 		};
 	}
 

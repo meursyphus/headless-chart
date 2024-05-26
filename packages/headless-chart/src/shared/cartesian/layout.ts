@@ -1,4 +1,4 @@
-import type { CartesianProps } from "./types";
+import type { CartesianCustom } from "./types";
 import {
   Column,
   Container,
@@ -7,13 +7,12 @@ import {
   MainAxisAlignment,
   MainAxisSize,
   Row,
+  type Widget,
 } from "@meursyphus/flitter";
 
 export function Layout(
-  ...[{ title, legends, plot } ]: Parameters<
-    CartesianProps["layout"]
-  >
-) {
+  ...[{ title, legends, plot }]: Parameters<CartesianCustom["layout"]>
+): Widget {
   return Container({
     padding: EdgeInsets.only({
       left: 20,

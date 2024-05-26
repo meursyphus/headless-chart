@@ -3,7 +3,7 @@ import type { LineChartConfig } from './types';
 
 const BAR_CHART_CONTEXT_KEY = Symbol('BarChartKey');
 
-export function LineChartConfigProvider({ child, value }: { child: Widget; value: LineChartConfig }) {
+export function LineChartConfigProvider({ child, value }: { child: Widget; value: LineChartConfig }): Widget {
 	return Provider({
 		child,
 		providerKey: BAR_CHART_CONTEXT_KEY,

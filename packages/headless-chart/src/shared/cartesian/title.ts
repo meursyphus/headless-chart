@@ -1,6 +1,6 @@
-import type { CartesianProps } from "./types";
-import { Text } from "@meursyphus/flitter";
+import type { CartesianCustom } from "./types";
+import { Text, type Widget } from "@meursyphus/flitter";
 
-export function Title({ name }: Parameters<CartesianProps["title"]>[0]) {
+export function Title({ name }: Parameters<CartesianCustom["title"]>[0]): Widget {
   return Text(name);
 }
