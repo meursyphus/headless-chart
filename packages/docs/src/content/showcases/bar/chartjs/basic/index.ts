@@ -71,7 +71,7 @@ function Layout(
         Positioned({
           top: 0,
           right: 0,
-          child: Text("chartjs 따라하기", {
+          child: Text("made by flitter4", {
             style: new TextStyle({
               fontSize: 14,
               color: "#999999",

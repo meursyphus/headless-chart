@@ -78,7 +78,7 @@ function Layout(
         Positioned({
           top: 0,
           right: 0,
-          child: Text("rechart 따라하기", {
+          child: Text("made by flitter", {
             style: new TextStyle({
               fontSize: 14,
               color: "#999999",

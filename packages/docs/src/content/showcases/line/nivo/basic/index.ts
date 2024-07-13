@@ -51,8 +51,8 @@ export default LineChart({
       "moto",
       "bicycle",
       "horse",
-      "skateboard",
-      "others",
+      // "skateboard",
+      // "others",
     ],
     datasets: [
       {
