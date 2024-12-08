@@ -16,5 +16,8 @@
   "devDependencies": {
     "@meursyphus/flitter": "^2.0.0-alpha.2",
     "@meursyphus/flitter-svelte": "^2.0.0-alpha.1"
+  },
+  "dependencies": {
+    "vite-plugin-dts": "^4.2.4"
   }
 }
