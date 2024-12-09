@@ -48,95 +48,33 @@ const { Content } = await entry.render();
   image={entry.data.image}
 >
   <div
-    class="grid h-[calc(100vh-var(--header))] grid-cols-[220px_1fr_1fr]"
+    class="grid h-[calc(100vh-var(--header))] grid-cols-[220px_minmax(0,1fr)]"
     id="mainContainer"
   >
-    <aside class="relative h-full overflow-scroll border-r border-gray-600/30">
+    <aside class="glass relative h-full border-r border-gray-200/30 overflow-y-scroll overflow-x-hidden">
       <div
-        class="absolute -right-1 top-0 h-full w-2 cursor-col-resize hover:bg-blue-500/20"
+        class="absolute -right-1 top-0 h-full w-2 cursor-col-resize hover:bg-purple-500/20"
         id="tocResizer"
       >
       </div>
-      <TableOfContents currentSlug={entry.slug.replace(/^\d+_/, "")} />
+      <TableOfContents currentSlug={entry.slug} />
     </aside>
 
-    <div class="w-full overflow-auto">
-      <nav
-        class="sticky top-0 flex h-[60px] items-center justify-between border-b border-gray-600/30 px-6 backdrop-blur"
-      >
-        <div class="flex items-center gap-2">
-          {
-            prev && (
-              <a
-                href={`/tutorial/${prev.slug}`}
-                class="flex h-10 w-10 items-center justify-center rounded text-gray-300 transition-colors hover:bg-gray-800 hover:text-white"
-                title={prev.data.title}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M15 19l-7-7 7-7"
-                  />
-                </svg>
-              </a>
-            )
-          }
-          {
-            next && (
-              <a
-                href={`/tutorial/${next.slug}`}
-                class="flex h-10 w-10 items-center justify-center rounded text-gray-300 transition-colors hover:bg-gray-800 hover:text-white"
-                title={next.data.title}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-              </a>
-            )
-          }
-        </div>
-        <div class="flex items-center gap-2">
-          <button
-            id="solvedButton"
-            class="rounded bg-gray-800 px-4 py-2 text-sm font-medium text-gray-100 transition-colors hover:bg-gray-700"
-          >
-            Show Solution
-          </button>
-        </div>
-      </nav>
-      <div class="prose prose-invert prose-modern max-w-none p-8">
+    <div class="flex flex-col w-full">
+      <div class="prose prose-modern max-w-none p-8">
         <Content />
       </div>
-    </div>
 
-    <div class="sticky-screen">
-      <div id="originalSandpack" class="h-full">
-        <SandPack files={entry.data.files} client:only="react" />
-      </div>
-      <div id="solvedSandpack" class="hidden h-full">
-        <SandPack
-          files={entry.data.solved_files ?? entry.data.files}
-          client:only="react"
-        />
+      <div class="flex-1 border-t border-gray-200/30 px-10">
+        <div id="originalSandpack" class="h-full">
+          <SandPack files={entry.data.files} client:only="react" />
+        </div>
+        <div id="solvedSandpack" class="hidden h-full">
+          <SandPack
+            files={entry.data.solved_files ?? entry.data.files}
+            client:only="react"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -182,7 +120,7 @@ const { Content } = await entry.render();
     if (newWidth >= 160 && newWidth <= 400) {
       container?.style.setProperty(
         "grid-template-columns",
-        `${newWidth}px 1fr 1fr`,
+        `${newWidth}px minmax(0,1fr)`,
       );
     }
   }

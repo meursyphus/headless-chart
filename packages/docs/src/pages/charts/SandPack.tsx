@@ -110,10 +110,9 @@ export default function MySandpack({
           height: "100%",
           margin: 0,
           display: "flex",
-          flexDirection: "column",
+          flexDirection: "row",
         }}
       >
-        <MonacoEditor />
         <SandpackPreview
           style={{
             height: "100%",
@@ -122,6 +121,9 @@ export default function MySandpack({
             margin: 0,
           }}
         />
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+          <MonacoEditor />
+        </div>
       </SandpackLayout>
     </SandpackProvider>
   );
