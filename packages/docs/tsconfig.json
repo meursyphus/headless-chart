@@ -1,14 +1,14 @@
 {
   "extends": "astro/tsconfigs/strict",
-  "include": [
-    ".astro/types.d.ts",
-    "**/*"
-  ],
-  "exclude": [
-    "dist"
-  ],
   "compilerOptions": {
-    "jsx": "react-jsx",
-    "jsxImportSource": "react"
-  }
+    "jsx": "preserve",
+    "jsxImportSource": "react",
+    "baseUrl": "/Users/daeseungmoon/work/flitter/packages/docs",
+    "paths": {
+      "$components/*": ["src/components/*"],
+      "$layouts/*": ["src/layouts/*"],
+      "$utils/*": ["src/utils/*"]
+    }
+  },
+  "exclude": ["src/layouts/Layout.astro"]
 }
