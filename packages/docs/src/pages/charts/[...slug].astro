@@ -7,7 +7,7 @@ import TableOfContents from "./TableOfContents.astro";
 export const prerender = true;
 
 export const getStaticPaths = async () => {
-  const tutorialEntries = await getCollection("charts");
+  const charts = await getCollection("charts");
 
   function resolveSlug(slug: string) {
     const segments = slug.split("/");
@@ -17,7 +17,8 @@ export const getStaticPaths = async () => {
     return cleanedSegments.join("/");
   }
 
-  return tutorialEntries
+
+  const result = charts
     .map((entry) => ({
       ...entry,
       slug: resolveSlug(entry.slug),
@@ -32,6 +33,8 @@ export const getStaticPaths = async () => {
         entry,
       },
     }));
+
+    return result;
 };
 
 const { entry, prev, next } = Astro.props;
@@ -42,7 +45,7 @@ const { Content } = await entry.render();
 <Layout
   title={`${entry.data.nav_group}/${entry.data.title} - Flitter`}
   description={entry.data.description}
-  image={entry.data.image ?? "/og-tutorial.png"}
+  image={entry.data.image}
 >
   <div
     class="grid h-[calc(100vh-var(--header))] grid-cols-[220px_1fr_1fr]"
@@ -149,30 +152,6 @@ const { Content } = await entry.render();
 </style>
 
 <script>
-  // Toggle solution button logic
-  document.getElementById("solvedButton")?.addEventListener("click", () => {
-    const button = document.getElementById("solvedButton")!;
-    const originalSandpack = document.getElementById("originalSandpack");
-    const solvedSandpack = document.getElementById("solvedSandpack");
-
-    if (button?.classList.contains("solved")) {
-      originalSandpack?.classList.remove("hidden");
-      solvedSandpack?.classList.add("hidden");
-      button.classList.remove("solved");
-      button.classList.remove("bg-blue-500");
-      button.classList.add("bg-green-500");
-      button.textContent = "Show Solution";
-    } else {
-      originalSandpack?.classList.add("hidden");
-      solvedSandpack?.classList.remove("hidden");
-      button.classList.add("solved");
-      button.classList.remove("bg-green-500");
-      button.classList.add("bg-blue-500");
-      button.textContent = "Hide Solution";
-    }
-  });
-
-  // TOC Resizer logic
   const resizer = document.getElementById("tocResizer");
   const sidebar = resizer?.parentElement;
   const container = sidebar?.parentElement;

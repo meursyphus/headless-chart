@@ -9,7 +9,7 @@ interface Props {
 const { title, description, image } = Astro.props;
 ---
 
-<Layout title={title} description={description} image={image}>
+<Layout title={title} description={description} image={image ?? "/og-charts.png"}>
   <slot />
 </Layout>
 
