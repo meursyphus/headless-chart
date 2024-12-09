@@ -54,35 +54,59 @@ const charts = [
 
 .charts-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  padding: 2rem;
-  margin-top: 2rem;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+  padding: 3rem;
+  margin-top: 3rem;
+  width: 100%;
+  justify-content: center;
+  align-items: stretch;
+}
+
+@media (min-width: 1024px) {
+  .charts-grid {
+    grid-template-columns: repeat(2, minmax(600px, 1fr));
+    max-width: 90%;
+    margin: 3rem auto;
+  }
 }
 
 .chart-card {
+  display: block;
+  padding: 4rem;
+  width: 100%;
   text-decoration: none;
-  color: #333;
-  padding: 2rem;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+  color: inherit;
+
+  /* 글래시모피즘 베이스 */
+  background:
+    linear-gradient(to bottom right, rgba(255,255,255,0.5), rgba(255,255,255,0.2)), 
+    linear-gradient(to right top, #e0e0e0 0%, transparent 50%),
+    linear-gradient(to left bottom, #d8d8d8 0%, transparent 50%),
+    linear-gradient(#e5e5e5 1px, transparent 1px),
+    linear-gradient(90deg, #e5e5e5 1px, transparent 1px);
   
-  /* Glassmorphism effect */
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
-  background-color: rgba(255, 255, 255, 0.4);
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background-blend-mode: lighten, normal, normal, normal, normal;
+  background-size: cover, 100% 100%, 100% 100%, 20px 20px, 20px 20px;
+  background-position: center, 0 0, 0 0, 0 0, 0 0;
+
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
 .chart-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-  background-color: rgba(255, 255, 255, 0.5);
+  background: 
+    linear-gradient(to bottom right, rgba(255,255,255,0.6), rgba(255,255,255,0.3)), 
+    linear-gradient(to right top, #dddddd 0%, transparent 50%),
+    linear-gradient(to left bottom, #d0d0d0 0%, transparent 50%),
+    linear-gradient(#dedede 1px, transparent 1px),
+    linear-gradient(90deg, #dedede 1px, transparent 1px);
+
+  box-shadow: 0 6px 30px rgba(0,0,0,0.1);
 }
 
 .chart-card .image-placeholder {
