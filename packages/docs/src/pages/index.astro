@@ -1,8 +1,113 @@
 ---
 import Layout from "../layouts/HomeLayout.astro";
+
+// 임시 차트 데이터
+const charts = [
+  { name: "Line Chart", image: "/charts/line.png", link: "/charts/bar/chartjs" },
+  { name: "Bar Chart", image: "/charts/bar.png", link: "/charts/bar" },
+  { name: "Pie Chart", image: "/charts/pie.png", link: "/charts/pie" },
+  { name: "Scatter Chart", image: "/charts/scatter.png", link: "/charts/scatter" },
+];
 ---
 
 <Layout>
-  <main class="">
-  </main>
+  <section class="hero">
+    <h1>😫 Tired of Chart Limitations? 🎯</h1>
+    <p>
+      ✨ Copy, Paste, Done!<br/>
+      🎨 Ultimate Freedom in Chart Customization<br/>
+      🚀 Zero Restrictions
+    </p>
+  </section>
+
+  <section class="charts-grid">
+    {charts.map(chart => (
+      <a class="chart-card" href={chart.link}>
+        <div class="image-placeholder">
+          <!-- 이미지 배경 -->
+        </div>
+        <h2>{chart.name}</h2>
+      </a>
+    ))}
+  </section>
 </Layout>
+
+<style>
+.hero {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+.hero h1 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #333;
+  line-height: 1.2;
+}
+.hero p {
+  font-size: clamp(1rem, 3vw, 1.25rem);
+  color: #555;
+  margin: 0 auto;
+  max-width: 800px;
+  line-height: 1.6;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  padding: 2rem;
+  margin-top: 2rem;
+}
+
+.chart-card {
+  text-decoration: none;
+  color: #333;
+  padding: 2rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  
+  /* Glassmorphism effect */
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.chart-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.chart-card .image-placeholder {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: #f0f0f0;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.chart-card h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+  }
+  
+  .chart-card {
+    padding: 1.5rem;
+  }
+}
+</style>
