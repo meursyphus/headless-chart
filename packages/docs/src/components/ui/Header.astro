@@ -45,87 +45,83 @@ let current: "docs" | "charts" | "i18n" | "none" = pathname.startsWith("/docs")
 </header>
 
 <style>
+  .header-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(229, 231, 235, 0.2);
+  }
 
-.header-container {
-  height: var(--header);
-  width: 100%;
-  position: fixed;
-  top: 0;
-  z-index: 999;
-}
+  .header-inner {
+    position: relative;
+    max-width: 1280px;
+    margin: 0 auto;
+    height: 100%;
+    padding: 0 1rem;
+  }
 
-.header-inner {
-  max-width: var(--mx, 1920px);
-  margin: 0 auto;
-  height: 100%;
-  padding-inline: var(--px);
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-}
+  .logo-area {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    gap: 0.5rem;
+    text-decoration: none;
+  }
 
-.logo-area {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  text-decoration: none;
-}
+  .logo-img {
+    width: 32px;
+    height: 32px;
+  }
 
-.logo-img {
-  width: 44px;
-  height: 44px;
-  transform: scale(1.5);
-  object-fit: cover;
-  border-radius: 8px;
-}
+  .logo-text {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #fff;
+  }
 
-.logo-text {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #333;
-  font-family: sans-serif;
-}
+  .nav {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    gap: 2rem;
+  }
 
-.nav {
-  display: flex;
-  gap: 1.5rem;
-  margin-left: auto; /* nav를 가운데 위치시키고 싶지 않을 경우 이 부분 조정 */
-}
+  .nav-link {
+    color: #9ca3af;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: color 0.2s;
+  }
 
-.nav-link {
-  text-decoration: none;
-  font-size: 1rem;
-  color: #333;
-  font-weight: 500;
-  transition: color 0.3s ease;
-  font-family: sans-serif;
-  position: relative;
-}
+  .nav-link:hover {
+    color: #fff;
+  }
 
-.nav-link:hover {
-  color: #555;
-}
+  .nav-link.active {
+    color: #fff;
+  }
 
-.nav-link.active {
-  color: #111;
-  font-weight: 700;
-}
+  .external-links {
+    display: flex;
+    gap: 1rem;
+    margin-left: auto; /* nav를 가운데 정렬하고 external-links를 우측 정렬하기 위함 */
+  }
 
-.external-links {
-  display: flex;
-  gap: 1rem;
-  margin-left: auto; /* nav를 가운데 정렬하고 external-links를 우측 정렬하기 위함 */
-}
+  .icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: contain;
+    transition: transform 0.2s;
+  }
 
-.icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  object-fit: contain;
-  transition: transform 0.2s;
-}
-
-.icon:hover {
-  transform: scale(1.1);
-}
+  .icon:hover {
+    transform: scale(1.1);
+  }
 </style>
