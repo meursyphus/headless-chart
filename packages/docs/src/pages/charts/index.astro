@@ -1,0 +1,218 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+const title = "Chart Examples - Headless Charts";
+const description = "Various chart examples using Headless Charts";
+
+const chartGroups = [
+  {
+    type: "Bar Charts",
+    charts: [
+      {
+        title: "Basic Bar Chart",
+        description: "Simple vertical bar chart with basic configuration",
+        link: "/docs/charts/bar/basic"
+      },
+      {
+        title: "Grouped Bar Chart",
+        description: "Multiple data series grouped by category",
+        link: "/docs/charts/bar/grouped"
+      },
+      {
+        title: "Stacked Bar Chart",
+        description: "Stacked bars showing part-to-whole relationships",
+        link: "/docs/charts/bar/stacked"
+      },
+      {
+        title: "Horizontal Bar Chart",
+        description: "Horizontal bars for better label readability",
+        link: "/docs/charts/bar/horizontal"
+      }
+    ]
+  },
+  {
+    type: "Line Charts",
+    charts: [
+      {
+        title: "Basic Line Chart",
+        description: "Simple line chart for time series data",
+        link: "/docs/charts/line/basic"
+      },
+      {
+        title: "Multi-line Chart",
+        description: "Multiple lines for comparing trends",
+        link: "/docs/charts/line/multi"
+      },
+      {
+        title: "Stepped Line Chart",
+        description: "Stepped lines for discrete changes",
+        link: "/docs/charts/line/stepped"
+      },
+      {
+        title: "Curved Line Chart",
+        description: "Smooth curved lines with interpolation",
+        link: "/docs/charts/line/curved"
+      }
+    ]
+  },
+  {
+    type: "Area Charts",
+    charts: [
+      {
+        title: "Basic Area Chart",
+        description: "Simple area chart for showing volumes",
+        link: "/docs/charts/area/basic"
+      },
+      {
+        title: "Stacked Area Chart",
+        description: "Stacked areas for comparing proportions",
+        link: "/docs/charts/area/stacked"
+      },
+      {
+        title: "Stream Graph",
+        description: "Symmetrical stacked area chart",
+        link: "/docs/charts/area/stream"
+      },
+      {
+        title: "Range Area Chart",
+        description: "Area between two series",
+        link: "/docs/charts/area/range"
+      }
+    ]
+  },
+  {
+    type: "Scatter Charts",
+    charts: [
+      {
+        title: "Basic Scatter Plot",
+        description: "Simple scatter plot for correlation analysis",
+        link: "/docs/charts/scatter/basic"
+      },
+      {
+        title: "Bubble Chart",
+        description: "Scatter plot with sized points",
+        link: "/docs/charts/scatter/bubble"
+      },
+      {
+        title: "Connected Scatter",
+        description: "Scatter points connected by lines",
+        link: "/docs/charts/scatter/connected"
+      },
+      {
+        title: "Matrix Scatter",
+        description: "Grid of scatter plots for multiple variables",
+        link: "/docs/charts/scatter/matrix"
+      }
+    ]
+  }
+];
+---
+
+<Layout title={title} description={description}>
+  <div class="charts-container">
+    <h1>Copy and Paste!!</h1>
+    {
+      chartGroups.map(group => (
+        <section class="chart-group">
+          <h2 class="group-title">{group.type}</h2>
+          <div class="charts-grid">
+            {
+              group.charts.map(chart => (
+                <a href={chart.link} class="chart-item glass">
+                  <div class="chart-image">
+                    <div class="placeholder"></div>
+                  </div>
+                  <div class="chart-info">
+                    <h3>{chart.title}</h3>
+                    <p>{chart.description}</p>
+                  </div>
+                </a>
+              ))
+            }
+          </div>
+        </section>
+      ))
+    }
+  </div>
+</Layout>
+
+<style>
+  .charts-container {
+    padding: 2rem var(--px);
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    color: #333;
+  }
+
+  .chart-group {
+    margin-bottom: 4rem;
+  }
+
+  .group-title {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #333;
+  }
+
+  .charts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+
+  .chart-item {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    transition: transform 0.2s ease-in-out;
+  }
+
+  .chart-item:hover {
+    transform: translateY(-4px);
+  }
+
+  .chart-image {
+    width: 100%;
+    height: 300px;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+
+  .chart-image .placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .chart-info h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #444;
+  }
+
+  .chart-info p {
+    color: #666;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 768px) {
+    .charts-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .group-title {
+      font-size: 1.75rem;
+    }
+  }
+</style>
