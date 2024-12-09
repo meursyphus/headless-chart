@@ -1,13 +1,13 @@
 ---
 import SandPack from "./SandPack.tsx";
-import Layout from "../../layouts/TutorialLayout.astro";
+import Layout from "../../layouts/ChartsLayout.astro";
 import { getCollection } from "astro:content";
 import TableOfContents from "./TableOfContents.astro";
 
 export const prerender = true;
 
 export const getStaticPaths = async () => {
-  const tutorialEntries = await getCollection("tutorial");
+  const tutorialEntries = await getCollection("charts");
 
   function resolveSlug(slug: string) {
     const segments = slug.split("/");
@@ -21,7 +21,6 @@ export const getStaticPaths = async () => {
     .map((entry) => ({
       ...entry,
       slug: resolveSlug(entry.slug),
-      lang: entry.slug.split("/")[0], // 언어 정보 추출
     }))
     .map((entry, i, arr) => ({
       params: {
@@ -31,7 +30,6 @@ export const getStaticPaths = async () => {
         prev: arr[i - 1],
         next: arr[i + 1],
         entry,
-        lang: entry.lang,
       },
     }));
 };
