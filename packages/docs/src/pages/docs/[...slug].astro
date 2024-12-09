@@ -1,0 +1,85 @@
+---
+import Layout from "../../layouts/DocsLayout.astro";
+import SideBar from "./SideBar.astro";
+import Toc from "./Toc.astro";
+import { getCollection } from "astro:content";
+
+export const prerender = true;
+
+
+export async function getStaticPaths() {
+  const docsEntries = await getCollection("docs");
+
+  function resolveSlug(slug: string) {
+    const segments = slug.split("/");
+    const cleanedSegments = segments.map((segment) =>
+      segment.replace(/^\d+\.?/, ""),
+    );
+    return cleanedSegments.join("/");
+  }
+
+  const paths = docsEntries.map((entry) => ({
+    params: { slug: resolveSlug(entry.slug) },
+    props: { entry: {
+      ...entry,
+      slug: resolveSlug(entry.slug),
+    } },
+  }));
+  return paths;
+}
+
+const { entry } = Astro.props;
+const { Content, headings } = await entry.render();
+const docsEntries = await getCollection("docs");
+
+// Sort docsEntries by nav_group_order and nav_order
+const sortedEntries = docsEntries.sort((a, b) => a.slug.localeCompare(b.slug));
+// Find the index of the current entry
+const currentIndex = sortedEntries.findIndex((it) => it.slug === entry.slug);
+
+// Find the previous and next entry
+const prevEntry = currentIndex > 0 ? sortedEntries[currentIndex - 1] : null;
+const nextEntry =
+  currentIndex < sortedEntries.length - 1
+    ? sortedEntries[currentIndex + 1]
+    : null;
+---
+
+<Layout
+  title={`${entry.data.nav_group}/${entry.data.title}`}
+  description={entry.data.description}
+  image={entry.data.image}
+>
+  <div  class="relative mx-auto flex p-8">
+    <div class="glass sticky top-0 h-fit">
+      <SideBar />
+    </div>
+    <div
+      class="glass ml-2 prose prose-modern w-full max-w-full px-8 lg:prose-lg h-fit"
+    >
+      <Content />
+    </div>
+    <Toc headings={headings} />
+  </div>
+</Layout>
+
+<style>
+  main {
+  }
+</style>
+
+<style is:global>
+  .move {
+    width: 200px;
+    height: 80px;
+    border: white solid 1px;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .move.disabled {
+    display: none;
+  }
+</style>

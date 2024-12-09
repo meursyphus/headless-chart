@@ -1,0 +1,93 @@
+---
+nav_group: "Getting Started"
+nav_order: 2
+title: "Installation"
+description: "Step-by-step guide on installing headless-chart and integrating it with Flitter"
+---
+
+# Installation
+
+This section will guide you through the installation of **headless-chart** and the necessary Flitter dependencies. We'll also demonstrate how to run Flitter and headless-chart in a pure Vite setup and prepare you to integrate with frameworks like React.
+
+## Setting Up Your Project
+
+### 1. Create a New Vite Project
+
+If you haven't already, start by creating a new Vite project. For example, to create a new Vite+React project:
+
+```bash
+npm create vite@latest my-chart-app -- --template react
+cd my-chart-app
+npm install
+```
+
+### 2. Install headless-chart and Flitter
+
+headless-chart is built on Flitter, so you'll need both:
+
+```bash
+npm install @meursyphus/flitter @meursyphus/headless-chart
+```
+
+This gives you access to Flitter's widget system and the headless-chart components like BarChart.
+
+## Running Flitter in a Pure Vite Environment
+
+To run Flitter without any UI framework (just plain Vite + vanilla JS/TS), you can:
+
+Import and initialize Flitter's AppRunner with an SVG or Canvas element in your main.js:
+
+```js
+import { AppRunner, Container, Text } from '@meursyphus/flitter';
+
+const svgElement = document.getElementById('root'); // An <svg> element in your index.html
+const runner = new AppRunner({ view: svgElement });
+
+const widget = Container({
+  width: 300,
+  height: 200,
+  color: "lightblue",
+  child: Text("Flitter + Vite is running!")
+});
+
+runner.runApp(widget);
+```
+
+This approach does not require React or any additional frameworks.
+
+## Integrating Flitter-React
+
+For a more React-friendly approach, install flitter-react:
+
+```bash
+npm install @meursyphus/flitter-react
+```
+
+Then you can wrap your Flitter widgets in React components without manually handling refs or lifecycle events:
+
+```jsx
+import ReactWidget from "@meursyphus/flitter-react";
+import { Container, Text } from "@meursyphus/flitter";
+
+export default function App() {
+  const widget = Container({
+    width: 300,
+    height: 200,
+    color: "lightblue",
+    child: Text("Hello from Flitter in React!")
+  });
+
+  return (
+    <ReactWidget 
+      width="100%" 
+      height="300px" 
+      widget={widget} 
+      renderer="svg" 
+    />
+  );
+}
+```
+
+## Next Steps
+
+With headless-chart and Flitter installed, you're ready to create and customize charts. Next, we'll look at how to use Flitter-React more deeply and how to utilize headless-chart's customization features for building complex bar charts.

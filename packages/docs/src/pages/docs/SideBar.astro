@@ -1,0 +1,93 @@
+---
+import { getCollection } from "astro:content";
+import { normalizePath } from "./utils";
+
+function resolveSlug(slug: string) {
+  const segments = slug.split("/");
+  const cleanedSegments = segments.map((segment) =>
+    segment.replace(/^\d+\.?/, ""),
+  );
+  return cleanedSegments.join("/");
+}
+
+const _docsEntries = await getCollection("docs");
+const docsEntries = _docsEntries
+.sort((a, b) => a.slug.localeCompare(b.slug))
+.map((entry) => ({
+  ...entry,
+  slug: resolveSlug(entry.slug),
+}));
+
+
+
+const url = new URL(Astro.request.url);
+const pathSegments = url.pathname.split("/").filter(Boolean);
+const lang = pathSegments[1];
+
+
+// 현재 언어에 맞는 문서만 필터링
+const filteredDocs = docsEntries.filter((entry) =>
+  entry.slug.startsWith(lang + "/"),
+)
+
+// navigation 정보로 표현할 객체 만들기
+const navigation = filteredDocs.reduce(
+  (acc, entry, i) => {
+    const { nav_group, nav_order, title, nav_title } = entry.data;
+
+    // 해당 navGroup이 이미 존재하는지 확인
+    let group = acc.find((g) => g.name === nav_group);
+    if (!group) {
+      // 존재하지 않으면 새로운 그룹 생성
+      group = { name: nav_group, items: [] };
+      acc.push(group);
+    }
+
+    // 그룹에 문서 추가
+    group.items.push({
+      url: `/docs/${entry.slug}`,
+      title: nav_title ?? title,
+    });
+
+    return acc;
+  },
+  [] as {
+    name: string;
+    items: { url: string; title: string }[];
+  }[],
+);
+
+const normalizedPathname = normalizePath(url.pathname);
+---
+
+<nav
+  class="inline-flex w-80 shrink-0 flex-col items-end justify-start gap-6 px-8 pt-[20px]"
+>
+  {
+    navigation.map((group) => (
+      <div class="flex flex-col items-start justify-start self-stretch">
+        <div class="inline-flex items-start justify-start gap-2.5 self-stretch">
+          <div class="text-xl font-bold text-gray-700">{group.name}</div>
+        </div>
+        {group.items.map((item) => (
+          <div class="mt-1 inline-flex items-start justify-start gap-2 self-stretch px-4">
+            <a
+              href={item.url}
+              class={`${normalizePath(item.url) === normalizedPathname ? "font-semibold text-purple-500" : "text-gray-600"} text-lg hover:text-purple-500`}
+            >
+              {item.title}
+            </a>
+          </div>
+        ))}
+      </div>
+    ))
+  }
+</nav>
+
+<style>
+  nav {
+    height: 100%;
+    overflow-y: auto;
+    padding-bottom: 16px;
+  }
+</style>

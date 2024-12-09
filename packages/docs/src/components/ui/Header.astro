@@ -1,0 +1,125 @@
+---
+const url = new URL(Astro.request.url);
+const pathname = url.pathname; 
+
+let current: "docs" | "charts" | "i18n" | "none" = pathname.startsWith("/docs")
+  ? "docs"
+  : pathname.startsWith("/charts")
+    ? "charts"
+    : pathname.startsWith("/i18n")
+      ? "i18n"
+      : "none";
+---
+
+<header class="header-container glass">
+  <div class="header-inner">
+    <a href="/" class="logo-area">
+      <img class="logo-img scale-150" src="/logo.png" alt="logo" />
+      <span class="logo-text">Headless Chart</span>
+    </a>
+
+    <nav class="nav">
+      <a
+        class={`nav-link ${current === "docs" ? "active" : ""}`}
+        href="/docs/getting-started/introduction"
+      >docs</a>
+      <a
+        class={`nav-link ${current === "charts" ? "active" : ""}`}
+        href="/charts"
+      >charts</a>
+      <a
+        class={`nav-link ${current === "i18n" ? "active" : ""}`}
+        href="/i18n"
+      >i18n</a>
+    </nav>
+
+    <div class="external-links">
+      <a href="https://github.com/meursyphus/headless-chart">
+        <img class="icon" src="/github-mark.png" alt="GitHub" />
+      </a>
+      <a href="https://discord.gg/kUZp4SaHzF">
+        <img class="icon" src="/discord.png" alt="Discord" />
+      </a>
+    </div>
+  </div>
+</header>
+
+<style>
+  .header-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(229, 231, 235, 0.2);
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1280px;
+    margin: 0 auto;
+    height: 100%;
+    padding: 0 1rem;
+  }
+
+  .logo-area {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    gap: 0.5rem;
+    text-decoration: none;
+  }
+
+  .logo-img {
+    width: 32px;
+    height: 32px;
+  }
+
+  .logo-text {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1a1a1a;
+  }
+
+  .nav {
+    display: flex;
+    gap: 2rem;
+  }
+
+  .nav-link {
+    color: #666666;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: color 0.2s;
+  }
+
+  .nav-link:hover {
+    color: #1a1a1a;
+  }
+
+  .nav-link.active {
+    color: #1a1a1a;
+  }
+
+  .external-links {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: contain;
+    transition: transform 0.2s;
+  }
+
+  .icon:hover {
+    transform: scale(1.1);
+  }
+</style>

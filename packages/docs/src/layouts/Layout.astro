@@ -1,62 +1,123 @@
 ---
+import Header from "../components/ui/Header.astro";
 interface Props {
-  title: string;
+  title?: string;
+  description?: string;
+  image?: string;
 }
 
-const { title } = Astro.props;
+const {
+  image = "/og.png",
+  title = "Headless Charts - 😫 Tired of Chart Limitations? 🎯",
+  description = "✨ Copy, Paste, Done! 🎨 Ultimate Freedom in Chart Customization 🚀 Zero Restrictions",
+} = Astro.props;
+
+const BASE_ORIGIN = Astro.url.origin;
+const fullCanonicalUrl = `${BASE_ORIGIN}${Astro.url.pathname}`;
 ---
 
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="description" content="Astro description" />
-    <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="generator" content={Astro.generator} />
-    <title>{title}</title>
-  </head>
-  <body>
-    <slot />
-  </body>
-</html>
-<style is:global>
-  :root {
-    --accent: 136, 58, 234;
-    --accent-light: 224, 204, 250;
-    --accent-dark: 49, 10, 101;
-    --accent-gradient: linear-gradient(
-      45deg,
-      rgb(var(--accent)),
-      rgb(var(--accent-light)) 30%,
-      white 60%
-    );
-  }
-  html {
-    font-family: system-ui, sans-serif;
-    background-size: 224px;
-  }
-  * {
-    scrollbar-width: thin; /* Firefox */
-    scrollbar-color: rgba(128, 128, 128, 0.8) transparent; /* Firefox */
-  }
-  /* 스크롤바 스타일 추가 */
-  ::-webkit-scrollbar {
-    width: 5px; /* 스크롤바의 너비 */
-    height: 5px; /* 스크롤바의 높이 */
-  }
-  ::-webkit-scrollbar-track {
-    background: transparent; /* 스크롤 트랙 배경 투명 */
-  }
-  ::-webkit-scrollbar-thumb {
-    background: rgba(128, 128, 128, 0.5); /* 스크롤바 썸의 배경색 */
-    border-radius: 10px; /* 스크롤바 썸의 모서리 둥글게 */
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: rgba(128, 128, 128, 1); /* 스크롤바 썸의 배경색 (호버 시) */
-  }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={fullCanonicalUrl} />
+  <link rel="icon" type="image/svg+xml" href="/favicon.png" />
+  
+  <!-- SEO Meta -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={fullCanonicalUrl} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={new URL(image, BASE_ORIGIN)} />
 
-  .astro-code {
-    padding: 16px;
-  }
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content={fullCanonicalUrl} />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={new URL(image, BASE_ORIGIN)} />
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+</head>
+<body>
+  <Header />
+
+  <main class="layout">
+    <slot />
+  </main>
+</body>
+</html>
+
+<style is:global>
+:root {
+  --header: 64px; /* 헤더 높이 */
+  --px: 64px; /* 좌우 패딩 */
+}
+
+html, body {
+  margin:0; padding:0;
+  font-family: 'Inter', sans-serif;
+  color: #333;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body {
+  background-color: #fff;
+  background-image: 
+    linear-gradient(to right top, #e0e0e0 0%, transparent 50%),
+    linear-gradient(to left bottom, #d8d8d8 0%, transparent 50%),
+    linear-gradient(#e5e5e5 1px, transparent 1px),
+    linear-gradient(90deg, #e5e5e5 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 20px 20px, 20px 20px;
+  background-position: 0 0, 0 0, 0 0, 0 0;
+}
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  max-width: 1920px;
+  margin: 0 auto;
+  min-height: 100vh;
+  padding-top: var(--header);
+
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  border: 2px solid transparent;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+.glass {
+  background:
+    linear-gradient(to bottom right, rgba(255,255,255,0.5), rgba(255,255,255,0.2)), 
+    linear-gradient(to right top, #e0e0e0 0%, transparent 50%),
+    linear-gradient(to left bottom, #d8d8d8 0%, transparent 50%),
+    linear-gradient(#e5e5e5 1px, transparent 1px),
+    linear-gradient(90deg, #e5e5e5 1px, transparent 1px);
+  
+  background-blend-mode: lighten, normal, normal, normal, normal;
+  background-size: cover, 100% 100%, 100% 100%, 20px 20px, 20px 20px;
+  background-position: center, 0 0, 0 0, 0 0, 0 0;
+
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  border-radius: 4px;
+}
 </style>

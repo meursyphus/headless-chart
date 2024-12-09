@@ -4,9 +4,12 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm run dev --workspace=docs",
     "dev": "npm run dev --workspace=docs",
-    "build": "npm run build --workspace=@meursyphus/headless-chart"
+    "start": "npm run dev",
+    "docs:start": "npm run dev",
+    "build": "npm run build --workspace=@meursyphus/headless-chart",
+    "lunaria:build": "lunaria build && cp -r dist/lunaria/index.html packages/docs/public/lunaria.html",
+    "lunaria:preview": "lunaria preview"
   },
   "author": "meursyphus",
   "license": "ISC",
@@ -14,7 +17,12 @@
     "packages/*"
   ],
   "devDependencies": {
-    "@meursyphus/flitter": "^2.0.0-alpha.2",
+    "@meursyphus/flitter": "^2.0.0",
+    "@meursyphus/flitter-react": "^0.0.8",
     "@meursyphus/flitter-svelte": "^2.0.0-alpha.1"
+  },
+  "dependencies": {
+    "@lunariajs/core": "^0.1.1",
+    "vite-plugin-dts": "^4.2.4"
   }
 }

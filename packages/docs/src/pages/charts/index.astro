@@ -1,0 +1,221 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+const title = "Chart Examples - Headless Charts";
+const description = "Various chart examples using Headless Charts";
+
+const chartGroups = [
+  {
+    type: "Bar Charts",
+    charts: [
+      {
+        title: "Chart.js Style Bar Chart",
+        description: "Headless chart implementation inspired by Chart.js styling",
+        link: "/charts/bar/chartjs",
+        image: "/bar-chart/chartjs.png"
+      },
+      {
+        title: "Nivo Style Bar Chart",
+        description: "Headless chart implementation inspired by Nivo styling",
+        link: "/charts/bar/nivo",
+        image: "/bar-chart/nivo.png"
+      },
+      {
+        title: "Highcharts Style Bar Chart",
+        description: "Headless chart implementation inspired by Highcharts styling",
+        link: "/charts/bar/highchart",
+        image: "/bar-chart/highchart.png"
+      },
+      {
+        title: "Recharts Style Bar Chart",
+        description: "Headless chart implementation inspired by Recharts styling",
+        link: "/charts/bar/rechart",
+        image: "/bar-chart/rechart.png"
+      }
+    ]
+  },
+  {
+    type: "Line Charts",
+    description: "Coming Soon",
+    charts: []
+  },
+  {
+    type: "Pie Charts",
+    description: "Coming Soon",
+    charts: []
+  },
+  {
+    type: "Area Charts",
+    description: "Coming Soon",
+    charts: []
+  },
+  {
+    type: "Scatter Charts",
+    description: "Coming Soon",
+    charts: []
+  }
+];
+---
+
+<Layout title={title} description={description}>
+  <div class="charts-container">
+    <section class="header">
+      <h1>Chart Gallery</h1>
+      <p class="contribute-message">
+        🎨 Got a cool chart design? Show off your creativity!<br/>
+        Join our growing gallery of chart artworks at <a href="https://github.com/meursyphus/headless-chart" class="github-link">
+          <span class="github-icon">⭐</span> meursyphus/headless-chart
+        </a>
+      </p>
+    </section>
+    {
+      chartGroups.map(group => (
+        <section class="chart-group">
+          <h2 class="group-title">{group.type}</h2>
+          {group.description && <p class="group-description">{group.description}</p>}
+          <div class="charts-grid">
+            {
+              group.charts.map(chart => (
+                <a href={chart.link} class="chart-card glass">
+                  <div class="chart-image">
+                    <img src={chart.image} alt={chart.title} />
+                  </div>
+                  <div class="chart-info">
+                    <h3>{chart.title}</h3>
+                    <p>{chart.description}</p>
+                  </div>
+                </a>
+              ))
+            }
+          </div>
+        </section>
+      ))
+    }
+  </div>
+</Layout>
+
+<style>
+  .charts-container {
+    padding: 2rem var(--px);
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    color: #333;
+  }
+
+  .chart-group {
+    margin-bottom: 4rem;
+  }
+
+  .group-title {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #333;
+  }
+
+  .group-description {
+    font-size: 1.25rem;
+    color: #666;
+    margin-bottom: 1.5rem;
+  }
+
+  .charts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+
+  .chart-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .chart-image {
+    width: 100%;
+    aspect-ratio: 1.2;
+    position: relative;
+    background: #f8f9fa;
+  }
+
+  .chart-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 1rem;
+  }
+
+  .chart-info {
+    padding: 1.5rem;
+  }
+
+  .chart-info h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+  }
+
+  .chart-info p {
+    margin: 0;
+    color: #666;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  .chart-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .contribute-message {
+    font-size: 1.1rem;
+    color: #666;
+    margin-top: 1rem;
+  }
+
+  .github-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #333;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    background: #f0f0f0;
+    transition: all 0.2s ease;
+    margin-top: 0.5rem;
+  }
+
+  .github-link:hover {
+    background: #e0e0e0;
+    transform: translateY(-2px);
+  }
+
+  .github-icon {
+    font-size: 1.2rem;
+  }
+
+  @media (max-width: 768px) {
+    .charts-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .group-title {
+      font-size: 1.75rem;
+    }
+  }
+</style>

@@ -1,0 +1,106 @@
+---
+nav_group: "Getting Started"
+nav_order: 3
+title: "Using headless-chart with flitter-react"
+description: "How to integrate headless-chart with React using flitter-react"
+---
+
+# Using headless-chart with flitter-react
+
+Now that you've got headless-chart and Flitter set up, let's take advantage of `@meursyphus/flitter-react` for a seamless integration with React. This approach simplifies the rendering and lifecycle management of charts.
+
+## Basic Usage
+
+`headless-chart` exports various chart constructors like `BarChart`. With Flitter and flitter-react, you can render these directly in React:
+
+```jsx
+import ReactWidget from "@meursyphus/flitter-react";
+import { BarChart } from "@meursyphus/headless-chart";
+
+export default function App() {
+  const chart = BarChart({
+    data: {
+      labels: ["January", "February", "March"],
+      datasets: [
+        { legend: "Sales", values: [150, 200, 170] }
+      ],
+      title: "Monthly Sales"
+    }
+  });
+
+  return (
+    <div>
+      <h1>My Headless Bar Chart</h1>
+      <ReactWidget 
+        width="600px" 
+        height="400px" 
+        widget={chart} 
+        renderer="svg" 
+      />
+    </div>
+  );
+}
+```
+
+## Customizing Your Chart
+
+One of the core strengths of headless-chart is its custom configuration through BarChartCustom. You can override default behaviors, axis styles, legends, and more by passing a custom object when creating your chart:
+
+```jsx
+import ReactWidget from "@meursyphus/flitter-react";
+import { BarChart, type BarChartCustom } from "@meursyphus/headless-chart";
+import { Text, Container, EdgeInsets, BoxDecoration } from "@meursyphus/flitter";
+
+const myCustom: Partial<BarChartCustom> = {
+  bar: ({ value, label, legend }, config) => {
+    return Container({
+      width: 20,
+      height: value * 2,
+      decoration: new BoxDecoration({ color: legend === "Sales" ? "blue" : "gray" }),
+      child: Text(`${value}`, { style: { fill: "white" } })
+    });
+  },
+  title: ({ name }, config) => {
+    return Text(name, { style: { fontSize: 18, fontWeight: "bold" } });
+  },
+  // ...you can customize more components here
+};
+
+export default function App() {
+  const chart = BarChart({
+    data: {
+      title: "Customized Sales Chart",
+      labels: ["Jan", "Feb", "Mar"],
+      datasets: [
+        { legend: "Sales", values: [150, 200, 170] }
+      ]
+    },
+    custom: myCustom
+  });
+
+  return (
+    <div>
+      <h1>Customized Headless Bar Chart</h1>
+      <ReactWidget 
+        width="600px" 
+        height="400px" 
+        widget={chart} 
+        renderer="svg" 
+      />
+    </div>
+  );
+}
+```
+
+## Tips
+
+- **Leverage Flitter Widgets:** Remember that every part of your chart is a Flitter widget. You can nest, style, and compose these widgets for complete control.
+- **Automatic Layout:** Flitter handles layout so you can focus on design.
+- **SVG/Canvas Rendering:** Switch renderer prop between "svg" and "canvas" based on your needs.
+- **Interactive & Animated:** Use Flitter's built-in capabilities for animation or interaction on chart elements.
+
+## Next Steps
+
+Now you know how to use headless-chart with React, customize components, and take advantage of Flitter's features. Explore more advanced chart configurations, add multiple datasets, implement tooltips, or experiment with horizontal bar charts by adjusting the direction property.
+
+The possibilities are endless, and you have full control over the visual experience of your charts!

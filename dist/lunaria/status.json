@@ -1,0 +1,389 @@
+[
+  {
+    "sharedPath": "packages/docs/src/content/docs/01.getting-started/01.introduction.mdx",
+    "sourceFile": {
+      "lang": "en",
+      "sharedPath": "packages/docs/src/content/docs/01.getting-started/01.introduction.mdx",
+      "path": "packages/docs/src/content/docs/en/01.getting-started/01.introduction.mdx",
+      "isLocalizable": true,
+      "git": {
+        "lastChange": "2024-12-09T05:57:25.000Z",
+        "lastCommitMessage": "good",
+        "lastCommitHash": "220868850f154e867e91a9e573cab875eac00fc0",
+        "lastMajorChange": "2024-12-09T05:57:25.000Z",
+        "lastMajorCommitMessage": "good",
+        "lastMajorCommitHash": "220868850f154e867e91a9e573cab875eac00fc0"
+      },
+      "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/blob/main/packages/docs/src/content/docs/en/01.getting-started/01.introduction.mdx",
+      "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/01.introduction.mdx",
+      "pattern": "packages/docs/src/content/docs/@lang/@path",
+      "meta": {
+        "type": "universal"
+      }
+    },
+    "localizations": {
+      "en": {
+        "lang": "en",
+        "sharedPath": "packages/docs/src/content/docs/01.getting-started/01.introduction.mdx",
+        "path": "packages/docs/src/content/docs/en/01.getting-started/01.introduction.mdx",
+        "isLocalizable": true,
+        "git": {
+          "lastChange": "2024-12-09T05:57:25.000Z",
+          "lastCommitMessage": "good",
+          "lastCommitHash": "220868850f154e867e91a9e573cab875eac00fc0",
+          "lastMajorChange": "2024-12-09T05:57:25.000Z",
+          "lastMajorCommitMessage": "good",
+          "lastMajorCommitHash": "220868850f154e867e91a9e573cab875eac00fc0"
+        },
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/blob/main/packages/docs/src/content/docs/en/01.getting-started/01.introduction.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/01.introduction.mdx?since=2024-12-09T05:57:25.000Z",
+        "pattern": "packages/docs/src/content/docs/@lang/@path",
+        "meta": {
+          "type": "universal"
+        },
+        "isMissing": false,
+        "isOutdated": false
+      },
+      "ko": {
+        "lang": "ko",
+        "sharedPath": "packages/docs/src/content/docs/01.getting-started/01.introduction.mdx",
+        "path": "packages/docs/src/content/docs/ko/01.getting-started/01.introduction.mdx",
+        "isLocalizable": true,
+        "git": {
+          "lastChange": "2024-12-09T05:57:25.000Z",
+          "lastCommitMessage": "good",
+          "lastCommitHash": "220868850f154e867e91a9e573cab875eac00fc0",
+          "lastMajorChange": "2024-12-09T05:57:25.000Z",
+          "lastMajorCommitMessage": "good",
+          "lastMajorCommitHash": "220868850f154e867e91a9e573cab875eac00fc0"
+        },
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/blob/main/packages/docs/src/content/docs/ko/01.getting-started/01.introduction.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/01.introduction.mdx?since=2024-12-09T05:57:25.000Z",
+        "pattern": "packages/docs/src/content/docs/@lang/@path",
+        "meta": {
+          "type": "universal"
+        },
+        "isMissing": false,
+        "isOutdated": false
+      },
+      "zh-cn": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/zh-cn/01.getting-started/01.introduction.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/01.introduction.mdx"
+      },
+      "zh-tw": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/zh-tw/01.getting-started/01.introduction.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/01.introduction.mdx"
+      },
+      "ja": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/ja/01.getting-started/01.introduction.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/01.introduction.mdx"
+      },
+      "ar": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/ar/01.getting-started/01.introduction.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/01.introduction.mdx"
+      },
+      "de": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/de/01.getting-started/01.introduction.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/01.introduction.mdx"
+      },
+      "es": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/es/01.getting-started/01.introduction.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/01.introduction.mdx"
+      },
+      "fr": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/fr/01.getting-started/01.introduction.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/01.introduction.mdx"
+      },
+      "hi": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/hi/01.getting-started/01.introduction.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/01.introduction.mdx"
+      },
+      "it": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/it/01.getting-started/01.introduction.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/01.introduction.mdx"
+      },
+      "pl": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/pl/01.getting-started/01.introduction.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/01.introduction.mdx"
+      },
+      "pt-br": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/pt-br/01.getting-started/01.introduction.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/01.introduction.mdx"
+      },
+      "ru": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/ru/01.getting-started/01.introduction.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/01.introduction.mdx"
+      }
+    }
+  },
+  {
+    "sharedPath": "packages/docs/src/content/docs/01.getting-started/02.installation.mdx",
+    "sourceFile": {
+      "lang": "en",
+      "sharedPath": "packages/docs/src/content/docs/01.getting-started/02.installation.mdx",
+      "path": "packages/docs/src/content/docs/en/01.getting-started/02.installation.mdx",
+      "isLocalizable": true,
+      "git": {
+        "lastChange": "2024-12-09T05:57:25.000Z",
+        "lastCommitMessage": "good",
+        "lastCommitHash": "220868850f154e867e91a9e573cab875eac00fc0",
+        "lastMajorChange": "2024-12-09T05:57:25.000Z",
+        "lastMajorCommitMessage": "good",
+        "lastMajorCommitHash": "220868850f154e867e91a9e573cab875eac00fc0"
+      },
+      "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/blob/main/packages/docs/src/content/docs/en/01.getting-started/02.installation.mdx",
+      "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/02.installation.mdx",
+      "pattern": "packages/docs/src/content/docs/@lang/@path",
+      "meta": {
+        "type": "universal"
+      }
+    },
+    "localizations": {
+      "en": {
+        "lang": "en",
+        "sharedPath": "packages/docs/src/content/docs/01.getting-started/02.installation.mdx",
+        "path": "packages/docs/src/content/docs/en/01.getting-started/02.installation.mdx",
+        "isLocalizable": true,
+        "git": {
+          "lastChange": "2024-12-09T05:57:25.000Z",
+          "lastCommitMessage": "good",
+          "lastCommitHash": "220868850f154e867e91a9e573cab875eac00fc0",
+          "lastMajorChange": "2024-12-09T05:57:25.000Z",
+          "lastMajorCommitMessage": "good",
+          "lastMajorCommitHash": "220868850f154e867e91a9e573cab875eac00fc0"
+        },
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/blob/main/packages/docs/src/content/docs/en/01.getting-started/02.installation.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/02.installation.mdx?since=2024-12-09T05:57:25.000Z",
+        "pattern": "packages/docs/src/content/docs/@lang/@path",
+        "meta": {
+          "type": "universal"
+        },
+        "isMissing": false,
+        "isOutdated": false
+      },
+      "ko": {
+        "lang": "ko",
+        "sharedPath": "packages/docs/src/content/docs/01.getting-started/02.installation.mdx",
+        "path": "packages/docs/src/content/docs/ko/01.getting-started/02.installation.mdx",
+        "isLocalizable": true,
+        "git": {
+          "lastChange": "2024-12-09T05:57:25.000Z",
+          "lastCommitMessage": "good",
+          "lastCommitHash": "220868850f154e867e91a9e573cab875eac00fc0",
+          "lastMajorChange": "2024-12-09T05:57:25.000Z",
+          "lastMajorCommitMessage": "good",
+          "lastMajorCommitHash": "220868850f154e867e91a9e573cab875eac00fc0"
+        },
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/blob/main/packages/docs/src/content/docs/ko/01.getting-started/02.installation.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/02.installation.mdx?since=2024-12-09T05:57:25.000Z",
+        "pattern": "packages/docs/src/content/docs/@lang/@path",
+        "meta": {
+          "type": "universal"
+        },
+        "isMissing": false,
+        "isOutdated": false
+      },
+      "zh-cn": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/zh-cn/01.getting-started/02.installation.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/02.installation.mdx"
+      },
+      "zh-tw": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/zh-tw/01.getting-started/02.installation.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/02.installation.mdx"
+      },
+      "ja": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/ja/01.getting-started/02.installation.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/02.installation.mdx"
+      },
+      "ar": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/ar/01.getting-started/02.installation.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/02.installation.mdx"
+      },
+      "de": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/de/01.getting-started/02.installation.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/02.installation.mdx"
+      },
+      "es": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/es/01.getting-started/02.installation.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/02.installation.mdx"
+      },
+      "fr": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/fr/01.getting-started/02.installation.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/02.installation.mdx"
+      },
+      "hi": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/hi/01.getting-started/02.installation.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/02.installation.mdx"
+      },
+      "it": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/it/01.getting-started/02.installation.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/02.installation.mdx"
+      },
+      "pl": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/pl/01.getting-started/02.installation.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/02.installation.mdx"
+      },
+      "pt-br": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/pt-br/01.getting-started/02.installation.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/02.installation.mdx"
+      },
+      "ru": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/ru/01.getting-started/02.installation.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/02.installation.mdx"
+      }
+    }
+  },
+  {
+    "sharedPath": "packages/docs/src/content/docs/01.getting-started/03.flitter-react.mdx",
+    "sourceFile": {
+      "lang": "en",
+      "sharedPath": "packages/docs/src/content/docs/01.getting-started/03.flitter-react.mdx",
+      "path": "packages/docs/src/content/docs/en/01.getting-started/03.flitter-react.mdx",
+      "isLocalizable": true,
+      "git": {
+        "lastChange": "2024-12-09T05:57:25.000Z",
+        "lastCommitMessage": "good",
+        "lastCommitHash": "220868850f154e867e91a9e573cab875eac00fc0",
+        "lastMajorChange": "2024-12-09T05:57:25.000Z",
+        "lastMajorCommitMessage": "good",
+        "lastMajorCommitHash": "220868850f154e867e91a9e573cab875eac00fc0"
+      },
+      "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/blob/main/packages/docs/src/content/docs/en/01.getting-started/03.flitter-react.mdx",
+      "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/03.flitter-react.mdx",
+      "pattern": "packages/docs/src/content/docs/@lang/@path",
+      "meta": {
+        "type": "universal"
+      }
+    },
+    "localizations": {
+      "en": {
+        "lang": "en",
+        "sharedPath": "packages/docs/src/content/docs/01.getting-started/03.flitter-react.mdx",
+        "path": "packages/docs/src/content/docs/en/01.getting-started/03.flitter-react.mdx",
+        "isLocalizable": true,
+        "git": {
+          "lastChange": "2024-12-09T05:57:25.000Z",
+          "lastCommitMessage": "good",
+          "lastCommitHash": "220868850f154e867e91a9e573cab875eac00fc0",
+          "lastMajorChange": "2024-12-09T05:57:25.000Z",
+          "lastMajorCommitMessage": "good",
+          "lastMajorCommitHash": "220868850f154e867e91a9e573cab875eac00fc0"
+        },
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/blob/main/packages/docs/src/content/docs/en/01.getting-started/03.flitter-react.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/03.flitter-react.mdx?since=2024-12-09T05:57:25.000Z",
+        "pattern": "packages/docs/src/content/docs/@lang/@path",
+        "meta": {
+          "type": "universal"
+        },
+        "isMissing": false,
+        "isOutdated": false
+      },
+      "ko": {
+        "lang": "ko",
+        "sharedPath": "packages/docs/src/content/docs/01.getting-started/03.flitter-react.mdx",
+        "path": "packages/docs/src/content/docs/ko/01.getting-started/03.flitter-react.mdx",
+        "isLocalizable": true,
+        "git": {
+          "lastChange": "2024-12-09T05:57:25.000Z",
+          "lastCommitMessage": "good",
+          "lastCommitHash": "220868850f154e867e91a9e573cab875eac00fc0",
+          "lastMajorChange": "2024-12-09T05:57:25.000Z",
+          "lastMajorCommitMessage": "good",
+          "lastMajorCommitHash": "220868850f154e867e91a9e573cab875eac00fc0"
+        },
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/blob/main/packages/docs/src/content/docs/ko/01.getting-started/03.flitter-react.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/03.flitter-react.mdx?since=2024-12-09T05:57:25.000Z",
+        "pattern": "packages/docs/src/content/docs/@lang/@path",
+        "meta": {
+          "type": "universal"
+        },
+        "isMissing": false,
+        "isOutdated": false
+      },
+      "zh-cn": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/zh-cn/01.getting-started/03.flitter-react.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/03.flitter-react.mdx"
+      },
+      "zh-tw": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/zh-tw/01.getting-started/03.flitter-react.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/03.flitter-react.mdx"
+      },
+      "ja": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/ja/01.getting-started/03.flitter-react.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/03.flitter-react.mdx"
+      },
+      "ar": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/ar/01.getting-started/03.flitter-react.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/03.flitter-react.mdx"
+      },
+      "de": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/de/01.getting-started/03.flitter-react.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/03.flitter-react.mdx"
+      },
+      "es": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/es/01.getting-started/03.flitter-react.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/03.flitter-react.mdx"
+      },
+      "fr": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/fr/01.getting-started/03.flitter-react.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/03.flitter-react.mdx"
+      },
+      "hi": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/hi/01.getting-started/03.flitter-react.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/03.flitter-react.mdx"
+      },
+      "it": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/it/01.getting-started/03.flitter-react.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/03.flitter-react.mdx"
+      },
+      "pl": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/pl/01.getting-started/03.flitter-react.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/03.flitter-react.mdx"
+      },
+      "pt-br": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/pt-br/01.getting-started/03.flitter-react.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/03.flitter-react.mdx"
+      },
+      "ru": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/ru/01.getting-started/03.flitter-react.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/03.flitter-react.mdx"
+      }
+    }
+  }
+]

@@ -1,0 +1,139 @@
+---
+import SandPack from "./SandPack.tsx";
+import Layout from "../../layouts/ChartsLayout.astro";
+import { getCollection } from "astro:content";
+import TableOfContents from "./TableOfContents.astro";
+
+export const prerender = true;
+
+export const getStaticPaths = async () => {
+  const charts = await getCollection("charts");
+
+  function resolveSlug(slug: string) {
+    const segments = slug.split("/");
+    const cleanedSegments = segments.map((segment) =>
+      segment.replace(/^\d+\.?/, ""),
+    );
+    return cleanedSegments.join("/");
+  }
+
+
+  const result = charts
+    .map((entry) => ({
+      ...entry,
+      slug: resolveSlug(entry.slug),
+    }))
+    .map((entry, i, arr) => ({
+      params: {
+        slug: entry.slug,
+      },
+      props: {
+        prev: arr[i - 1],
+        next: arr[i + 1],
+        entry,
+      },
+    }));
+
+    return result;
+};
+
+const { entry } = Astro.props;
+
+const { Content } = await entry.render();
+---
+
+<Layout
+  title={`${entry.data.nav_group}/${entry.data.title} - Flitter`}
+  description={entry.data.description}
+  image={entry.data.image}
+>
+  <div
+    class="grid  relative grid-cols-[220px_minmax(0,1fr)] min-h-[calc(100vh-var(--header))] p-8"
+    id="mainContainer"
+  >
+    <aside class="glass sticky top-0 h-full border-r border-gray-200/30 overflow-y-scroll overflow-x-hidden">
+      <div
+        class="absolute -right-1 top-0 h-full w-2 cursor-col-resize hover:bg-purple-500/20"
+        id="tocResizer"
+      >
+      </div>
+      <TableOfContents currentSlug={entry.slug} />
+    </aside>
+
+    <div class="flex flex-col w-full ml-2 min-h-full pb-4">
+      <div class="prose prose-modern max-w-none p-8">
+        <Content />
+      </div>
+
+      <div class="flex-1 border-t border-gray-200/30 px-8">
+        <div id="originalSandpack" class="h-full">
+          <SandPack files={entry.data.files} client:only="react" />
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style is:global>
+  .sp-preview-container html,
+  .sp-preview-container body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+</style>
+
+<script>
+  const resizer = document.getElementById("tocResizer");
+  const sidebar = resizer?.parentElement;
+  const container = sidebar?.parentElement;
+
+  let isResizing = false;
+  let startX: number;
+  let startWidth: number;
+
+  resizer?.addEventListener("mousedown", initResize);
+
+  function initResize(e: MouseEvent) {
+    isResizing = true;
+    startX = e.clientX;
+    startWidth = sidebar?.offsetWidth || 0;
+
+    document.addEventListener("mousemove", resize);
+    document.addEventListener("mouseup", stopResize);
+    document.body.style.userSelect = "none";
+    document.body.style.cursor = "col-resize";
+  }
+
+  function resize(e: MouseEvent) {
+    if (!isResizing) return;
+
+    const diff = e.clientX - startX;
+    const newWidth = startWidth + diff;
+
+    if (newWidth >= 160 && newWidth <= 400) {
+      container?.style.setProperty(
+        "grid-template-columns",
+        `${newWidth}px minmax(0,1fr)`,
+      );
+    }
+  }
+
+  function stopResize() {
+    isResizing = false;
+    document.removeEventListener("mousemove", resize);
+    document.removeEventListener("mouseup", stopResize);
+    document.body.style.userSelect = "";
+    document.body.style.cursor = "";
+  }
+</script>
+
+<style>
+  #tocResizer {
+    transition: background-color 0.2s;
+    z-index: 10;
+  }
+  #tocResizer:active {
+    background-color: rgb(59 130 246 / 0.2);
+  }
+</style>
