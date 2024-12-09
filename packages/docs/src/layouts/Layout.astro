@@ -83,7 +83,9 @@ body {
   flex-direction: column;
   max-width: 1920px;
   margin: 0 auto;
-  min-height: calc(100vh - var(--header));
+  min-height: 100vh;
+  padding-top: var(--header);
+
 }
 
 ::-webkit-scrollbar {
@@ -115,5 +117,7 @@ body {
 
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+
+  border-radius: 4px;
 }
 </style>
