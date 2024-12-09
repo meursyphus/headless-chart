@@ -1,12 +1,31 @@
 ---
 import Layout from "../layouts/HomeLayout.astro";
 
-// 임시 차트 데이터
 const charts = [
-  { name: "Line Chart", image: "/charts/line.png", link: "/charts/bar/chartjs" },
-  { name: "Bar Chart", image: "/charts/bar.png", link: "/charts/bar" },
-  { name: "Pie Chart", image: "/charts/pie.png", link: "/charts/pie" },
-  { name: "Scatter Chart", image: "/charts/scatter.png", link: "/charts/scatter" },
+  { 
+    name: "Chart.js Style Bar Chart", 
+    description: "Headless chart implementation inspired by Chart.js styling",
+    image: "/bar-chart/chartjs.png", 
+    link: "/charts/bar/chartjs" 
+  },
+  { 
+    name: "Nivo Style Bar Chart", 
+    description: "Headless chart implementation inspired by Nivo styling",
+    image: "/bar-chart/nivo.png", 
+    link: "/charts/bar/nivo" 
+  },
+  { 
+    name: "Highcharts Style Bar Chart", 
+    description: "Headless chart implementation inspired by Highcharts styling",
+    image: "/bar-chart/highchart.png", 
+    link: "/charts/bar/highchart" 
+  },
+  { 
+    name: "Recharts Style Bar Chart", 
+    description: "Headless chart implementation inspired by Recharts styling",
+    image: "/bar-chart/rechart.png", 
+    link: "/charts/bar/rechart" 
+  }
 ];
 ---
 
@@ -23,115 +42,99 @@ const charts = [
   <section class="charts-grid">
     {charts.map(chart => (
       <a class="chart-card" href={chart.link}>
-        <div class="image-placeholder">
-          <!-- 이미지 배경 -->
+        <div class="chart-image">
+          <img src={chart.image} alt={chart.name} />
         </div>
-        <h2>{chart.name}</h2>
+        <div class="chart-info">
+          <h2>{chart.name}</h2>
+          <p>{chart.description}</p>
+        </div>
       </a>
     ))}
   </section>
 </Layout>
 
 <style>
-.hero {
-  text-align: center;
-  padding: 4rem 2rem;
-}
-.hero h1 {
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  font-weight: 700;
-  margin-bottom: 1rem;
-  color: #333;
-  line-height: 1.2;
-}
-.hero p {
-  font-size: clamp(1rem, 3vw, 1.25rem);
-  color: #555;
-  margin: 0 auto;
-  max-width: 800px;
-  line-height: 1.6;
-}
-
-.charts-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 3rem;
-  padding: 3rem;
-  margin-top: 3rem;
-  width: 100%;
-  justify-content: center;
-  align-items: stretch;
-}
-
-@media (min-width: 1024px) {
-  .charts-grid {
-    grid-template-columns: repeat(2, minmax(600px, 1fr));
-    max-width: 90%;
-    margin: 3rem auto;
+  .hero {
+    text-align: center;
+    padding: 4rem 2rem;
   }
-}
-
-.chart-card {
-  display: block;
-  padding: 4rem;
-  width: 100%;
-  text-decoration: none;
-  color: inherit;
-
-  /* 글래시모피즘 베이스 */
-  background:
-    linear-gradient(to bottom right, rgba(255,255,255,0.5), rgba(255,255,255,0.2)), 
-    linear-gradient(to right top, #e0e0e0 0%, transparent 50%),
-    linear-gradient(to left bottom, #d8d8d8 0%, transparent 50%),
-    linear-gradient(#e5e5e5 1px, transparent 1px),
-    linear-gradient(90deg, #e5e5e5 1px, transparent 1px);
   
-  background-blend-mode: lighten, normal, normal, normal, normal;
-  background-size: cover, 100% 100%, 100% 100%, 20px 20px, 20px 20px;
-  background-position: center, 0 0, 0 0, 0 0, 0 0;
+  .hero h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #333;
+    line-height: 1.2;
+  }
+  
+  .hero p {
+    font-size: clamp(1rem, 3vw, 1.25rem);
+    color: #555;
+    margin: 0 auto;
+    max-width: 800px;
+    line-height: 1.6;
+  }
 
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-}
-
-.chart-card:hover {
-  background: 
-    linear-gradient(to bottom right, rgba(255,255,255,0.6), rgba(255,255,255,0.3)), 
-    linear-gradient(to right top, #dddddd 0%, transparent 50%),
-    linear-gradient(to left bottom, #d0d0d0 0%, transparent 50%),
-    linear-gradient(#dedede 1px, transparent 1px),
-    linear-gradient(90deg, #dedede 1px, transparent 1px);
-
-  box-shadow: 0 6px 30px rgba(0,0,0,0.1);
-}
-
-.chart-card .image-placeholder {
-  width: 100%;
-  aspect-ratio: 16/9;
-  background: #f0f0f0;
-  border-radius: 8px;
-  margin-bottom: 1.5rem;
-}
-
-.chart-card h2 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin: 0;
-}
-
-/* Mobile Responsiveness */
-@media (max-width: 768px) {
   .charts-grid {
-    grid-template-columns: 1fr;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .chart-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .chart-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .chart-image {
+    width: 100%;
+    aspect-ratio: 1.2;
+    background: #f8f9fa;
+  }
+
+  .chart-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
     padding: 1rem;
   }
-  
-  .chart-card {
+
+  .chart-info {
     padding: 1.5rem;
   }
-}
+
+  .chart-info h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+  }
+
+  .chart-info p {
+    margin: 0;
+    color: #666;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 768px) {
+    .charts-grid {
+      grid-template-columns: 1fr;
+      padding: 1rem;
+    }
+  }
 </style>

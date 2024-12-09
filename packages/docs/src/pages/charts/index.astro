@@ -9,118 +9,76 @@ const chartGroups = [
     type: "Bar Charts",
     charts: [
       {
-        title: "Basic Bar Chart",
-        description: "Simple vertical bar chart with basic configuration",
-        link: "/docs/charts/bar/basic"
+        title: "Chart.js Style Bar Chart",
+        description: "Headless chart implementation inspired by Chart.js styling",
+        link: "/charts/bar/chartjs",
+        image: "/bar-chart/chartjs.png"
       },
       {
-        title: "Grouped Bar Chart",
-        description: "Multiple data series grouped by category",
-        link: "/docs/charts/bar/grouped"
+        title: "Nivo Style Bar Chart",
+        description: "Headless chart implementation inspired by Nivo styling",
+        link: "/charts/bar/nivo",
+        image: "/bar-chart/nivo.png"
       },
       {
-        title: "Stacked Bar Chart",
-        description: "Stacked bars showing part-to-whole relationships",
-        link: "/docs/charts/bar/stacked"
+        title: "Highcharts Style Bar Chart",
+        description: "Headless chart implementation inspired by Highcharts styling",
+        link: "/charts/bar/highchart",
+        image: "/bar-chart/highchart.png"
       },
       {
-        title: "Horizontal Bar Chart",
-        description: "Horizontal bars for better label readability",
-        link: "/docs/charts/bar/horizontal"
+        title: "Recharts Style Bar Chart",
+        description: "Headless chart implementation inspired by Recharts styling",
+        link: "/charts/bar/rechart",
+        image: "/bar-chart/rechart.png"
       }
     ]
   },
   {
     type: "Line Charts",
-    charts: [
-      {
-        title: "Basic Line Chart",
-        description: "Simple line chart for time series data",
-        link: "/docs/charts/line/basic"
-      },
-      {
-        title: "Multi-line Chart",
-        description: "Multiple lines for comparing trends",
-        link: "/docs/charts/line/multi"
-      },
-      {
-        title: "Stepped Line Chart",
-        description: "Stepped lines for discrete changes",
-        link: "/docs/charts/line/stepped"
-      },
-      {
-        title: "Curved Line Chart",
-        description: "Smooth curved lines with interpolation",
-        link: "/docs/charts/line/curved"
-      }
-    ]
+    description: "Coming Soon",
+    charts: []
+  },
+  {
+    type: "Pie Charts",
+    description: "Coming Soon",
+    charts: []
   },
   {
     type: "Area Charts",
-    charts: [
-      {
-        title: "Basic Area Chart",
-        description: "Simple area chart for showing volumes",
-        link: "/docs/charts/area/basic"
-      },
-      {
-        title: "Stacked Area Chart",
-        description: "Stacked areas for comparing proportions",
-        link: "/docs/charts/area/stacked"
-      },
-      {
-        title: "Stream Graph",
-        description: "Symmetrical stacked area chart",
-        link: "/docs/charts/area/stream"
-      },
-      {
-        title: "Range Area Chart",
-        description: "Area between two series",
-        link: "/docs/charts/area/range"
-      }
-    ]
+    description: "Coming Soon",
+    charts: []
   },
   {
     type: "Scatter Charts",
-    charts: [
-      {
-        title: "Basic Scatter Plot",
-        description: "Simple scatter plot for correlation analysis",
-        link: "/docs/charts/scatter/basic"
-      },
-      {
-        title: "Bubble Chart",
-        description: "Scatter plot with sized points",
-        link: "/docs/charts/scatter/bubble"
-      },
-      {
-        title: "Connected Scatter",
-        description: "Scatter points connected by lines",
-        link: "/docs/charts/scatter/connected"
-      },
-      {
-        title: "Matrix Scatter",
-        description: "Grid of scatter plots for multiple variables",
-        link: "/docs/charts/scatter/matrix"
-      }
-    ]
+    description: "Coming Soon",
+    charts: []
   }
 ];
 ---
 
 <Layout title={title} description={description}>
   <div class="charts-container">
-    <h1>Copy and Paste!!</h1>
+    <section class="header">
+      <h1>Chart Gallery</h1>
+      <p class="contribute-message">
+        🎨 Got a cool chart design? Show off your creativity!<br/>
+        Join our growing gallery of chart artworks at <a href="https://github.com/meursyphus/headless-chart" class="github-link">
+          <span class="github-icon">⭐</span> meursyphus/headless-chart
+        </a>
+      </p>
+    </section>
     {
       chartGroups.map(group => (
         <section class="chart-group">
           <h2 class="group-title">{group.type}</h2>
+          {group.description && <p class="group-description">{group.description}</p>}
           <div class="charts-grid">
             {
               group.charts.map(chart => (
-                <a href={chart.link} class="chart-item glass">
+                <a href={chart.link} class="chart-card glass">
                   <div class="chart-image">
-                    <div class="placeholder"></div>
+                    <img src={chart.image} alt={chart.title} />
                   </div>
                   <div class="chart-info">
                     <h3>{chart.title}</h3>
@@ -159,51 +117,96 @@ const chartGroups = [
     color: #333;
   }
 
+  .group-description {
+    font-size: 1.25rem;
+    color: #666;
+    margin-bottom: 1.5rem;
+  }
+
   .charts-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 2rem;
   }
 
-  .chart-item {
-    padding: 1.5rem;
+  .chart-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
     display: flex;
     flex-direction: column;
-    text-decoration: none;
-    transition: transform 0.2s ease-in-out;
-  }
-
-  .chart-item:hover {
-    transform: translateY(-4px);
   }
 
   .chart-image {
     width: 100%;
-    height: 300px;
-    border-radius: 8px;
-    overflow: hidden;
-    margin-bottom: 1rem;
+    aspect-ratio: 1.2;
+    position: relative;
+    background: #f8f9fa;
   }
 
-  .chart-image .placeholder {
+  .chart-image img {
     width: 100%;
     height: 100%;
-    background-color: #f0f0f0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    object-fit: contain;
+    padding: 1rem;
+  }
+
+  .chart-info {
+    padding: 1.5rem;
   }
 
   .chart-info h3 {
-    font-size: 1.5rem;
-    font-weight: 600;
+    margin: 0;
+    font-size: 1.25rem;
+    color: #333;
     margin-bottom: 0.5rem;
-    color: #444;
   }
 
   .chart-info p {
+    margin: 0;
     color: #666;
+    font-size: 1rem;
     line-height: 1.5;
+  }
+
+  .chart-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .contribute-message {
+    font-size: 1.1rem;
+    color: #666;
+    margin-top: 1rem;
+  }
+
+  .github-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #333;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    background: #f0f0f0;
+    transition: all 0.2s ease;
+    margin-top: 0.5rem;
+  }
+
+  .github-link:hover {
+    background: #e0e0e0;
+    transform: translateY(-2px);
+  }
+
+  .github-icon {
+    font-size: 1.2rem;
   }
 
   @media (max-width: 768px) {
