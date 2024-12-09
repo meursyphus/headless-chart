@@ -1,9 +1,20 @@
 ---
 import { getCollection } from "astro:content";
 
+  function resolveSlug(slug: string) {
+    const segments = slug.split("/");
+    const cleanedSegments = segments.map((segment) =>
+      segment.replace(/^\d+\.?/, ""),
+    );
+    return cleanedSegments.join("/");
+  }
+
 const charts = await getCollection("charts");
 const sortedCharts = charts
   .sort((a, b) => a.slug.localeCompare(b.slug))
+  .map((entry) => ({  ...entry,
+    slug: resolveSlug(entry.slug),
+  }))
   .map((entry) => {
     const segments = entry.slug.split("/");
     return {
@@ -28,6 +39,8 @@ const groupedTutorials = sortedCharts.reduce(
   },
   {} as Record<string, typeof sortedCharts>,
 );
+
+
 ---
 
 <div class="p-3 text-sm">

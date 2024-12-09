@@ -58,26 +58,6 @@ const nextEntry =
       class="glass ml-2 prose prose-modern w-full max-w-full px-8 lg:prose-lg h-fit"
     >
       <Content />
-      <div class="flex justify-between py-4">
-        {
-          prevEntry ? (
-            <a class="glass move mr-auto rounded-lg px-4 py-2 text-gray-600 hover:text-purple-500" href={`/docs/${prevEntry.slug}`}>
-              {prevEntry.data.nav_title ?? prevEntry.data.title}
-            </a>
-          ) : (
-            <div class="glass move disabled mr-auto rounded-lg px-4 py-2 text-gray-400" />
-          )
-        }
-        {
-          nextEntry ? (
-            <a class="glass move ml-auto rounded-lg px-4 py-2 text-gray-600 hover:text-purple-500" href={`/docs/${nextEntry.slug}`}>
-              {nextEntry.data.nav_title ?? nextEntry.data.title}
-            </a>
-          ) : (
-            <div class="glass move disabled ml-auto rounded-lg px-4 py-2 text-gray-400" />
-          )
-        }
-      </div>
     </div>
     <Toc headings={headings} />
   </div>
