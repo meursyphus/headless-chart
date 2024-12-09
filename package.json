@@ -7,6 +7,7 @@
     "dev": "npm run dev --workspace=docs",
     "start": "npm run dev",
     "docs:start": "npm run dev",
+    "docs:build": "npm run build --workspace=docs",
     "build": "npm run build --workspace=@meursyphus/headless-chart",
     "lunaria:build": "lunaria build && cp -r dist/lunaria/index.html packages/docs/public/lunaria.html",
     "lunaria:preview": "lunaria preview"
@@ -23,6 +24,7 @@
   },
   "dependencies": {
     "@lunariajs/core": "^0.1.1",
+    "astro": "^5.0.3",
     "vite-plugin-dts": "^4.2.4"
   }
 }
