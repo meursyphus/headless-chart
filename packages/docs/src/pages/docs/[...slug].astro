@@ -50,10 +50,12 @@ const nextEntry =
   description={entry.data.description}
   image={entry.data.image ?? "/og-docs.png"}
 >
-  <main data-theme="pink" class="relative mx-auto flex">
-    <SideBar />
+  <div  class="relative mx-auto flex p-8">
+    <div class="glass sticky top-0 h-fit">
+      <SideBar />
+    </div>
     <div
-      class="glass ml-2 prose prose-modern w-full max-w-full px-8 py-20 lg:prose-lg"
+      class="glass ml-2 prose prose-modern w-full max-w-full px-8 lg:prose-lg h-fit"
     >
       <Content />
       <div class="flex justify-between py-4">
@@ -78,7 +80,7 @@ const nextEntry =
       </div>
     </div>
     <Toc headings={headings} />
-  </main>
+  </div>
 </Layout>
 
 <style>

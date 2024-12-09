@@ -2,15 +2,32 @@
 import { getCollection } from "astro:content";
 import { getNavOrder, normalizePath } from "./utils";
 
-const docsEntries = await getCollection("docs");
+  function resolveSlug(slug: string) {
+    const segments = slug.split("/");
+    const cleanedSegments = segments.map((segment) =>
+      segment.replace(/^\d+\.?/, ""),
+    );
+    return cleanedSegments.join("/");
+  }
+
+const _docsEntries = await getCollection("docs");
+const docsEntries = _docsEntries
+.sort((a, b) => a.slug.localeCompare(b.slug))
+.map((entry) => ({
+  ...entry,
+  slug: resolveSlug(entry.slug),
+}));
+
+
 const url = new URL(Astro.request.url);
 const pathSegments = url.pathname.split("/").filter(Boolean);
 const lang = pathSegments[1];
 
+
 // 현재 언어에 맞는 문서만 필터링
 const filteredDocs = docsEntries.filter((entry) =>
   entry.slug.startsWith(lang + "/"),
-);
+)
 
 // navigation 정보로 표현할 객체 만들기
 const navigation = filteredDocs.reduce(
@@ -42,9 +59,6 @@ const navigation = filteredDocs.reduce(
   }[],
 );
 
-// 그룹을 navGroupOrder에 따라 정렬
-navigation.sort((a, b) => a.order - b.order);
-
 // 각 그룹 내의 항목들을 navOrder에 따라 정렬
 navigation.forEach((group) => {
   group.items.sort((a, b) => a.order - b.order);
@@ -54,7 +68,7 @@ const normalizedPathname = normalizePath(url.pathname);
 ---
 
 <nav
-  class="glass rounded inline-flex w-80 shrink-0 flex-col items-end justify-start gap-6 px-8 pt-[20px]"
+  class="inline-flex w-80 shrink-0 flex-col items-end justify-start gap-6 px-8 pt-[20px]"
 >
   {
     navigation.map((group) => (
@@ -79,10 +93,7 @@ const normalizedPathname = normalizePath(url.pathname);
 
 <style>
   nav {
-    height: calc(100vh);
-    position: sticky;
-    top: 0;
-    margin: 0;
+    height: 100%;
     overflow-y: auto;
   }
 </style>

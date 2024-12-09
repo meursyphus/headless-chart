@@ -48,10 +48,10 @@ const { Content } = await entry.render();
   image={entry.data.image}
 >
   <div
-    class="grid h-[calc(100vh-var(--header))] grid-cols-[220px_minmax(0,1fr)]"
+    class="grid  relative grid-cols-[220px_minmax(0,1fr)] min-h-[calc(100vh-var(--header))] p-8"
     id="mainContainer"
   >
-    <aside class="glass relative h-full border-r border-gray-200/30 overflow-y-scroll overflow-x-hidden">
+    <aside class="glass sticky top-0 h-full border-r border-gray-200/30 overflow-y-scroll overflow-x-hidden">
       <div
         class="absolute -right-1 top-0 h-full w-2 cursor-col-resize hover:bg-purple-500/20"
         id="tocResizer"
@@ -60,7 +60,7 @@ const { Content } = await entry.render();
       <TableOfContents currentSlug={entry.slug} />
     </aside>
 
-    <div class="flex flex-col w-full">
+    <div class="flex flex-col w-full glass ml-2 min-h-full">
       <div class="prose prose-modern max-w-none p-8">
         <Content />
       </div>
