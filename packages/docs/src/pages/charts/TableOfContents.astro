@@ -54,7 +54,7 @@ const groupedTutorials = sortedCharts.reduce(
           {tutorials.map((tutorial) => (
             <li>
               <a
-                href={`/tutorial/${tutorial.slug}`}
+                href={`/charts/${tutorial.slug}`}
                 class:list={[
                   "block rounded px-2 py-1.5 text-[14px] transition-colors",
                   currentSlug === tutorial.slug

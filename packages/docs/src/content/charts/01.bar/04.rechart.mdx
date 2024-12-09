@@ -1,0 +1,225 @@
+---
+nav_group: "Bar"
+nav_order: 1
+title: "Rechart"
+description: "A headless-chart example inspired by Rechart"
+files:
+  App.js: |
+    import Widget from "@meursyphus/flitter-react";
+    import { BarChart } from "@meursyphus/headless-chart";
+    import {
+      Text,
+      Border,
+      BoxDecoration,
+      Column,
+      Container,
+      EdgeInsets,
+      Row,
+      SizedBox,
+      TextStyle,
+      Padding,
+      MainAxisSize,
+      MainAxisAlignment,
+      Flexible,
+      Stack,
+      Positioned,
+      FractionalTranslation,
+      Offset,
+      CustomPaint,
+    } from "@meursyphus/flitter";
+
+    const colors = [
+      "#0088FE",
+      "#00C49F",
+      "#FFBB28",
+      "#FF8042",
+      "red",
+      "pink",
+      "black",
+    ];
+    const data = {
+      labels: [
+        "Page A",
+        "Page B",
+        "Page C",
+        "Page D",
+        "Page E",
+        "Page F",
+        "Page G",
+      ],
+      datasets: [
+        {
+          legend: "",
+          values: [4000, 3000, 2000, 2780, 1890, 2390, 3490],
+        },
+      ],
+    };
+
+    const Layout = (...[{ plot }]) =>
+      Container({
+        padding: EdgeInsets.only({ left: 30, bottom: 70 }),
+        child: Stack({
+          children: [
+            Positioned({
+              top: 0,
+              right: 0,
+              child: Text("rechart 따라하기", {
+                style: new TextStyle({
+                  fontSize: 14,
+                  color: "#999999",
+                  fontFamily: "Noto Sans JP",
+                }),
+              }),
+            }),
+            Padding({
+              padding: EdgeInsets.only({ top: 20, left: 30 }),
+              child: plot,
+            }),
+          ],
+        }),
+      });
+
+    const XAxisLabel = (...[{ name }]) =>
+      Column({
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container({
+            width: 1,
+            height: 6,
+            color: "black",
+          }),
+          Text(name, {
+            style: new TextStyle({
+              fontFamily: "Noto Sans JP",
+              fontSize: 12,
+              color: "#666666",
+            }),
+          }),
+        ],
+      });
+
+    const YAxisLabel = (...[{ name }]) =>
+      Padding({
+        padding: EdgeInsets.only({ right: 1 }),
+        child: Text(name, {
+          style: new TextStyle({
+            fontFamily: "Noto Sans JP",
+            fontSize: 12,
+            color: "#666666",
+          }),
+        }),
+      });
+
+    const Legend = (...[{ name }]) =>
+      Row({
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container({
+            width: 36,
+            height: 12,
+            decoration: new BoxDecoration({
+              color: "rgba(255, 99, 132, 0.2)",
+              border: Border.all({ color: "rgb(255, 99, 132)" }),
+            }),
+          }),
+          SizedBox({ width: 5 }),
+          Text(name, {
+            style: new TextStyle({
+              fontFamily: "Noto Sans JP",
+              fontSize: 14,
+              color: "#666666",
+            }),
+          }),
+        ],
+      });
+
+    const Bar = (...[{ label, value }]) => {
+      const index = data.labels.indexOf(label);
+      const color = colors[index];
+      const getPath = (x, y, width, height) => {
+        return `M${x},${y + height}C${x + width / 3},${y + height} ${x + width / 2},${y + height / 3}
+        ${x + width / 2}, ${y}
+        C${x + width / 2},${y + height / 3} ${x + (2 * width) / 3},${y + height} ${x + width}, ${y + height}
+        Z`;
+      };
+
+      return Stack({
+        children: [
+          Positioned({
+            top: 0,
+            left: 0,
+            right: 0,
+            child: FractionalTranslation({
+              translation: new Offset({ x: 0, y: -1 }),
+              child: Row({
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(`${value}`, {
+                    style: new TextStyle({
+                      fontSize: 14,
+                      color,
+                    }),
+                  }),
+                ],
+              }),
+            }),
+          }),
+          Container({
+            width: Infinity,
+            height: Infinity,
+            margin: EdgeInsets.symmetric({ horizontal: 5 }),
+            child: CustomPaint({
+              painter: {
+                svg: {
+                  createDefaultSvgEl(context) {
+                    return {
+                      bar: context.createSvgEl("path"),
+                    };
+                  },
+                  paint({ bar }, { width, height }) {
+                    bar.setAttribute("fill", color);
+                    bar.setAttribute("d", getPath(0, 0, width, height));
+                  },
+                },
+              },
+            }),
+          }),
+        ],
+      });
+    };
+
+    const chart = BarChart({
+      data,
+      getScale() {
+        return {
+          min: 0,
+          max: 4000,
+          step: 1000,
+        };
+      },
+      custom: {
+        layout: Layout,
+        bar: Bar,
+        xAxisLabel: XAxisLabel,
+        yAxisLabel: YAxisLabel,
+        xAxisTick: () => SizedBox.shrink(),
+        legend: Legend,
+        gridXLine: () => Container({ height: 1, color: "#DDDDDD" }),
+        gridYLine: () => Container({ width: 1, color: "#DDDDDD" }),
+      },
+    });
+
+    export default function App() {
+      return (
+        <Widget
+          width="auto"
+          height="400px"
+          widget={chart}
+          renderer="svg"
+        />
+      );
+    }
+---
+
+# Rechart
