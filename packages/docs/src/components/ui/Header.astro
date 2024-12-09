@@ -11,21 +11,21 @@ let current: "docs" | "charts" | "i18n" | "none" = pathname.startsWith("/docs")
       : "none";
 ---
 
-<header class="header-container">
+<header class="header-container glass">
   <div class="header-inner">
     <a href="/" class="logo-area">
-      <img class="logo-img" src="/logo.jpeg" alt="logo" />
+      <img class="logo-img" src="/logo.png" alt="logo" />
       <span class="logo-text">Headless Chart</span>
     </a>
 
     <nav class="nav">
       <a
         class={`nav-link ${current === "docs" ? "active" : ""}`}
-        href="/docs/introduction"
+        href="/docs/getting-started/introduction"
       >docs</a>
       <a
         class={`nav-link ${current === "charts" ? "active" : ""}`}
-        href="/charts/get-started/introduction"
+        href="/charts"
       >charts</a>
       <a
         class={`nav-link ${current === "i18n" ? "active" : ""}`}
@@ -52,12 +52,6 @@ let current: "docs" | "charts" | "i18n" | "none" = pathname.startsWith("/docs")
   position: sticky;
   top: 0;
   z-index: 999;
-  
-  /* 글래시모피즘 효과 */
-  background: rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 0 20px rgba(0,0,0,0.1);
 }
 
 .header-inner {
@@ -80,6 +74,7 @@ let current: "docs" | "charts" | "i18n" | "none" = pathname.startsWith("/docs")
 .logo-img {
   width: 44px;
   height: 44px;
+  transform: scale(1.5);
   object-fit: cover;
   border-radius: 8px;
 }
@@ -127,7 +122,6 @@ let current: "docs" | "charts" | "i18n" | "none" = pathname.startsWith("/docs")
   height: 32px;
   border-radius: 50%;
   object-fit: contain;
-  filter: invert(1); /* 어두운 배경에서 아이콘을 밝게 보이게 함 */
   transition: transform 0.2s;
 }
 

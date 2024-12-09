@@ -3,17 +3,29 @@ import Layout from "../../layouts/DocsLayout.astro";
 import SideBar from "./SideBar.astro";
 import Toc from "./Toc.astro";
 import { getCollection } from "astro:content";
-import { getNavOrder } from "./utils";
 
 export const prerender = true;
+
 
 export async function getStaticPaths() {
   const docsEntries = await getCollection("docs");
 
-  return docsEntries.map((entry) => ({
-    params: { slug: entry.slug },
-    props: { entry },
+  function resolveSlug(slug: string) {
+    const segments = slug.split("/");
+    const cleanedSegments = segments.map((segment) =>
+      segment.replace(/^\d+\.?/, ""),
+    );
+    return cleanedSegments.join("/");
+  }
+
+  const paths = docsEntries.map((entry) => ({
+    params: { slug: resolveSlug(entry.slug) },
+    props: { entry: {
+      ...entry,
+      slug: resolveSlug(entry.slug),
+    } },
   }));
+  return paths;
 }
 
 const { entry } = Astro.props;
@@ -21,19 +33,7 @@ const { Content, headings } = await entry.render();
 const docsEntries = await getCollection("docs");
 
 // Sort docsEntries by nav_group_order and nav_order
-const sortedEntries = docsEntries.sort((a, b) => {
-  const groupOrderDiff =
-    getNavOrder(a.data.nav_group) - getNavOrder(b.data.nav_group);
-  if (groupOrderDiff === 0) {
-    // Within the same group, sort by nav_order
-    const orderDiff = (a.data.nav_order ?? 0) - (b.data.nav_order ?? 0);
-    if (orderDiff === 0) {
-      return a.data.title.localeCompare(b.data.title);
-    }
-    return orderDiff;
-  }
-  return groupOrderDiff;
-});
+const sortedEntries = docsEntries.sort((a, b) => a.slug.localeCompare(b.slug));
 // Find the index of the current entry
 const currentIndex = sortedEntries.findIndex((it) => it.slug === entry.slug);
 
@@ -53,27 +53,26 @@ const nextEntry =
   <main data-theme="pink" class="relative mx-auto flex">
     <SideBar />
     <div
-      data-theme="pink"
-      class="prose prose-invert prose-modern w-full max-w-full px-8 py-20 lg:prose-lg"
+      class="glass ml-2 prose prose-modern w-full max-w-full px-8 py-20 lg:prose-lg"
     >
       <Content />
       <div class="flex justify-between py-4">
         {
           prevEntry ? (
-            <a class="move mr-auto" href={`/docs/${prevEntry.slug}`}>
+            <a class="glass move mr-auto rounded-lg px-4 py-2 text-gray-600 hover:text-purple-500" href={`/docs/${prevEntry.slug}`}>
               {prevEntry.data.nav_title ?? prevEntry.data.title}
             </a>
           ) : (
-            <div class="move disabled mr-auto" />
+            <div class="glass move disabled mr-auto rounded-lg px-4 py-2 text-gray-400" />
           )
         }
         {
           nextEntry ? (
-            <a class="move ml-auto" href={`/docs/${nextEntry.slug}`}>
+            <a class="glass move ml-auto rounded-lg px-4 py-2 text-gray-600 hover:text-purple-500" href={`/docs/${nextEntry.slug}`}>
               {nextEntry.data.nav_title ?? nextEntry.data.title}
             </a>
           ) : (
-            <div class="move disabled ml-auto" />
+            <div class="glass move disabled ml-auto rounded-lg px-4 py-2 text-gray-400" />
           )
         }
       </div>

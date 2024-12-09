@@ -21,8 +21,7 @@ export default defineConfig({
     sitemap(),
   ],
   redirects: {
-    "/docs": "/docs/introduction",
-    "/tutorial": "/tutorial/get-started/introduction",
+    "/docs": "/docs/getting-started/introduction",
   },
   markdown: {
     shikiConfig: {

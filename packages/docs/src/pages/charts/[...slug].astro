@@ -12,7 +12,7 @@ export const getStaticPaths = async () => {
   function resolveSlug(slug: string) {
     const segments = slug.split("/");
     const cleanedSegments = segments.map((segment) =>
-      segment.replace(/^\d+_/, ""),
+      segment.replace(/^\d+\.?/, ""),
     );
     return cleanedSegments.join("/");
   }

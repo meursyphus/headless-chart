@@ -30,7 +30,6 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
 
   // Only process /tutorial routes
   if (
-    url.pathname.startsWith("/tutorial") ||
     url.pathname.startsWith("/docs")
   ) {
     const pathSegments = url.pathname.split("/").filter(Boolean);
