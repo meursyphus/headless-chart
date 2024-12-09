@@ -37,7 +37,7 @@ export const getStaticPaths = async () => {
     return result;
 };
 
-const { entry, prev, next } = Astro.props;
+const { entry } = Astro.props;
 
 const { Content } = await entry.render();
 ---
@@ -60,20 +60,14 @@ const { Content } = await entry.render();
       <TableOfContents currentSlug={entry.slug} />
     </aside>
 
-    <div class="flex flex-col w-full glass ml-2 min-h-full">
+    <div class="flex flex-col w-full ml-2 min-h-full pb-4">
       <div class="prose prose-modern max-w-none p-8">
         <Content />
       </div>
 
-      <div class="flex-1 border-t border-gray-200/30 px-10">
+      <div class="flex-1 border-t border-gray-200/30 px-8">
         <div id="originalSandpack" class="h-full">
           <SandPack files={entry.data.files} client:only="react" />
-        </div>
-        <div id="solvedSandpack" class="hidden h-full">
-          <SandPack
-            files={entry.data.solved_files ?? entry.data.files}
-            client:only="react"
-          />
         </div>
       </div>
     </div>

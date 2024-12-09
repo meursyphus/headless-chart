@@ -57,19 +57,24 @@ function MonacoEditor() {
   }, []);
 
   return (
-    <SandpackStack style={{ margin: 0, height: "50vh" }}>
+    <SandpackStack style={{ margin: 0, height: "80vh" }}>
       <FileTabs />
-      <div style={{ flex: 1, paddingTop: 8, background: "#1e1e1e" }}>
+      <div style={{ flex: 1, paddingTop: 0, background: "#ffffff" }}>
         <Editor
           width="100%"
           height="100%"
           language="javascript"
-          theme="vs-dark"
+          theme="vs-light"
           key={sandpack.activeFile}
           defaultValue={code}
           onChange={handleChange}
           onMount={(editor) => {
             editorRef.current = editor;
+          }}
+          options={{
+            minimap: { enabled: false },
+            scrollBeyondLastLine: false,
+            padding: { top: 8, bottom: 8 }
           }}
         />
       </div>
@@ -85,6 +90,7 @@ const customSetup = {
     react: "^18.2.0",
     "react-markdown": "^9.0.1",
     "@meursyphus/flitter-chart": "0.0.9",
+    "@meursyphus/headless-chart": "^0.0.2",
   },
 };
 
@@ -100,7 +106,7 @@ export default function MySandpack({
         ...customSetup,
       }}
       template="react"
-      theme="dark"
+      theme="light"
       style={{
         height: "100%",
       }}

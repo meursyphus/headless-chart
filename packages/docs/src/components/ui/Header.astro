@@ -14,7 +14,7 @@ let current: "docs" | "charts" | "i18n" | "none" = pathname.startsWith("/docs")
 <header class="header-container glass">
   <div class="header-inner">
     <a href="/" class="logo-area">
-      <img class="logo-img" src="/logo.png" alt="logo" />
+      <img class="logo-img scale-150" src="/logo.png" alt="logo" />
       <span class="logo-text">Headless Chart</span>
     </a>
 
@@ -57,7 +57,9 @@ let current: "docs" | "charts" | "i18n" | "none" = pathname.startsWith("/docs")
   }
 
   .header-inner {
-    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     max-width: 1280px;
     margin: 0 auto;
     height: 100%;
@@ -80,42 +82,38 @@ let current: "docs" | "charts" | "i18n" | "none" = pathname.startsWith("/docs")
   .logo-text {
     font-size: 1.25rem;
     font-weight: 600;
-    color: #fff;
+    color: #1a1a1a;
   }
 
   .nav {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
     display: flex;
     gap: 2rem;
   }
 
   .nav-link {
-    color: #9ca3af;
+    color: #666666;
     text-decoration: none;
     font-size: 1rem;
     transition: color 0.2s;
   }
 
   .nav-link:hover {
-    color: #fff;
+    color: #1a1a1a;
   }
 
   .nav-link.active {
-    color: #fff;
+    color: #1a1a1a;
   }
 
   .external-links {
     display: flex;
+    align-items: center;
     gap: 1rem;
-    margin-left: auto; /* nav를 가운데 정렬하고 external-links를 우측 정렬하기 위함 */
   }
 
   .icon {
-    width: 32px;
-    height: 32px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
     object-fit: contain;
     transition: transform 0.2s;

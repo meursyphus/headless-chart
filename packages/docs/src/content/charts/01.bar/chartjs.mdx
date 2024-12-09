@@ -1,95 +1,191 @@
 ---
-nav_group: "Getting Started"
+nav_group: "Bar"
 nav_order: 1
-title: "Introduction"
-description: "An introduction to the Flitter framework and its key features"
+title: "Chartjs Inspired"
+description: "A quick example of a headless-chart inspired by chart.js"
 files:
   App.js: |
-    import ReactWidget from "@meursyphus/flitter-react";
-    import { BarChart } from "@meursyphus/flitter-chart";
+    import Widget from "@meursyphus/flitter-react";
+    import { BarChart } from "@meursyphus/headless-chart";
+    import {
+      Text,
+      Border,
+      BorderSide,
+      BoxDecoration,
+      Column,
+      Container,
+      EdgeInsets,
+      Row,
+      SizedBox,
+      TextStyle,
+      Padding,
+      MainAxisSize,
+      MainAxisAlignment,
+      Stack,
+      Positioned
+    } from "@meursyphus/flitter";
 
-    export default function App() {
-      const chart = BarChart({
-        data: {
-          title: "Title",
-          labels: ["label1", "label2", "label3", "label4", "label5"],
-          datasets: [
-            {
-              legend: "A",
-              data: [30, 40.5, 50.12, 30.5, 40],
-            },
-            {
-              legend: "B",
-              data: [60, 20.5, 20.2, 22.5, 10],
-            },
-            {
-              legend: "C",
-              data: [6, 10.5, 20.2, 12.5, 1],
-            },
-          ],
+    const data = {
+      labels: ["January", "February", "March", "April", "May", "June", "July"],
+      datasets: [
+        {
+          legend: "My First Dataset",
+          values: [65, 59, 80, 81, 56, 55, 40],
         },
-      });
+      ],
+    };
 
-      return (
-        <div>
-          <h1>Basic Flitter Bar Chart</h1>
-          <ReactWidget width="auto" height="calc(100vh - 16px)" widget={chart} />
-        </div>
-      );
-    }
+    const backgroundColors = [
+      "rgba(255, 99, 132, 0.2)",
+      "rgba(255, 159, 64, 0.2)",
+      "rgba(255, 205, 86, 0.2)",
+      "rgba(75, 192, 192, 0.2)",
+      "rgba(54, 162, 235, 0.2)",
+      "rgba(153, 102, 255, 0.2)",
+      "rgba(201, 203, 207, 0.2)",
+    ];
+    const borderColors = [
+      "rgb(255, 99, 132)",
+      "rgb(255, 159, 64)",
+      "rgb(255, 205, 86)",
+      "rgb(75, 192, 192)",
+      "rgb(54, 162, 235)",
+      "rgb(153, 102, 255)",
+      "rgb(201, 203, 207)",
+    ];
 
-solved_files:
-  App.js: |
-    import ReactWidget from "@meursyphus/flitter-react";
-    import { BarChart } from "@meursyphus/flitter-chart";
-    import { Container, BoxDecoration, BoxShadow } from "@meursyphus/flitter";
-
-    export default function App() {
-      const customizedChart = BarChart({
-        data: {
-          title: "Title",
-          labels: ["label1", "label2", "label3", "label4", "label5"],
-          datasets: [
-            {
-              legend: "A",
-              data: [30, 40.5, 50.12, 30.5, 40],
-            },
-            {
-              legend: "B",
-              data: [60, 20.5, 20.2, 22.5, 10],
-            },
-            {
-              legend: "C",
-              data: [6, 10.5, 20.2, 12.5, 1],
-            },
-          ],
-        },
-        custom: {
-          bar: {
-            type: "custom",
-            Custom(child, { legend, backgroundColor }) {
-              return Container({
-                decoration: new BoxDecoration({
-                  color: backgroundColor,
-                  boxShadow:
-                    legend === "B" ? [new BoxShadow({ color: "black", blurRadius: 5 })] : [],
+    const chart = BarChart({
+      data,
+      custom: {
+        layout: (...[{ legends, plot }]) => 
+          Container({
+            padding: EdgeInsets.only({ left: 30, bottom: 70 }),
+            child: Stack({
+              children: [
+                Positioned({
+                  top: 0,
+                  right: 0,
+                  child: Text("Inspired by Chart.js", {
+                    style: new TextStyle({
+                      fontSize: 14,
+                      color: "#999999",
+                      fontFamily: "Noto Sans JP",
+                    }),
+                  }),
                 }),
-                width: legend === "B" ? 30 : 15,
-              });
-            },
-          },
+                Column({
+                  children: [
+                    Row({
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [...legends, SizedBox({ width: 30 })],
+                    }),
+                    SizedBox({ height: 5 }),
+                    plot,
+                  ],
+                }),
+              ],
+            }),
+          }),
+        bar: (...[{ label }]) => {
+          const index = data.labels.indexOf(label);
+          const backgroundColor = backgroundColors[index];
+          const borderSide = new BorderSide({
+            color: borderColors[index],
+            width: 1,
+          });
+          return Container({
+            width: Infinity,
+            margin: EdgeInsets.symmetric({ horizontal: 8 }),
+            height: Infinity,
+            decoration: new BoxDecoration({
+              color: backgroundColor,
+              border: new Border({
+                left: borderSide,
+                right: borderSide,
+                top: borderSide,
+              }),
+            }),
+          });
         },
-      });
+        xAxisLabel: (...[{ name }]) => Padding({
+          padding: EdgeInsets.only({ top: 1 }),
+          child: Text(name, {
+            style: new TextStyle({
+              fontFamily: "Noto Sans JP",
+              fontSize: 12,
+              color: "#666666",
+            }),
+          }),
+        }),
+        yAxisLabel: (...[{ name }]) => Padding({
+          padding: EdgeInsets.only({ right: 1 }),
+          child: Text(name, {
+            style: new TextStyle({
+              fontFamily: "Noto Sans JP",
+              fontSize: 12,
+              color: "#666666",
+            }),
+          }),
+        }),
+        xAxisTick: () => Container({
+          height: 6,
+          width: 1,
+          color: "#DDDDDD",
+        }),
+        yAxisTick: () => Container({
+          height: 1,
+          width: 6,
+          color: "#DDDDDD",
+        }),
+        yAxisLine: () => Container({
+          color: "#BBBBBB",
+          width: 1,
+          height: Infinity,
+        }),
+        xAxisLine: () => Container({
+          color: "#BBBBBB",
+          height: 1,
+          width: Infinity,
+        }),
+        legend: (...[{ name }]) => Row({
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container({
+              width: 36,
+              height: 12,
+              decoration: new BoxDecoration({
+                color: "rgba(255, 99, 132, 0.2)",
+                border: Border.all({ color: "rgb(255, 99, 132)" }),
+              }),
+            }),
+            SizedBox({ width: 5 }),
+            Text(name, {
+              style: new TextStyle({
+                fontFamily: "Noto Sans JP",
+                fontSize: 14,
+                color: "#666666",
+              }),
+            }),
+          ],
+        }),
+        gridXLine: () => Container({ height: 1, color: "#EEEEEE" }),
+        gridYLine: () => Container({ width: 1, color: "#EEEEEE" }),
+      },
+    });
 
+    export default function App() {
       return (
-        <div>
-          <h1>Customized Flitter Bar Chart</h1>
-          <ReactWidget width="auto" height="calc(100vh - 16px)" widget={customizedChart} />
-        </div>
+        <Widget
+          width="auto"
+          height="400px"
+          widget={chart}
+          renderer="svg"
+        />
       );
     }
 ---
 
-# Introduction
+# Chartjs Inspired
 
-Flitter is an innovative framework that makes creating and customizing chart libraries incredibly easy. With automatic layout calculations and seamless support for both SVG and Canvas, Flitter takes the hassle out of crafting complex data visualizations. Ready-to-use interactions and animations are built-in, so you can focus on delivering engaging content without worrying about the underlying mechanics.
+A very simple headless-chart example inspired by Chart.js. All customizations are done inline for simplicity.
