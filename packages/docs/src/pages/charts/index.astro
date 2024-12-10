@@ -36,8 +36,14 @@ const chartGroups = [
   },
   {
     type: "Line Charts",
-    description: "Coming Soon",
-    charts: []
+    charts: [
+      {
+        title: "Chart.js Style Line Chart",
+        description: "Headless chart implementation inspired by Chart.js styling",
+        link: "/charts/line/chartjs",
+        image: "/line-chart/chartjs.png"
+      }
+    ]
   },
   {
     type: "Pie Charts",
@@ -57,7 +63,7 @@ const chartGroups = [
 ];
 ---
 
-<Layout title={title} description={description}>
+<Layout title={title}>
   <div class="charts-container">
     <section class="header">
       <h1>Chart Gallery</h1>
