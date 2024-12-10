@@ -6,7 +6,6 @@ import { getCollection } from "astro:content";
 
 export const prerender = true;
 
-
 export async function getStaticPaths() {
   const docsEntries = await getCollection("docs");
 
@@ -50,16 +49,22 @@ const nextEntry =
   description={entry.data.description}
   image={entry.data.image}
 >
-  <div  class="relative mx-auto flex p-8">
-    <div class="glass sticky top-0 h-fit">
-      <SideBar />
+  <div class="relative mx-auto flex flex-col lg:flex-row p-4 lg:p-8 gap-4">
+    <div class="lg:sticky lg:top-0 lg:h-fit order-2 lg:order-1">
+      <div class="glass lg:min-w-[250px]">
+        <SideBar />
+      </div>
     </div>
     <div
-      class="glass ml-2 prose prose-modern w-full max-w-full px-8 lg:prose-lg h-fit"
+      class="glass prose prose-modern w-full max-w-full px-4 lg:px-8 h-fit order-1 lg:order-2"
     >
       <Content />
     </div>
-    <Toc headings={headings} />
+    <div class="lg:sticky lg:top-0 lg:h-fit order-3">
+      <div class="glass">
+        <Toc headings={headings} />
+      </div>
+    </div>
   </div>
 </Layout>
 
@@ -81,5 +86,24 @@ const nextEntry =
   }
   .move.disabled {
     display: none;
+  }
+</style>
+
+<style>
+  @media (max-width: 1024px) {
+    :global(.toc-container) {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      z-index: 50;
+      max-height: 80vh;
+      overflow-y: auto;
+      transform: translateX(100%);
+      transition: transform 0.3s ease-in-out;
+    }
+    
+    :global(.toc-container.show) {
+      transform: translateX(0);
+    }
   }
 </style>

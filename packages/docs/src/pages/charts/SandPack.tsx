@@ -57,9 +57,9 @@ function MonacoEditor() {
   }, []);
 
   return (
-    <SandpackStack style={{ margin: 0, height: "80vh" }}>
+    <SandpackStack style={{ margin: 0, height: "auto", minHeight: "50vh" }}>
       <FileTabs />
-      <div style={{ flex: 1, paddingTop: 0, background: "#ffffff" }}>
+      <div style={{ flex: 1, paddingTop: 0, background: "#ffffff", minHeight: "300px" }}>
         <Editor
           width="100%"
           height="100%"
@@ -70,11 +70,15 @@ function MonacoEditor() {
           onChange={handleChange}
           onMount={(editor) => {
             editorRef.current = editor;
+            // 초기 레이아웃 설정
+            editor.layout();
           }}
           options={{
             minimap: { enabled: false },
             scrollBeyondLastLine: false,
-            padding: { top: 8, bottom: 8 }
+            padding: { top: 8, bottom: 8 },
+            automaticLayout: true, // 자동 레이아웃 조정 활성화
+            wordWrap: "on" // 긴 줄 자동 줄바꿈
           }}
         />
       </div>
@@ -101,35 +105,19 @@ export default function MySandpack({
 }>) {
   return (
     <SandpackProvider
-      files={files}
-      customSetup={{
-        ...customSetup,
-      }}
       template="react"
-      theme="light"
-      style={{
-        height: "100%",
+      files={files}
+      customSetup={customSetup}
+      theme={{
+        colors: {
+          surface1: "#ffffff",
+          surface2: "#EFEFEF",
+        },
       }}
     >
-      <SandpackLayout
-        style={{
-          height: "100%",
-          margin: 0,
-          display: "flex",
-          flexDirection: "row",
-        }}
-      >
-        <SandpackPreview
-          style={{
-            height: "100%",
-            flex: 1,
-            padding: 0,
-            margin: 0,
-          }}
-        />
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-          <MonacoEditor />
-        </div>
+      <SandpackLayout style={{ height: "auto", minHeight: "100vh" }}>
+        <SandpackPreview style={{ height: "auto", minHeight: "50vh" }} />
+        <MonacoEditor />
       </SandpackLayout>
     </SandpackProvider>
   );

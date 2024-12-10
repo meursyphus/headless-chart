@@ -47,25 +47,34 @@ const { Content } = await entry.render();
   description={entry.data.description}
   image={entry.data.image}
 >
-  <div
-    class="grid  relative grid-cols-[220px_minmax(0,1fr)] min-h-[calc(100vh-var(--header))] p-8"
-    id="mainContainer"
-  >
-    <aside class="glass sticky top-0 h-full border-r border-gray-200/30 overflow-y-scroll overflow-x-hidden">
+  <div class="relative flex flex-col lg:grid lg:grid-cols-[220px_minmax(0,1fr)] min-h-[calc(100vh-var(--header))] p-4 lg:p-8" id="mainContainer">
+    <button
+      id="sidebar-toggle"
+      class="lg:hidden fixed bottom-4 left-4 z-50 p-2 rounded-full bg-white shadow-lg"
+      aria-label="Toggle Sidebar"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+
+    <aside class="sidebar-container glass lg:sticky lg:top-0 lg:h-full border-r border-gray-200/30 overflow-y-auto overflow-x-hidden fixed inset-y-0 left-0 z-40 w-64 -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
       <div
-        class="absolute -right-1 top-0 h-full w-2 cursor-col-resize hover:bg-purple-500/20"
+        class="absolute -right-1 top-0 h-full w-2 cursor-col-resize hover:bg-purple-500/20 hidden lg:block"
         id="tocResizer"
       >
       </div>
       <TableOfContents currentSlug={entry.slug} />
     </aside>
 
-    <div class="flex flex-col w-full ml-2 min-h-full pb-4">
-      <div class="prose prose-modern max-w-none p-8">
+    <div class="flex flex-col w-full lg:ml-2 min-h-full pb-4">
+      <div class="prose prose-modern max-w-none p-4 lg:p-8">
         <Content />
       </div>
 
-      <div class="flex-1 border-t border-gray-200/30 px-8">
+      <div class="flex-1 border-t border-gray-200/30 px-4 lg:px-8">
         <div id="originalSandpack" class="h-full">
           <SandPack files={entry.data.files} client:only="react" />
         </div>
@@ -81,9 +90,71 @@ const { Content } = await entry.render();
     margin: 0;
     padding: 0;
   }
+
+  .sidebar-container.show {
+    transform: translateX(0);
+  }
+
+  @media (max-width: 1024px) {
+    .sp-wrapper {
+      flex-direction: column !important;
+    }
+    
+    .sp-layout {
+      flex-direction: column !important;
+      height: auto !important;
+    }
+
+    .sp-stack {
+      height: auto !important;
+      min-height: 300px;
+    }
+
+    .sp-tabs {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 4px;
+    }
+
+    .sp-tab-button {
+      white-space: nowrap;
+    }
+
+    /* 에디터와 프리뷰 영역을 세로로 배치 */
+    .sp-layout > div:first-child {
+      width: 100% !important;
+      max-width: none !important;
+    }
+
+    .sp-layout > div:last-child {
+      width: 100% !important;
+      border-left: none !important;
+      border-top: 1px solid var(--sp-colors-surface2);
+    }
+  }
 </style>
 
 <script>
+  const sidebarToggle = document.getElementById("sidebar-toggle");
+  const sidebarContainer = document.querySelector(".sidebar-container");
+  const mainContainer = document.getElementById("mainContainer");
+
+  sidebarToggle?.addEventListener("click", () => {
+    sidebarContainer?.classList.toggle("show");
+  });
+
+  // Close sidebar when clicking outside on mobile
+  mainContainer?.addEventListener("click", (e) => {
+    if (window.innerWidth < 1024 && sidebarContainer?.classList.contains("show")) {
+      const isClickInside = sidebarContainer.contains(e.target as Node) || 
+                           sidebarToggle?.contains(e.target as Node);
+      if (!isClickInside) {
+        sidebarContainer.classList.remove("show");
+      }
+    }
+  });
+
   const resizer = document.getElementById("tocResizer");
   const sidebar = resizer?.parentElement;
   const container = sidebar?.parentElement;
@@ -95,6 +166,7 @@ const { Content } = await entry.render();
   resizer?.addEventListener("mousedown", initResize);
 
   function initResize(e: MouseEvent) {
+    if (window.innerWidth < 1024) return;
     isResizing = true;
     startX = e.clientX;
     startWidth = sidebar?.offsetWidth || 0;
@@ -135,5 +207,14 @@ const { Content } = await entry.render();
   }
   #tocResizer:active {
     background-color: rgb(59 130 246 / 0.2);
+  }
+
+  #sidebar-toggle {
+    background: white;
+    border: 1px solid #e5e5e5;
+  }
+
+  #sidebar-toggle:hover {
+    background: #f5f5f5;
   }
 </style>
