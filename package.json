@@ -5,10 +5,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npm run dev --workspace=docs",
+    "build": "npm run build --workspace=@meursyphus/headless-chart",
     "start": "npm run dev",
     "docs:start": "npm run dev",
     "docs:build": "npm run build --workspace=docs",
-    "build": "npm run build --workspace=@meursyphus/headless-chart",
+    "predocs:build": "npm run build",
     "lunaria:build": "lunaria build && cp -r dist/lunaria/index.html packages/docs/public/lunaria.html",
     "lunaria:preview": "lunaria preview"
   },
@@ -18,7 +19,7 @@
     "packages/*"
   ],
   "devDependencies": {
-    "@meursyphus/flitter": "^2.0.0",
+    "@meursyphus/flitter": "^2.0.3",
     "@meursyphus/flitter-react": "^0.0.8",
     "@meursyphus/flitter-svelte": "^2.0.0-alpha.1"
   },
