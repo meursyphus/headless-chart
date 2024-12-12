@@ -47,13 +47,13 @@ files:
     }
 
     const colors = [
-      "blue",
-      "blue",
-      "blue",
-      "blue",
-      "blue",
-      "blue",
-      "blue",
+      "#5a6fc0",
+      "#5a6fc0",
+      "#5a6fc0",
+      "#5a6fc0",
+      "#5a6fc0",
+      "#5a6fc0",
+      "#5a6fc0",
     ]
 
     const Layout = (...[{ plot }]) => 
@@ -154,17 +154,6 @@ files:
              right: 0,
              child: FractionalTranslation({
                 translation: new Offset({ x: 0, y: -1 }),
-                child: Row({
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(`${value}`, {
-                      style: new TextStyle({
-                         fontSize: 14,
-                         color,
-                      }),
-                    }),
-                  ],
-                }),
              }),
           }),
           Container({
@@ -181,7 +170,7 @@ files:
                   },
                   paint({ bar }, { width, height }) {
                     bar.setAttribute("fill", color);
-                    bar.setAttribute("d", getPath(0, 0, width, height));
+                    bar.setAttribute("d", getPath(width / 6, 0, width / 3 * 2, height));
                   },
                 },
               },
@@ -207,7 +196,7 @@ files:
           xAxisTick: () => SizedBox.shrink(),
           legend: Legend,
           gridXLine: () => Container({ height: 1, color: "#DDDDDD" }),
-          gridYLine: () => Container({ width: 1, color: "#DDDDDD" }),
+          gridYLine: () => Container({ height: 1, color: "transparent" })
         }
     })
 
