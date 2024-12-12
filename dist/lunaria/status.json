@@ -7,12 +7,12 @@
       "path": "packages/docs/src/content/docs/en/01.getting-started/01.introduction.mdx",
       "isLocalizable": true,
       "git": {
-        "lastChange": "2024-12-09T05:57:25.000Z",
-        "lastCommitMessage": "good",
-        "lastCommitHash": "220868850f154e867e91a9e573cab875eac00fc0",
-        "lastMajorChange": "2024-12-09T05:57:25.000Z",
-        "lastMajorCommitMessage": "good",
-        "lastMajorCommitHash": "220868850f154e867e91a9e573cab875eac00fc0"
+        "lastChange": "2024-12-09T07:15:52.000Z",
+        "lastCommitMessage": "INIT!!! (#5)",
+        "lastCommitHash": "baa85a165833f27605ae85382fbca0b8a6c259a2",
+        "lastMajorChange": "2024-12-09T07:15:52.000Z",
+        "lastMajorCommitMessage": "INIT!!! (#5)",
+        "lastMajorCommitHash": "baa85a165833f27605ae85382fbca0b8a6c259a2"
       },
       "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/blob/main/packages/docs/src/content/docs/en/01.getting-started/01.introduction.mdx",
       "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/01.introduction.mdx",
@@ -28,15 +28,15 @@
         "path": "packages/docs/src/content/docs/en/01.getting-started/01.introduction.mdx",
         "isLocalizable": true,
         "git": {
-          "lastChange": "2024-12-09T05:57:25.000Z",
-          "lastCommitMessage": "good",
-          "lastCommitHash": "220868850f154e867e91a9e573cab875eac00fc0",
-          "lastMajorChange": "2024-12-09T05:57:25.000Z",
-          "lastMajorCommitMessage": "good",
-          "lastMajorCommitHash": "220868850f154e867e91a9e573cab875eac00fc0"
+          "lastChange": "2024-12-09T07:15:52.000Z",
+          "lastCommitMessage": "INIT!!! (#5)",
+          "lastCommitHash": "baa85a165833f27605ae85382fbca0b8a6c259a2",
+          "lastMajorChange": "2024-12-09T07:15:52.000Z",
+          "lastMajorCommitMessage": "INIT!!! (#5)",
+          "lastMajorCommitHash": "baa85a165833f27605ae85382fbca0b8a6c259a2"
         },
         "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/blob/main/packages/docs/src/content/docs/en/01.getting-started/01.introduction.mdx",
-        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/01.introduction.mdx?since=2024-12-09T05:57:25.000Z",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/01.introduction.mdx?since=2024-12-09T07:15:52.000Z",
         "pattern": "packages/docs/src/content/docs/@lang/@path",
         "meta": {
           "type": "universal"
@@ -50,15 +50,15 @@
         "path": "packages/docs/src/content/docs/ko/01.getting-started/01.introduction.mdx",
         "isLocalizable": true,
         "git": {
-          "lastChange": "2024-12-09T05:57:25.000Z",
-          "lastCommitMessage": "good",
-          "lastCommitHash": "220868850f154e867e91a9e573cab875eac00fc0",
-          "lastMajorChange": "2024-12-09T05:57:25.000Z",
-          "lastMajorCommitMessage": "good",
-          "lastMajorCommitHash": "220868850f154e867e91a9e573cab875eac00fc0"
+          "lastChange": "2024-12-09T07:15:52.000Z",
+          "lastCommitMessage": "INIT!!! (#5)",
+          "lastCommitHash": "baa85a165833f27605ae85382fbca0b8a6c259a2",
+          "lastMajorChange": "2024-12-09T07:15:52.000Z",
+          "lastMajorCommitMessage": "INIT!!! (#5)",
+          "lastMajorCommitHash": "baa85a165833f27605ae85382fbca0b8a6c259a2"
         },
         "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/blob/main/packages/docs/src/content/docs/ko/01.getting-started/01.introduction.mdx",
-        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/01.introduction.mdx?since=2024-12-09T05:57:25.000Z",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/01.introduction.mdx?since=2024-12-09T07:15:52.000Z",
         "pattern": "packages/docs/src/content/docs/@lang/@path",
         "meta": {
           "type": "universal"
@@ -136,12 +136,12 @@
       "path": "packages/docs/src/content/docs/en/01.getting-started/02.installation.mdx",
       "isLocalizable": true,
       "git": {
-        "lastChange": "2024-12-09T05:57:25.000Z",
-        "lastCommitMessage": "good",
-        "lastCommitHash": "220868850f154e867e91a9e573cab875eac00fc0",
-        "lastMajorChange": "2024-12-09T05:57:25.000Z",
-        "lastMajorCommitMessage": "good",
-        "lastMajorCommitHash": "220868850f154e867e91a9e573cab875eac00fc0"
+        "lastChange": "2024-12-09T07:15:52.000Z",
+        "lastCommitMessage": "INIT!!! (#5)",
+        "lastCommitHash": "baa85a165833f27605ae85382fbca0b8a6c259a2",
+        "lastMajorChange": "2024-12-09T07:15:52.000Z",
+        "lastMajorCommitMessage": "INIT!!! (#5)",
+        "lastMajorCommitHash": "baa85a165833f27605ae85382fbca0b8a6c259a2"
       },
       "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/blob/main/packages/docs/src/content/docs/en/01.getting-started/02.installation.mdx",
       "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/02.installation.mdx",
@@ -157,15 +157,15 @@
         "path": "packages/docs/src/content/docs/en/01.getting-started/02.installation.mdx",
         "isLocalizable": true,
         "git": {
-          "lastChange": "2024-12-09T05:57:25.000Z",
-          "lastCommitMessage": "good",
-          "lastCommitHash": "220868850f154e867e91a9e573cab875eac00fc0",
-          "lastMajorChange": "2024-12-09T05:57:25.000Z",
-          "lastMajorCommitMessage": "good",
-          "lastMajorCommitHash": "220868850f154e867e91a9e573cab875eac00fc0"
+          "lastChange": "2024-12-09T07:15:52.000Z",
+          "lastCommitMessage": "INIT!!! (#5)",
+          "lastCommitHash": "baa85a165833f27605ae85382fbca0b8a6c259a2",
+          "lastMajorChange": "2024-12-09T07:15:52.000Z",
+          "lastMajorCommitMessage": "INIT!!! (#5)",
+          "lastMajorCommitHash": "baa85a165833f27605ae85382fbca0b8a6c259a2"
         },
         "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/blob/main/packages/docs/src/content/docs/en/01.getting-started/02.installation.mdx",
-        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/02.installation.mdx?since=2024-12-09T05:57:25.000Z",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/02.installation.mdx?since=2024-12-09T07:15:52.000Z",
         "pattern": "packages/docs/src/content/docs/@lang/@path",
         "meta": {
           "type": "universal"
@@ -179,15 +179,15 @@
         "path": "packages/docs/src/content/docs/ko/01.getting-started/02.installation.mdx",
         "isLocalizable": true,
         "git": {
-          "lastChange": "2024-12-09T05:57:25.000Z",
-          "lastCommitMessage": "good",
-          "lastCommitHash": "220868850f154e867e91a9e573cab875eac00fc0",
-          "lastMajorChange": "2024-12-09T05:57:25.000Z",
-          "lastMajorCommitMessage": "good",
-          "lastMajorCommitHash": "220868850f154e867e91a9e573cab875eac00fc0"
+          "lastChange": "2024-12-09T07:15:52.000Z",
+          "lastCommitMessage": "INIT!!! (#5)",
+          "lastCommitHash": "baa85a165833f27605ae85382fbca0b8a6c259a2",
+          "lastMajorChange": "2024-12-09T07:15:52.000Z",
+          "lastMajorCommitMessage": "INIT!!! (#5)",
+          "lastMajorCommitHash": "baa85a165833f27605ae85382fbca0b8a6c259a2"
         },
         "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/blob/main/packages/docs/src/content/docs/ko/01.getting-started/02.installation.mdx",
-        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/02.installation.mdx?since=2024-12-09T05:57:25.000Z",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/02.installation.mdx?since=2024-12-09T07:15:52.000Z",
         "pattern": "packages/docs/src/content/docs/@lang/@path",
         "meta": {
           "type": "universal"
@@ -265,12 +265,12 @@
       "path": "packages/docs/src/content/docs/en/01.getting-started/03.flitter-react.mdx",
       "isLocalizable": true,
       "git": {
-        "lastChange": "2024-12-09T05:57:25.000Z",
-        "lastCommitMessage": "good",
-        "lastCommitHash": "220868850f154e867e91a9e573cab875eac00fc0",
-        "lastMajorChange": "2024-12-09T05:57:25.000Z",
-        "lastMajorCommitMessage": "good",
-        "lastMajorCommitHash": "220868850f154e867e91a9e573cab875eac00fc0"
+        "lastChange": "2024-12-09T07:15:52.000Z",
+        "lastCommitMessage": "INIT!!! (#5)",
+        "lastCommitHash": "baa85a165833f27605ae85382fbca0b8a6c259a2",
+        "lastMajorChange": "2024-12-09T07:15:52.000Z",
+        "lastMajorCommitMessage": "INIT!!! (#5)",
+        "lastMajorCommitHash": "baa85a165833f27605ae85382fbca0b8a6c259a2"
       },
       "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/blob/main/packages/docs/src/content/docs/en/01.getting-started/03.flitter-react.mdx",
       "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/03.flitter-react.mdx",
@@ -286,15 +286,15 @@
         "path": "packages/docs/src/content/docs/en/01.getting-started/03.flitter-react.mdx",
         "isLocalizable": true,
         "git": {
-          "lastChange": "2024-12-09T05:57:25.000Z",
-          "lastCommitMessage": "good",
-          "lastCommitHash": "220868850f154e867e91a9e573cab875eac00fc0",
-          "lastMajorChange": "2024-12-09T05:57:25.000Z",
-          "lastMajorCommitMessage": "good",
-          "lastMajorCommitHash": "220868850f154e867e91a9e573cab875eac00fc0"
+          "lastChange": "2024-12-09T07:15:52.000Z",
+          "lastCommitMessage": "INIT!!! (#5)",
+          "lastCommitHash": "baa85a165833f27605ae85382fbca0b8a6c259a2",
+          "lastMajorChange": "2024-12-09T07:15:52.000Z",
+          "lastMajorCommitMessage": "INIT!!! (#5)",
+          "lastMajorCommitHash": "baa85a165833f27605ae85382fbca0b8a6c259a2"
         },
         "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/blob/main/packages/docs/src/content/docs/en/01.getting-started/03.flitter-react.mdx",
-        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/03.flitter-react.mdx?since=2024-12-09T05:57:25.000Z",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/03.flitter-react.mdx?since=2024-12-09T07:15:52.000Z",
         "pattern": "packages/docs/src/content/docs/@lang/@path",
         "meta": {
           "type": "universal"
@@ -308,15 +308,15 @@
         "path": "packages/docs/src/content/docs/ko/01.getting-started/03.flitter-react.mdx",
         "isLocalizable": true,
         "git": {
-          "lastChange": "2024-12-09T05:57:25.000Z",
-          "lastCommitMessage": "good",
-          "lastCommitHash": "220868850f154e867e91a9e573cab875eac00fc0",
-          "lastMajorChange": "2024-12-09T05:57:25.000Z",
-          "lastMajorCommitMessage": "good",
-          "lastMajorCommitHash": "220868850f154e867e91a9e573cab875eac00fc0"
+          "lastChange": "2024-12-09T07:15:52.000Z",
+          "lastCommitMessage": "INIT!!! (#5)",
+          "lastCommitHash": "baa85a165833f27605ae85382fbca0b8a6c259a2",
+          "lastMajorChange": "2024-12-09T07:15:52.000Z",
+          "lastMajorCommitMessage": "INIT!!! (#5)",
+          "lastMajorCommitHash": "baa85a165833f27605ae85382fbca0b8a6c259a2"
         },
         "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/blob/main/packages/docs/src/content/docs/ko/01.getting-started/03.flitter-react.mdx",
-        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/03.flitter-react.mdx?since=2024-12-09T05:57:25.000Z",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/03.flitter-react.mdx?since=2024-12-09T07:15:52.000Z",
         "pattern": "packages/docs/src/content/docs/@lang/@path",
         "meta": {
           "type": "universal"
@@ -383,6 +383,135 @@
         "isMissing": true,
         "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/ru/01.getting-started/03.flitter-react.mdx",
         "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/01.getting-started/03.flitter-react.mdx"
+      }
+    }
+  },
+  {
+    "sharedPath": "packages/docs/src/content/docs/02.basic-chart/01.bar-chart.mdx",
+    "sourceFile": {
+      "lang": "en",
+      "sharedPath": "packages/docs/src/content/docs/02.basic-chart/01.bar-chart.mdx",
+      "path": "packages/docs/src/content/docs/en/02.basic-chart/01.bar-chart.mdx",
+      "isLocalizable": true,
+      "git": {
+        "lastChange": "2024-12-12T12:03:08.000Z",
+        "lastCommitMessage": "docs : 02. Basic Chart 영어 문서 작성",
+        "lastCommitHash": "d2f24c7e9c7ac8905388bf2fdb6c0796da48648b",
+        "lastMajorChange": "2024-12-12T12:03:08.000Z",
+        "lastMajorCommitMessage": "docs : 02. Basic Chart 영어 문서 작성",
+        "lastMajorCommitHash": "d2f24c7e9c7ac8905388bf2fdb6c0796da48648b"
+      },
+      "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/blob/main/packages/docs/src/content/docs/en/02.basic-chart/01.bar-chart.mdx",
+      "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/02.basic-chart/01.bar-chart.mdx",
+      "pattern": "packages/docs/src/content/docs/@lang/@path",
+      "meta": {
+        "type": "universal"
+      }
+    },
+    "localizations": {
+      "en": {
+        "lang": "en",
+        "sharedPath": "packages/docs/src/content/docs/02.basic-chart/01.bar-chart.mdx",
+        "path": "packages/docs/src/content/docs/en/02.basic-chart/01.bar-chart.mdx",
+        "isLocalizable": true,
+        "git": {
+          "lastChange": "2024-12-12T12:03:08.000Z",
+          "lastCommitMessage": "docs : 02. Basic Chart 영어 문서 작성",
+          "lastCommitHash": "d2f24c7e9c7ac8905388bf2fdb6c0796da48648b",
+          "lastMajorChange": "2024-12-12T12:03:08.000Z",
+          "lastMajorCommitMessage": "docs : 02. Basic Chart 영어 문서 작성",
+          "lastMajorCommitHash": "d2f24c7e9c7ac8905388bf2fdb6c0796da48648b"
+        },
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/blob/main/packages/docs/src/content/docs/en/02.basic-chart/01.bar-chart.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/02.basic-chart/01.bar-chart.mdx?since=2024-12-12T12:03:08.000Z",
+        "pattern": "packages/docs/src/content/docs/@lang/@path",
+        "meta": {
+          "type": "universal"
+        },
+        "isMissing": false,
+        "isOutdated": false
+      },
+      "ko": {
+        "lang": "ko",
+        "sharedPath": "packages/docs/src/content/docs/02.basic-chart/01.bar-chart.mdx",
+        "path": "packages/docs/src/content/docs/ko/02.basic-chart/01.bar-chart.mdx",
+        "isLocalizable": true,
+        "git": {
+          "lastChange": "2024-12-12T08:51:47.000Z",
+          "lastCommitMessage": "refactor : Astro파일에서 tsx로 변경",
+          "lastCommitHash": "2db40b14647d4a1012fed1bd27ab5191f0b5d3d8",
+          "lastMajorChange": "2024-12-12T08:51:47.000Z",
+          "lastMajorCommitMessage": "refactor : Astro파일에서 tsx로 변경",
+          "lastMajorCommitHash": "2db40b14647d4a1012fed1bd27ab5191f0b5d3d8"
+        },
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/blob/main/packages/docs/src/content/docs/ko/02.basic-chart/01.bar-chart.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/02.basic-chart/01.bar-chart.mdx?since=2024-12-12T08:51:47.000Z",
+        "pattern": "packages/docs/src/content/docs/@lang/@path",
+        "meta": {
+          "type": "universal"
+        },
+        "isMissing": false,
+        "isOutdated": true
+      },
+      "zh-cn": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/zh-cn/02.basic-chart/01.bar-chart.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/02.basic-chart/01.bar-chart.mdx"
+      },
+      "zh-tw": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/zh-tw/02.basic-chart/01.bar-chart.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/02.basic-chart/01.bar-chart.mdx"
+      },
+      "ja": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/ja/02.basic-chart/01.bar-chart.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/02.basic-chart/01.bar-chart.mdx"
+      },
+      "ar": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/ar/02.basic-chart/01.bar-chart.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/02.basic-chart/01.bar-chart.mdx"
+      },
+      "de": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/de/02.basic-chart/01.bar-chart.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/02.basic-chart/01.bar-chart.mdx"
+      },
+      "es": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/es/02.basic-chart/01.bar-chart.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/02.basic-chart/01.bar-chart.mdx"
+      },
+      "fr": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/fr/02.basic-chart/01.bar-chart.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/02.basic-chart/01.bar-chart.mdx"
+      },
+      "hi": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/hi/02.basic-chart/01.bar-chart.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/02.basic-chart/01.bar-chart.mdx"
+      },
+      "it": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/it/02.basic-chart/01.bar-chart.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/02.basic-chart/01.bar-chart.mdx"
+      },
+      "pl": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/pl/02.basic-chart/01.bar-chart.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/02.basic-chart/01.bar-chart.mdx"
+      },
+      "pt-br": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/pt-br/02.basic-chart/01.bar-chart.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/02.basic-chart/01.bar-chart.mdx"
+      },
+      "ru": {
+        "isMissing": true,
+        "gitHostingFileURL": "https://github.com/meursyphus/headless-chart/new/main?filename=packages/docs/src/content/docs/ru/02.basic-chart/01.bar-chart.mdx",
+        "gitHostingHistoryURL": "https://github.com/meursyphus/headless-chart/commits/main/packages/docs/src/content/docs/en/02.basic-chart/01.bar-chart.mdx"
       }
     }
   }
