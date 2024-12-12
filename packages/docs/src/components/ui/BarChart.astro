@@ -1,19 +1,4 @@
 ---
-nav_group: "기본 차트"
-nav_order: 2
-title: "headless-chart로 막대 차트 구성하기"
-description: "headless-chart로 막대 차트 구성하기"
----
-
-import BarChart from '../../../../components/ui/BarChart.astro';
-
-# headless-chart로 막대 차트 구성하기
-
-headless-chart와 Flitter를 활용하여 월 별 평균 기온에 대한 막대 차트를 구성하도록 하겠습니다.
-
-<BarChart />
-
-```jsx
 import ReactWidget from "@meursyphus/flitter-react";
 import { BarChart as HeadlessBarChart } from "@meursyphus/headless-chart";
 import {
@@ -184,19 +169,15 @@ const chart = HeadlessBarChart({
   },
 });
 
-export default function App() {
-  return (
-    <div>
-      <h1>Headless 막대 차트</h1>
-      <ReactWidget
-        client:load
-        width="600px"
-        height="400px"
-        widget={chart}
-        renderer="svg"
-      />
-    </div>
-  );
-}
-```
+---
 
+<div>
+  <h1>Headless 막대 차트</h1>
+  <ReactWidget 
+    client:load
+    width="auto"
+    height="400px"
+    widget={chart}
+    renderer="svg"
+  />
+</div>
