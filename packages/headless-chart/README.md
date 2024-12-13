@@ -33,8 +33,8 @@ export default function App() {
       datasets: [
         { legend: "Sales", values: [150, 200, 170] }
       ],
-      title: "Monthly Sales"
-    }
+    },
+    title: "Monthly Sales"
   });
 
   return (
@@ -76,12 +76,12 @@ const customConfig = {
 
 const chart = BarChart({
   data: {
-    title: "Customized Sales Chart",
     labels: ["Jan", "Feb", "Mar"],
     datasets: [
       { legend: "Sales", values: [150, 200, 170] }
     ]
   },
+  title: "Customized Sales Chart",
   custom: customConfig
 });
 ```
