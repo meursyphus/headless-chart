@@ -18,16 +18,22 @@ files:
       BoxDecoration,
       Column,
       Container,
+      CrossAxisAlignment,
       EdgeInsets,
       Row,
       SizedBox,
       TextStyle,
+      Flexible,
       Padding,
       MainAxisSize,
       MainAxisAlignment,
       Stack,
       Positioned
     } from "@meursyphus/flitter";
+
+    const colors = [
+      "#B2DFDB", "#FFCC80", "#FFFF8D", "#FFABAB", "#FFE0B2"
+    ];
 
     const data = {
       labels: ["plane","helicopter","boat","train","subway","bus","car","moto","bicycle","horse","skateboard","others"],
@@ -39,19 +45,19 @@ files:
         
         {
           legend: "germany",
-          values: [65, 59, 80, 81, 56, 55, 40],
+          values: [565, 850, 734, 863, 268, 571, 396, 588, 442, 726, 640, 732],
         },
         {
           legend: "us",
-          values: [65, 59, 80, 81, 56, 55, 40],
+          values: [435, 559, 482, 580, 167, 308, 255, 557, 437, 438, 543, 554],
         },
         {
           legend: "france",
-          values: [65, 59, 80, 81, 56, 55, 40],
+          values: [242, 405, 262, 418, 109, 224, 216, 339, 428, 284, 247, 416],
         },
         {
           legend: "japan",
-          values: [65, 59, 80, 81, 56, 55, 40],
+          values: [126, 166, 238, 122, 102, 120, 70, 281, 234, 59, 213, 289],
         },
       ],
     };
@@ -64,15 +70,15 @@ files:
         step: 100,
       }),
       custom: {
-        layout: (...[{ legends, plot }]) => 
+        layout: (...[{ legends, plot, title }]) => 
           Container({
-            padding: EdgeInsets.only({ top:20, left: 40, bottom: 50 }),
+            padding: EdgeInsets.only({ top:50, left: 50, bottom: 70 }),
             child: Stack({
               children: [
                 Positioned({
-                  top: 0,
+                  top: -20,
                   right: 0,
-                  child: Text("Inspired by Chart.js", {
+                  child: Text("Inspired by Nivo", {
                     style: new TextStyle({
                       fontSize: 14,
                       color: "#999999",
@@ -80,20 +86,21 @@ files:
                     }),
                   }),
                 }),
-                Column({
-                  children: [
-                    Row({
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [...legends, SizedBox({ width: 30 })],
-                    }),
-                    SizedBox({ height: 5 }),
-                    plot,
-                  ],
-                }),
+               Row({
+                children: [
+                  Flexible({ flex: 1, child: plot }),
+                  SizedBox({ width: 20 }),
+                  Column({ 
+                   mainAxisAlignment: MainAxisAlignment.end,
+                   crossAxisAlignment: CrossAxisAlignment.start,
+                   children: legends,
+                  })
+                ]
+               })
               ],
             }),
           }),
-        line: (...[{ values }, { scale }]) => {
+        line: (...[{ values, index }, { scale }]) => {
           return CustomPaint({
             painter: {
               svg: {
@@ -119,17 +126,17 @@ files:
 
                   points.forEach((point) => {
                     pointPath.addOval(
-                      Rect.fromCircle({ center: new Offset(point), radius: 3 })
+                      Rect.fromCircle({ center: new Offset(point), radius: 5 })
                     );
                   });
 
                   line.setAttribute("fill", "none");
-                  line.setAttribute("stroke", "rgb(75, 192, 192)");
-                  line.setAttribute("stroke-width", "3");
+                  line.setAttribute("stroke", colors[index]);
+                  line.setAttribute("stroke-width", "2");
                   line.setAttribute("d", linePath.getD());
                   point.setAttribute("fill", "white");
-                  point.setAttribute("stroke", "rgb(75, 192, 192)");
-                  point.setAttribute("stroke-width", "2");
+                  point.setAttribute("stroke", colors[index]);
+                  point.setAttribute("stroke-width", "1");
                   point.setAttribute("d", pointPath.getD());
                 },
               },
@@ -174,28 +181,33 @@ files:
           color: "#BBBBBB",
           height: 1,
         }),
-        legend: (...[{ name }]) => Row({
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container({
-              width: 40,
-              height: 15,
-              decoration: new BoxDecoration({
-                color: "#FFFFFF",
-                border: Border.all({ color: "rgb(75, 192, 192)", width: 3 }),
-              }),
-            }),
-            SizedBox({ width: 5 }),
-            Text(name, {
-              style: new TextStyle({
-                fontFamily: "Noto Sans JP",
-                fontSize: 14,
-                color: "#666666",
-              }),
-            }),
-          ],
-        }),
+        legend: (...[{ name, index }]) => {
+            const colors = ["#B2DFDB", "#FFCC80", "#FFFF8D", "#FFABAB", "#FFE0B2"]; 
+            const color = colors[index] || "#CCCCCC";
+
+            return Row({
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                    Container({
+                        width: 15,
+                        height: 15,
+                        decoration: new BoxDecoration({
+                            color, 
+                            shape: "circle", 
+                        }),
+                    }),
+                SizedBox({ width: 8 }), 
+                Text(name, {
+                    style: new TextStyle({
+                    fontFamily: "Noto Sans JP",
+                    fontSize: 14,
+                    color: "#666666", // 텍스트 색상
+                        }),
+                    }),
+                ],
+            });
+        },
         gridXLine: () => Container({ height: 1, color: "#DDDDDD" }),
         gridYLine: () => Container({ width: 1, color: "#DDDDDD" }),
       },
