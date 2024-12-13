@@ -14,13 +14,16 @@ export type BubbleChartData = {
   }[];
 };
 
+export type Scale = {
+  min: number;
+  max: number;
+  step: number;
+}
+
 export type BubbleChartScale = {
-  xMin: number;
-  xMax: number;
-  yMin: number;
-  yMax: number;
-  valueMin: number;
-  valueMax: number;
+  x: Scale;
+  y: Scale;
+  value: Scale;
 };
 
 export type BubbleChartCustom = {

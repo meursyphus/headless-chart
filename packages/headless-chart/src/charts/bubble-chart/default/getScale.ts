@@ -32,12 +32,15 @@ export function getScale({ datasets }: BubbleChartData): BubbleChartScale {
     step: (yEdge.max - yEdge.min) / roughStepCount,
   });
 
+  const valueScale = refineScale({
+    min: valueEdge.min,
+    max: valueEdge.max,
+    step: (valueEdge.max - valueEdge.min) / roughStepCount,
+  });
+
   return {
-    xMin: xScale.min,
-    xMax: xScale.max,
-    yMin: yScale.min,
-    yMax: yScale.max,
-    valueMin: valueEdge.min,
-    valueMax: valueEdge.max,
+    x: xScale,
+    y: yScale,
+    value: valueScale,
   };
 }

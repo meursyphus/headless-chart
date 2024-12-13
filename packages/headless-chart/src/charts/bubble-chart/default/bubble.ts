@@ -16,12 +16,12 @@ export function Bubble(
           points.forEach((pt) => {
             const { x, y, value } = pt;
             
-            const normX = (x - scale.xMin) / (scale.xMax - scale.xMin);
-            const normY = (y - scale.yMin) / (scale.yMax - scale.yMin);
+            const normX = (x - scale.x.min) / (scale.x.max - scale.x.min);
+            const normY = (y - scale.y.min) / (scale.y.max - scale.y.min);
             const cx = normX * width;
             const cy = height - (normY * height);
 
-            const normValue = (value - scale.valueMin) / (scale.valueMax - scale.valueMin);
+            const normValue = (value - scale.value.min) / (scale.value.max - scale.value.min);
             const radius = 5 + normValue * 20;
 
             const circle = g.ownerDocument.createElementNS("http://www.w3.org/2000/svg", "circle");
@@ -40,12 +40,12 @@ export function Bubble(
           const ctx = context.canvas;
           points.forEach((pt) => {
             const { x, y, value } = pt;
-            const normX = (x - scale.xMin) / (scale.xMax - scale.xMin);
-            const normY = (y - scale.yMin) / (scale.yMax - scale.yMin);
+            const normX = (x - scale.x.min) / (scale.x.max - scale.x.min);
+            const normY = (y - scale.y.min) / (scale.y.max - scale.y.min);
             const cx = normX * width;
             const cy = height - (normY * height);
 
-            const normValue = (value - scale.valueMin) / (scale.valueMax - scale.valueMin);
+            const normValue = (value - scale.value.min) / (scale.value.max - scale.value.min);
             const radius = 5 + normValue * 20;
 
             ctx.beginPath();
