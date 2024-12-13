@@ -43,6 +43,12 @@ const charts = [
     description: "Headless chart implementation inspired by Chart.js styling",
     image: "/line-chart/chartjs.png", 
     link: "/charts/line/chartjs" 
+  },
+  {
+    name: "Toast UI Style Bubble Chart",
+    description: "Headless chart implementation inspired by Toast UI Charts styling",
+    image: "/bubble-chart/toast.png",
+    link: "/charts/bubble/toast"
   }
 ];
 ---
@@ -59,7 +65,7 @@ const charts = [
 
   <section class="charts-grid">
     {charts.map(chart => (
-      <a class="chart-card" href={chart.link}>
+      <a class="chart-card glass" href={chart.link}>
         <div class="chart-image">
           <img src={chart.image} alt={chart.name} />
         </div>
@@ -104,7 +110,6 @@ const charts = [
   }
 
   .chart-card {
-    background: white;
     border-radius: 12px;
     overflow: hidden;
     text-decoration: none;
