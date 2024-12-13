@@ -248,7 +248,7 @@ class Series extends StatelessWidget {
     const { custom, data } = config;
     return custom.series(
       {
-        lines: data.datasets.map(
+        areas: data.datasets.map(
           (dataset, index) =>
             new Line({
               values: dataset.values,

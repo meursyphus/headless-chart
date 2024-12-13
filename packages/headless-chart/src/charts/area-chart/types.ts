@@ -9,7 +9,7 @@ export type AreaChartCustom = {
   yAxisLabel: ConfigArgs<{ name: string; index: number }>;
   xAxisTick: ConfigArgs;
   yAxisTick: ConfigArgs;
-  series: ConfigArgs<{ lines: Widget[] }>;
+  series: ConfigArgs<{ areas: Widget[] }>;
   area: ConfigArgs<{ values: number[]; legend: string; index: number }>;
   layout: ConfigArgs<{ title: Widget; legends: Widget[]; plot: Widget }>;
   plot: ConfigArgs<{
