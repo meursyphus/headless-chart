@@ -116,37 +116,41 @@ class YAxis extends StatelessWidget {
   }
 }
 
-class XAxisLabel extends StatelessWidget {
+class AxisLabel extends StatelessWidget {
   #name: string;
   #index: number;
+  #renderer: (args: any, config: any) => Widget;
 
-  constructor({ name, index }: { name: string; index: number }) {
+  constructor({ name, index, renderer }: { name: string; index: number; renderer: (args: any, config: any) => Widget }) {
     super();
     this.#name = name;
     this.#index = index;
+    this.#renderer = renderer;
   }
 
   override build(context: BuildContext): Widget {
     const config = BubbleChartConfigProvider.of(context);
-    const { custom } = config;
-    return custom.xAxisLabel({ name: this.#name, index: this.#index }, config);
+    return this.#renderer({ name: this.#name, index: this.#index }, config);
   }
 }
 
-class YAxisLabel extends StatelessWidget {
-  #name: string;
-  #index: number;
-
+class XAxisLabel extends AxisLabel {
   constructor({ name, index }: { name: string; index: number }) {
-    super();
-    this.#name = name;
-    this.#index = index;
+    super({
+      name,
+      index,
+      renderer: (args, config) => config.custom.xAxisLabel(args, config),
+    });
   }
+}
 
-  override build(context: BuildContext): Widget {
-    const config = BubbleChartConfigProvider.of(context);
-    const { custom } = config;
-    return custom.yAxisLabel({ name: this.#name, index: this.#index }, config);
+class YAxisLabel extends AxisLabel {
+  constructor({ name, index }: { name: string; index: number }) {
+    super({
+      name,
+      index,
+      renderer: (args, config) => config.custom.yAxisLabel(args, config),
+    });
   }
 }
 
