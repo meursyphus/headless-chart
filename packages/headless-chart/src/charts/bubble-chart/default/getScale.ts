@@ -1,30 +1,43 @@
 import type { BubbleChartData, BubbleChartScale } from "../types";
+import { getValueEdge, refineScale, type Scale } from "@shared/utils/scale";
 
 export function getScale({ datasets }: BubbleChartData): BubbleChartScale {
-  let xMin = Infinity;
-  let xMax = -Infinity;
-  let yMin = Infinity;
-  let yMax = -Infinity;
-  let valueMin = Infinity;
-  let valueMax = -Infinity;
+  const xValues: number[] = [];
+  const yValues: number[] = [];
+  const values: number[] = [];
 
   datasets.forEach((d) => {
     d.data.forEach((p) => {
-      if (p.x < xMin) xMin = p.x;
-      if (p.x > xMax) xMax = p.x;
-      if (p.y < yMin) yMin = p.y;
-      if (p.y > yMax) yMax = p.y;
-      if (p.value < valueMin) valueMin = p.value;
-      if (p.value > valueMax) valueMax = p.value;
+      xValues.push(p.x);
+      yValues.push(p.y);
+      values.push(p.value);
     });
   });
 
+  const xEdge = getValueEdge(xValues);
+  const yEdge = getValueEdge(yValues);
+  const valueEdge = getValueEdge(values);
+
+  const roughStepCount = 10;
+
+  const xScale = refineScale({
+    min: xEdge.min,
+    max: xEdge.max,
+    step: (xEdge.max - xEdge.min) / roughStepCount,
+  });
+
+  const yScale = refineScale({
+    min: yEdge.min,
+    max: yEdge.max,
+    step: (yEdge.max - yEdge.min) / roughStepCount,
+  });
+
   return {
-    xMin,
-    xMax,
-    yMin,
-    yMax,
-    valueMin,
-    valueMax,
+    xMin: xScale.min,
+    xMax: xScale.max,
+    yMin: yScale.min,
+    yMax: yScale.max,
+    valueMin: valueEdge.min,
+    valueMax: valueEdge.max,
   };
 }
