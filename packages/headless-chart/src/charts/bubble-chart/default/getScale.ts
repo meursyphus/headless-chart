@@ -1,5 +1,5 @@
 import type { BubbleChartData, BubbleChartScale } from "../types";
-import { getValueEdge, refineScale, type Scale } from "@shared/utils/scale";
+import { getValueEdge, refineScale } from "@shared/utils/scale";
 
 export function getScale({ datasets }: BubbleChartData): BubbleChartScale {
   const xValues: number[] = [];
