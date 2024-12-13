@@ -77,16 +77,15 @@ class XAxis extends StatelessWidget {
     const config = BubbleChartConfigProvider.of(context);
     const { custom } = config;
     const { scale } = config;
-    const stepCount = scale.x.step;
-    const stepSize = (scale.x.max - scale.x.min) / stepCount;
+    const xSteps = (scale.x.max - scale.x.min) / scale.x.step;
     const labels = [];
-    for (let i = 0; i <= stepCount; i++) {
-      labels.push((scale.x.min + i * stepSize).toFixed(2));
+    for (let i = 0; i <= xSteps; i++) {
+      labels.push((scale.x.min + i * scale.x.step));
     }
 
     return custom.xAxis(
       {
-        labels: labels.map((name, index) => new XAxisLabel({ name, index })),
+        labels: labels.map((name, index) => new XAxisLabel({ name: `${name}`, index })),
         tick: new XAxisTick(),
         line: new XAxisLine(),
       },
@@ -100,16 +99,15 @@ class YAxis extends StatelessWidget {
     const config = BubbleChartConfigProvider.of(context);
     const { custom } = config;
     const { scale } = config;
-    const stepCount = scale.y.step;
-    const stepSize = (scale.y.max - scale.y.min) / stepCount;
+    const ySteps = (scale.y.max - scale.y.min) / scale.y.step;
     const labels = [];
-    for (let i = 0; i <= stepCount; i++) {
-      labels.push((scale.y.min + i * stepSize).toFixed(2));
+    for (let i = 0; i <= ySteps; i++) {
+      labels.push((scale.y.min + i * scale.y.step));
     }
 
     return custom.yAxis(
       {
-        labels: labels.map((name, index) => new YAxisLabel({ name, index })),
+        labels: labels.map((name, index) => new YAxisLabel({ name: `${name}`, index })),
         tick: new YAxisTick(),
         line: new YAxisLine(),
       },
@@ -187,55 +185,19 @@ class YAxisLine extends StatelessWidget {
 class Series extends StatelessWidget {
   override build(context: BuildContext): Widget {
     const config = BubbleChartConfigProvider.of(context);
-    const { custom, data } = config;
+    const { custom, data, scale } = config;
 
-    return custom.series(
-      {
-        bubbles: data.datasets.map(
-          (dataset, index) =>
-            new BubbleWidget({
-              points: dataset.data,
-              index,
-              legend: dataset.legend,
-            }),
-        ),
-      },
-      config,
+    // 모든 dataset의 points를 하나의 배열로 합치기
+    const points = data.datasets.flatMap((dataset, datasetIndex) =>
+      dataset.data.map((pt) => ({
+        ...pt,
+        legend: dataset.legend,
+        index: datasetIndex,
+      })),
     );
-  }
-}
 
-class BubbleWidget extends StatelessWidget {
-  #points: { x: number; y: number; value: number; label: string }[];
-  #index: number;
-  #legend: string;
-
-  constructor({
-    points,
-    index,
-    legend,
-  }: {
-    points: { x: number; y: number; value: number; label: string }[];
-    index: number;
-    legend: string;
-  }) {
-    super();
-    this.#points = points;
-    this.#index = index;
-    this.#legend = legend;
-  }
-
-  override build(context: BuildContext): Widget {
-    const config = BubbleChartConfigProvider.of(context);
-    const { custom } = config;
-    return custom.bubble(
-      {
-        points: this.#points,
-        legend: this.#legend,
-        index: this.#index,
-      },
-      config,
-    );
+    // custom.series에 { points, scale } 형태로 전달
+    return custom.series({ points, scale }, config);
   }
 }
 

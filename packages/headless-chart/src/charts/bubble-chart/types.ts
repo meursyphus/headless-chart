@@ -33,8 +33,8 @@ export type BubbleChartCustom = {
   yAxisLabel: ConfigArgs<{ name: string; index: number }>;
   xAxisTick: ConfigArgs;
   yAxisTick: ConfigArgs;
-  series: ConfigArgs<{ bubbles: Widget[] }>;
-  bubble: ConfigArgs<{ points: {x:number; y:number; value:number; label:string}[], legend:string, index:number }>;
+  series: ConfigArgs<{ points: {x:number; y:number; value:number; label:string; legend:string; index:number}[]; scale: BubbleChartScale }>;
+  bubble: ConfigArgs<{ value:number; label:string; legend:string; index:number }>;
   layout: ConfigArgs<{ title: Widget; legends: Widget[]; plot: Widget }>;
   plot: ConfigArgs<{ xAxis: Widget; yAxis: Widget; series: Widget; grid: Widget }>;
   legend: ConfigArgs<{ name: string; index: number }>;
