@@ -1,0 +1,52 @@
+import type { Widget } from "@meursyphus/flitter";
+
+type ConfigArgs<T = undefined> = (args: T, context: BubbleChartConfig) => Widget;
+
+export type BubbleChartData = {
+  datasets: {
+    legend: string;
+    data: {
+      x: number;
+      y: number;
+      value: number;
+      label: string;
+    }[];
+  }[];
+};
+
+export type BubbleChartScale = {
+  xMin: number;
+  xMax: number;
+  yMin: number;
+  yMax: number;
+  valueMin: number;
+  valueMax: number;
+};
+
+export type BubbleChartCustom = {
+  xAxis: ConfigArgs<{ line: Widget; labels: Widget[]; tick: Widget }>;
+  yAxis: ConfigArgs<{ line: Widget; labels: Widget[]; tick: Widget }>;
+  xAxisLabel: ConfigArgs<{ name: string; index: number }>;
+  yAxisLabel: ConfigArgs<{ name: string; index: number }>;
+  xAxisTick: ConfigArgs;
+  yAxisTick: ConfigArgs;
+  series: ConfigArgs<{ bubbles: Widget[] }>;
+  bubble: ConfigArgs<{ points: {x:number; y:number; value:number; label:string}[], legend:string, index:number }>;
+  layout: ConfigArgs<{ title: Widget; legends: Widget[]; plot: Widget }>;
+  plot: ConfigArgs<{ xAxis: Widget; yAxis: Widget; series: Widget; grid: Widget }>;
+  legend: ConfigArgs<{ name: string; index: number }>;
+  title: ConfigArgs<{ name: string }>;
+  dataLabel: ConfigArgs<{ x:number; y:number; value: number; label: string; legend: string }>;
+  xAxisLine: ConfigArgs;
+  yAxisLine: ConfigArgs;
+  grid: ConfigArgs<{ xLine: Widget; yLine: Widget }>;
+  gridXLine: ConfigArgs;
+  gridYLine: ConfigArgs;
+};
+
+export type BubbleChartConfig = {
+  custom: BubbleChartCustom;
+  data: BubbleChartData;
+  scale: BubbleChartScale;
+  title: string;
+};
