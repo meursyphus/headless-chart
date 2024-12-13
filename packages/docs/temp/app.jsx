@@ -24,6 +24,8 @@ import {
 
 import Area from "./area";
 import Series from "./series";
+import XAxis from "./xAxis";
+import YAxis from "./yAxis";
 
 const data = {
   labels: [
@@ -100,6 +102,8 @@ const chart = AreaChart({
       }),
     area: Area,
     series: ({areas}) => new Series({areas}),
+    xAxis: ({labels, line, tick}) => new XAxis({labels, line, tick}),
+    yAxis: ({labels, line, tick}) => new YAxis({labels, line, tick}),
     xAxisLabel: (...[{ name }]) =>
       Padding({
         padding: EdgeInsets.only({ top: 1 }),
