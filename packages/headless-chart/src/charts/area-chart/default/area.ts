@@ -1,8 +1,8 @@
-import type { LineChartCustom, LineChartScale } from "../types";
+import type { AreaChartCustom, AreaChartScale } from "../types";
 import { CustomPaint, Path } from "@meursyphus/flitter";
 
 export function Line(
-  ...[{ values }, { scale }]: Parameters<LineChartCustom["line"]>
+  ...[{ values }, { scale }]: Parameters<AreaChartCustom["area"]>
 ) {
   return CustomPaint({
     painter: {
@@ -39,7 +39,7 @@ function createLinePath({
   height,
 }: {
   values: number[];
-  scale: LineChartScale;
+  scale: AreaChartScale;
   width: number;
   height: number;
 }) {

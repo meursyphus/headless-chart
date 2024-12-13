@@ -1,14 +1,14 @@
 import { type Widget, StatelessWidget } from "@meursyphus/flitter";
-import type { LineChartCustom, LineChartData, LineChartScale } from "./types";
-import { LineChartConfigProvider } from "./provider";
+import type { AreaChartCustom, AreaChartData, AreaChartScale } from "./types";
+import { AreaChartConfigProvider } from "./provider";
 import * as Default from "./default";
 import Chart from "./chart";
 import { classToFn } from "@utils/index";
 
 class BarChart extends StatelessWidget {
-  #config: LineChartCustom;
-  #data: LineChartData;
-  #getScale: (data: LineChartData) => LineChartScale;
+  #config: AreaChartCustom;
+  #data: AreaChartData;
+  #getScale: (data: AreaChartData) => AreaChartScale;
   #title: string;
 
   constructor({
@@ -25,7 +25,7 @@ class BarChart extends StatelessWidget {
       legend = Default.Legend,
       title: titleWidget = Default.Title,
       dataLabel = Default.DataLabel,
-      line = Default.Line,
+      area: line = Default.Line,
       xAxisLine = Default.XAxisLine,
       yAxisLine = Default.YAxisLine,
       grid = Default.Grid,
@@ -36,17 +36,17 @@ class BarChart extends StatelessWidget {
     data,
     title = "",
   }: {
-    custom?: Partial<LineChartCustom>;
+    custom?: Partial<AreaChartCustom>;
     title?: string;
-    data: LineChartData;
-    getScale?: (data: LineChartData) => LineChartScale;
+    data: AreaChartData;
+    getScale?: (data: AreaChartData) => AreaChartScale;
   }) {
     super();
     this.#data = data;
     this.#getScale = getScale;
     this.#title = title;
     this.#config = {
-      line,
+      area: line,
       xAxis,
       xAxisLabel,
       xAxisTick,
@@ -70,7 +70,7 @@ class BarChart extends StatelessWidget {
   override build(): Widget {
     const scale = this.#getScale(this.#data);
 
-    return LineChartConfigProvider({
+    return AreaChartConfigProvider({
       value: {
         custom: this.#config,
         data: this.#data,

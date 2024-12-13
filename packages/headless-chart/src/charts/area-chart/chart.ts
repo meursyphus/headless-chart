@@ -3,7 +3,7 @@ import {
   type Widget,
   type BuildContext,
 } from "@meursyphus/flitter";
-import { LineChartConfigProvider } from "./provider";
+import { AreaChartConfigProvider } from "./provider";
 
 class Chart extends StatelessWidget {
   override build(_: BuildContext): Widget {
@@ -15,12 +15,12 @@ export default Chart;
 
 class Layout extends StatelessWidget {
   #getLegends(context: BuildContext): string[] {
-    const { data } = LineChartConfigProvider.of(context);
+    const { data } = AreaChartConfigProvider.of(context);
     return data.datasets.map(({ legend }) => legend);
   }
 
   override build(context: BuildContext): Widget {
-    const config = LineChartConfigProvider.of(context);
+    const config = AreaChartConfigProvider.of(context);
     const { custom } = config;
     return custom.layout(
       {
@@ -46,7 +46,7 @@ class Legend extends StatelessWidget {
   }
 
   override build(context: BuildContext): Widget {
-    const config = LineChartConfigProvider.of(context);
+    const config = AreaChartConfigProvider.of(context);
     const { custom } = config;
     return custom.legend({ name: this.#name, index: this.#index }, config);
   }
@@ -54,7 +54,7 @@ class Legend extends StatelessWidget {
 
 class Title extends StatelessWidget {
   override build(context: BuildContext): Widget {
-    const config = LineChartConfigProvider.of(context);
+    const config = AreaChartConfigProvider.of(context);
     const { custom, title } = config;
     return custom.title({ name: title }, config);
   }
@@ -64,7 +64,7 @@ abstract class Axis extends StatelessWidget {
   protected getValueLabels(context: BuildContext): string[] {
     const {
       scale: { min, max, step },
-    } = LineChartConfigProvider.of(context);
+    } = AreaChartConfigProvider.of(context);
     const labels = [];
     for (let i = 0; i <= (max - min) / step; i++) {
       labels.push(min + step * i);
@@ -72,11 +72,11 @@ abstract class Axis extends StatelessWidget {
     return labels.map((label) => label.toString());
   }
   protected getCategoryLabels(context: BuildContext): string[] {
-    const { data } = LineChartConfigProvider.of(context);
+    const { data } = AreaChartConfigProvider.of(context);
     return data.labels;
   }
   protected getLabels(context: BuildContext): string[] {
-    const { data } = LineChartConfigProvider.of(context);
+    const { data } = AreaChartConfigProvider.of(context);
     return data.labels;
   }
 }
@@ -87,7 +87,7 @@ class XAxis extends Axis {
   }
 
   override build(context: BuildContext): Widget {
-    const config = LineChartConfigProvider.of(context);
+    const config = AreaChartConfigProvider.of(context);
     const { custom } = config;
     const labels = this.#getLabels(context);
     return custom.xAxis(
@@ -105,7 +105,7 @@ class XAxis extends Axis {
 
 class XAxisLine extends StatelessWidget {
   override build(context: BuildContext): Widget {
-    const config = LineChartConfigProvider.of(context);
+    const config = AreaChartConfigProvider.of(context);
     const { custom } = config;
     return custom.xAxisLine(undefined, config);
   }
@@ -117,7 +117,7 @@ class YAxis extends Axis {
   }
 
   override build(context: BuildContext): Widget {
-    const config = LineChartConfigProvider.of(context);
+    const config = AreaChartConfigProvider.of(context);
     const { custom } = config;
     return custom.yAxis(
       {
@@ -134,7 +134,7 @@ class YAxis extends Axis {
 
 class YAxisLine extends StatelessWidget {
   override build(context: BuildContext): Widget {
-    const config = LineChartConfigProvider.of(context);
+    const config = AreaChartConfigProvider.of(context);
     const { custom } = config;
     return custom.yAxisLine(undefined, config);
   }
@@ -153,7 +153,7 @@ abstract class Label extends StatelessWidget {
 
 class XAxisLabel extends Label {
   override build(context: BuildContext): Widget {
-    const config = LineChartConfigProvider.of(context);
+    const config = AreaChartConfigProvider.of(context);
     const { custom } = config;
     return custom.xAxisLabel({ name: this.name, index: this.index }, config);
   }
@@ -170,7 +170,7 @@ class YAxisLabel extends StatelessWidget {
   }
 
   override build(context: BuildContext): Widget {
-    const config = LineChartConfigProvider.of(context);
+    const config = AreaChartConfigProvider.of(context);
     const { custom } = config;
     return custom.yAxisLabel({ name: this.#name, index: this.#index }, config);
   }
@@ -178,7 +178,7 @@ class YAxisLabel extends StatelessWidget {
 
 class XAxisTick extends StatelessWidget {
   override build(context: BuildContext): Widget {
-    const config = LineChartConfigProvider.of(context);
+    const config = AreaChartConfigProvider.of(context);
     const { custom } = config;
     return custom.xAxisTick(undefined, config);
   }
@@ -186,7 +186,7 @@ class XAxisTick extends StatelessWidget {
 
 class YAxisTick extends StatelessWidget {
   override build(context: BuildContext): Widget {
-    const config = LineChartConfigProvider.of(context);
+    const config = AreaChartConfigProvider.of(context);
     const { custom } = config;
     return custom.yAxisTick(undefined, config);
   }
@@ -213,9 +213,9 @@ class Line extends StatelessWidget {
   }
 
   override build(context: BuildContext): Widget {
-    const config = LineChartConfigProvider.of(context);
+    const config = AreaChartConfigProvider.of(context);
     const { custom } = config;
-    return custom.line(
+    return custom.area(
       {
         values: this.#values,
         legend: this.#legend,
@@ -228,7 +228,7 @@ class Line extends StatelessWidget {
 
 class Plot extends StatelessWidget {
   override build(context: BuildContext): Widget {
-    const config = LineChartConfigProvider.of(context);
+    const config = AreaChartConfigProvider.of(context);
     const { custom } = config;
     return custom.plot(
       {
@@ -244,7 +244,7 @@ class Plot extends StatelessWidget {
 
 class Series extends StatelessWidget {
   override build(context: BuildContext): Widget {
-    const config = LineChartConfigProvider.of(context);
+    const config = AreaChartConfigProvider.of(context);
     const { custom, data } = config;
     return custom.series(
       {
@@ -264,7 +264,7 @@ class Series extends StatelessWidget {
 
 class Grid extends StatelessWidget {
   override build(context: BuildContext): Widget {
-    const config = LineChartConfigProvider.of(context);
+    const config = AreaChartConfigProvider.of(context);
     const { custom } = config;
     return custom.grid(
       { xLine: new GridXLine(), yLine: new GridYLine() },
@@ -275,7 +275,7 @@ class Grid extends StatelessWidget {
 
 class GridXLine extends StatelessWidget {
   override build(context: BuildContext): Widget {
-    const config = LineChartConfigProvider.of(context);
+    const config = AreaChartConfigProvider.of(context);
     const { custom } = config;
     return custom.gridXLine(undefined, config);
   }
@@ -283,7 +283,7 @@ class GridXLine extends StatelessWidget {
 
 class GridYLine extends StatelessWidget {
   override build(context: BuildContext): Widget {
-    const config = LineChartConfigProvider.of(context);
+    const config = AreaChartConfigProvider.of(context);
     const { custom } = config;
     return custom.gridYLine(undefined, config);
   }

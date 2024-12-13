@@ -1,4 +1,4 @@
-import type { LineChartCustom } from "../types";
+import type { AreaChartCustom } from "../types";
 import {
   Column,
   Container,
@@ -10,7 +10,7 @@ import {
 } from "@meursyphus/flitter";
 
 export function Layout(
-  ...[{ title, legends, plot }, { data }]: Parameters<LineChartCustom["layout"]>
+  ...[{ title, legends, plot }, { data }]: Parameters<AreaChartCustom["layout"]>
 ) {
   return Container({
     padding: EdgeInsets.only({

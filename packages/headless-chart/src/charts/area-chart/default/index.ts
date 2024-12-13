@@ -1,5 +1,5 @@
 export * from "./getScale";
-export * from "./line";
+export * from "./area";
 export * from "./data-label";
 export * from "./layout";
 export * from "./legend";
