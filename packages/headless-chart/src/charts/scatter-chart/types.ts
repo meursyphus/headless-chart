@@ -1,45 +1,70 @@
 import type { Widget } from "@meursyphus/flitter";
 
-type ConfigArgs<T = undefined> = (args: T, context: BubbleChartConfig) => Widget;
+type ConfigArgs<T = undefined> = (
+  args: T,
+  context: ScatterChartConfig,
+) => Widget;
 
-export type BubbleChartData = {
+export type ScatterChartData = {
   datasets: {
     legend: string;
     data: {
       x: number;
       y: number;
-      value: number;
       label: string;
     }[];
   }[];
 };
 
-export type BubbleScale = {
+export type ScatterScale = {
   min: number;
   max: number;
   step: number;
-}
-
-export type BubbleChartScale = {
-  x: BubbleScale;
-  y: BubbleScale;
-  value: BubbleScale;
 };
 
-export type BubbleChartCustom = {
+export type ScatterChartScale = {
+  x: ScatterScale;
+  y: ScatterScale;
+};
+
+export type ScatterChartCustom = {
   xAxis: ConfigArgs<{ line: Widget; labels: Widget[]; tick: Widget }>;
   yAxis: ConfigArgs<{ line: Widget; labels: Widget[]; tick: Widget }>;
   xAxisLabel: ConfigArgs<{ name: string; index: number }>;
   yAxisLabel: ConfigArgs<{ name: string; index: number }>;
   xAxisTick: ConfigArgs;
   yAxisTick: ConfigArgs;
-  series: ConfigArgs<{ points: {x:number; y:number; value:number; label:string; legend:string; index:number}[]; scale: BubbleChartScale }>;
-  bubble: ConfigArgs<{ value:number; label:string; legend:string; index:number }>;
+  series: ConfigArgs<{
+    points: {
+      x: number;
+      y: number;
+      label: string;
+      legend: string;
+      index: number;
+    }[];
+    scale: ScatterChartScale;
+  }>;
+  scatter: ConfigArgs<{
+    label: string;
+    legend: string;
+    index: number;
+  }>;
   layout: ConfigArgs<{ title: Widget; legends: Widget[]; plot: Widget }>;
-  plot: ConfigArgs<{ xAxis: Widget; yAxis: Widget; series: Widget; grid: Widget }>;
+  plot: ConfigArgs<{
+    xAxis: Widget;
+    yAxis: Widget;
+    series: Widget;
+    grid: Widget;
+  }>;
   legend: ConfigArgs<{ name: string; index: number }>;
   title: ConfigArgs<{ name: string }>;
-  dataLabel: ConfigArgs<{ x:number; y:number; value: number; label: string; legend: string }>;
+  dataLabel: ConfigArgs<{
+    x: number;
+    y: number;
+    value: number;
+    label: string;
+    legend: string;
+  }>;
   xAxisLine: ConfigArgs;
   yAxisLine: ConfigArgs;
   grid: ConfigArgs<{ xLine: Widget; yLine: Widget }>;
@@ -47,9 +72,9 @@ export type BubbleChartCustom = {
   gridYLine: ConfigArgs;
 };
 
-export type BubbleChartConfig = {
-  custom: BubbleChartCustom;
-  data: BubbleChartData;
-  scale: BubbleChartScale;
+export type ScatterChartConfig = {
+  custom: ScatterChartCustom;
+  data: ScatterChartData;
+  scale: ScatterChartScale;
   title: string;
 };
