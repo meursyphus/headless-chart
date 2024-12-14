@@ -1,9 +1,9 @@
 import Widget from "@meursyphus/flitter-react";
 import { BarChart } from "@meursyphus/headless-chart";
 import {
+  Flexible,
   Text,
   Border,
-  BorderSide,
   BoxDecoration,
   Column,
   Container,
@@ -26,6 +26,13 @@ import {
   Offset,
   Matrix4,
   BorderRadius,
+  StatefulWidget,
+  State,
+  AnimationController,
+  Tween,
+  CurvedAnimation,
+  Curves,
+  Expanded,
 } from "@meursyphus/flitter";
 
 const data = {
@@ -43,13 +50,62 @@ const data = {
 };
 
 const backgroundColors = [
-  "rgba(255, 99, 132, 0.2)",
-  "rgba(54, 162, 235, 0.2)"
+  "rgba(255, 99, 132, 0.4)",
+  "rgba(54, 162, 235, 0.4)"
 ];
 const borderColors = [
   "rgb(255, 99, 132)",
   "rgb(54, 162, 235)"
 ];
+
+class AnimatedBar extends StatefulWidget {
+  constructor({ value, width, backgroundColor, borderRadius, borderColor }) {
+    super();
+    this.value = value;
+    this.width = width;
+    this.backgroundColor = backgroundColor;
+    this.borderRadius = borderRadius;
+    this.borderColor = borderColor;
+  }
+
+  createState() {
+    return new AnimatedBarState();
+  }
+}
+
+class AnimatedBarState extends State {
+  initState() {
+    this.animationController = new AnimationController({ duration: 1000 });
+    this.animationController.addListener(() => {
+      this.setState();
+    });
+    const tween = new Tween({ begin: 0, end: 1 });
+    this.tweenAnimation = tween.animated(
+      new CurvedAnimation({
+        parent: this.animationController,
+        curve: Curves.backOut,
+      })
+    );
+    this.animationController.forward();
+  }
+
+  build(context) {
+    const { width, backgroundColor, borderRadius, borderColor } = this.widget;
+    
+    return Transform({
+      transform: Matrix4.diagonal3Values(1, this.tweenAnimation.value, 1),
+      alignment: this.widget.value < 0 ? Alignment.topCenter : Alignment.bottomCenter,
+      child: Container({
+        width: width,
+        decoration: new BoxDecoration({
+          color: backgroundColor,
+          borderRadius: borderRadius,
+          border: Border.all({ color: borderColor, width: 2 }),
+        }),
+      })
+    });
+  }
+}
 
 const chart = BarChart({
   data,
@@ -63,29 +119,31 @@ const chart = BarChart({
       return Container({
         width: Infinity,
         height: Infinity,
+        padding: EdgeInsets.symmetric({ horizontal: 10 }),
         child: FractionalTranslation({
           translation: { x: 0, y: translation },
           child: Flex({
-            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.end,
             direction: Axis.horizontal,
             children: bars.map((bar, index) => {
               const isNegative = values[index] < 0;
 
-              return FractionallySizedBox({
-                heightFactor: ratios[index],
-                alignment: isNegative ? Alignment.topCenter : Alignment.bottomCenter,
-                child: Padding({
-                  padding: EdgeInsets.symmetric({ horizontal: 2 }),
-                  child: isNegative 
-                  ?
-                  FractionalTranslation({
-                    translation: { x: 0, y: 1 },
-                    child: Transform({transform: Matrix4.diagonal3Values(1, -1, 1), child: bar})
+               return Flexible({
+                child: FractionallySizedBox({
+                  heightFactor: ratios[index],
+                  alignment: isNegative ? Alignment.topCenter : Alignment.bottomCenter,
+                  child: Padding({
+                    padding: EdgeInsets.symmetric({ horizontal: 2 }),
+                    child: isNegative 
+                    ?
+                    FractionalTranslation({
+                      translation: { x: 0, y: 1 },
+                      child: Transform({transform: Matrix4.diagonal3Values(1, -1, 1), child: bar})
+                    })
+                    : bar
                   })
-                  : bar
                 })
-              });
+               }) 
             })
           })
         })
@@ -120,16 +178,15 @@ const chart = BarChart({
           ],
         }),
       }),
-    bar: (...[{ label, legend }]) => {
+    bar: (...[{ label, legend, value }]) => {
       const index = data.datasets.findIndex((dataset) => dataset.legend === legend);
       const backgroundColor = backgroundColors[index];
-      return Container({
-        width: 30,
-        decoration: new BoxDecoration({
-          color: backgroundColor,
-          borderRadius: index === 0 ? BorderRadius.circular(15) : BorderRadius.circular(5),
-          border: Border.all({ color: borderColors[index], width: 2 }),
-        }),
+      return new AnimatedBar({
+        value,
+        width: Infinity,
+        backgroundColor: backgroundColor,
+        borderRadius: index === 0 ? BorderRadius.circular(15) : BorderRadius.circular(5),
+        borderColor: borderColors[index],
       });
     },
     xAxisLabel: (...[{ name }]) => Padding({
