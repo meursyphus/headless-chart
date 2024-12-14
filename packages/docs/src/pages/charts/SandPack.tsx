@@ -92,9 +92,7 @@ const customSetup = {
     "@meursyphus/flitter": "2.0.2",
     "react-dom": "^18.2.0",
     react: "^18.2.0",
-    "react-markdown": "^9.0.1",
-    "@meursyphus/flitter-chart": "0.0.9",
-    "@meursyphus/headless-chart": "^0.0.5",
+    "@meursyphus/headless-chart": "^0.0.6",
   },
 };
 

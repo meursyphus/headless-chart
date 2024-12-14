@@ -2,22 +2,13 @@ import Widget from "@meursyphus/flitter-react";
 import { AreaChart } from "@meursyphus/headless-chart";
 import {
   Text,
-  CustomPaint,
-  Path,
-  Rect,
-  Offset,
-  BoxDecoration,
-  Column,
   Container,
-  CrossAxisAlignment,
   EdgeInsets,
   Row,
   SizedBox,
   TextStyle,
   Flexible,
   Padding,
-  MainAxisSize,
-  MainAxisAlignment,
   Stack,
   Positioned,
 } from "@meursyphus/flitter";

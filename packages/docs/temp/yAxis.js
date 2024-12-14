@@ -21,6 +21,7 @@ import {
   CrossAxisAlignment,
   SizedBox,
   Tween,
+  VerticalDirection,
 } from "@meursyphus/flitter";
 
 function IgnoreHeight({ child, isEdge = false }) {
@@ -75,6 +76,7 @@ class YAxisState extends State {
         child: Column({
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.end,
+          verticalDirection: VerticalDirection.up,
           children: labels.map((label) =>
             IgnoreHeight({ child: label })
           ),
