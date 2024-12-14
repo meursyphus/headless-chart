@@ -162,9 +162,9 @@ const chart = ScatterChart({
         child: Stack({
           children: [
             Positioned({
-              top: 0,
+              top: -20,
               right: 0,
-              child: Text("Bubble Chart Example", {
+              child: Text("Toast Chart Example", {
                 style: new TextStyle({
                   fontSize: 14,
                   color: "#999999",

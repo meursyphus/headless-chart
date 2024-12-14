@@ -66,7 +66,7 @@ class YAxisState extends State {
 
   build(context) {
     const { line, labels, tick } = this.widget;
-
+ 
     const VerticalLine = () => line;
 
     const Labels = () =>
@@ -74,7 +74,7 @@ class YAxisState extends State {
         heightFactor: this.tweenAnimation.value,
         alignment: Alignment.bottomCenter,
         child: Column({
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.end,
           verticalDirection: VerticalDirection.up,
           children: labels.map((label) =>
@@ -89,7 +89,7 @@ class YAxisState extends State {
         alignment: Alignment.bottomCenter,
         child: Column({
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: Array(labels.length + 1).fill(0).map(() => tick),
+          children: Array(labels.length).fill(0).map(() => tick),
         }),
       });
 
