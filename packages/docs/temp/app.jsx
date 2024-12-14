@@ -1,80 +1,105 @@
 import Widget from "@meursyphus/flitter-react";
-import { AreaChart } from "@meursyphus/headless-chart";
+import { BarChart } from "@meursyphus/headless-chart";
 import {
   Text,
+  Border,
+  BorderSide,
+  BoxDecoration,
+  Column,
   Container,
   EdgeInsets,
   Row,
   SizedBox,
   TextStyle,
-  Flexible,
   Padding,
+  MainAxisSize,
+  MainAxisAlignment,
   Stack,
   Positioned,
+  Flex,
+  Axis,
+  Alignment,
+  FractionallySizedBox,
+  FractionalTranslation,
+  Transform,
+  CrossAxisAlignment,
+  Offset,
+  Matrix4,
+  BorderRadius,
 } from "@meursyphus/flitter";
 
-import Area from "./area";
-import Series from "./series";
-import XAxis from "./xAxis";
-import YAxis from "./yAxis";
-
 const data = {
-  labels: [
-    "plane",
-    "helicopter",
-    "boat",
-    "train",
-    "subway",
-    "bus",
-    "car",
-    "moto",
-    "bicycle",
-    "horse",
-    "skateboard",
-    "others",
-  ],
+  labels: ["January", "February", "March", "April", "May", "June", "July"],
   datasets: [
     {
-      legend: "norway",
-      values: [600, 1000, -800, 1000, 500, 850, 600, 675, 720, 890, 700, 950],
-    },
-
-    {
-      legend: "germany",
-      values: [565, 850, -734, 863, 268, 571, -396, 588, 442, 726, 640, 732],
+      legend: "Fully Rounded",
+      values: [120, -50, 70, -80, 100, 40, -30],
     },
     {
-      legend: "us",
-      values: [435, 559, -482, 580, 167, 308, -255, 557, 437, 438, 543, 554],
-    },
-    {
-      legend: "france",
-      values: [242, 405, -262, 418, 109, 224, -216, 339, 428, 284, 247, 416],
-    },
-    {
-      legend: "japan",
-      values: [126, 166, -238, 122, 102, 120, -70, 281, 234, 59, 213, 289],
+      legend: "Small Rounded",
+      values: [50, -40, 60, 70, 50, -50, 30],
     },
   ],
 };
 
-const chart = AreaChart({
+const backgroundColors = [
+  "rgba(255, 99, 132, 0.2)",
+  "rgba(54, 162, 235, 0.2)"
+];
+const borderColors = [
+  "rgb(255, 99, 132)",
+  "rgb(54, 162, 235)"
+];
+
+const chart = BarChart({
   data,
-  getScale: () => ({
-    min: -900,
-    max: 1100,
-    step: 200,
-  }),
   custom: {
-    layout: (...[{ legends, plot, title }]) =>
+    barGroup: (...[{ bars, values }, { scale }]) => {
+      const total = scale.max - scale.min;
+      const zeroPosition = -scale.min / total;
+      const ratios = values.map((value) => Math.abs(value) / total);
+      const translation = 0 - zeroPosition
+
+      return Container({
+        width: Infinity,
+        height: Infinity,
+        child: FractionalTranslation({
+          translation: { x: 0, y: translation },
+          child: Flex({
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            direction: Axis.horizontal,
+            children: bars.map((bar, index) => {
+              const isNegative = values[index] < 0;
+
+              return FractionallySizedBox({
+                heightFactor: ratios[index],
+                alignment: isNegative ? Alignment.topCenter : Alignment.bottomCenter,
+                child: Padding({
+                  padding: EdgeInsets.symmetric({ horizontal: 2 }),
+                  child: isNegative 
+                  ?
+                  FractionalTranslation({
+                    translation: { x: 0, y: 1 },
+                    child: Transform({transform: Matrix4.diagonal3Values(1, -1, 1), child: bar})
+                  })
+                  : bar
+                })
+              });
+            })
+          })
+        })
+      });
+    },
+    layout: (...[{ legends, plot }]) => 
       Container({
-        padding: EdgeInsets.only({ top: 50, left: 50, bottom: 70 }),
+        padding: EdgeInsets.only({ left: 30, bottom: 70 }),
         child: Stack({
           children: [
             Positioned({
-              top: -20,
+              top: 0,
               right: 0,
-              child: Text("Inspired by Toast", {
+              child: Text("Inspired by Chart.js", {
                 style: new TextStyle({
                   fontSize: 14,
                   color: "#999999",
@@ -82,68 +107,109 @@ const chart = AreaChart({
                 }),
               }),
             }),
-            Row({
+            Column({
               children: [
-                Flexible({ flex: 1, child: plot }),
-                SizedBox({ width: 20 }),
+                Row({
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [...legends, SizedBox({ width: 30 })],
+                }),
+                SizedBox({ height: 5 }),
+                plot,
               ],
             }),
           ],
         }),
       }),
-    area: Area,
-    series: ({areas}) => new Series({areas}),
-    xAxis: ({labels, line, tick}) => new XAxis({labels, line, tick}),
-    yAxis: ({labels, line, tick}) => new YAxis({labels, line, tick}),
-    xAxisLabel: (...[{ name }]) =>
+    bar: (...[{ label, legend }]) => {
+      const index = data.datasets.findIndex((dataset) => dataset.legend === legend);
+      const backgroundColor = backgroundColors[index];
+      return Container({
+        width: 30,
+        decoration: new BoxDecoration({
+          color: backgroundColor,
+          borderRadius: index === 0 ? BorderRadius.circular(15) : BorderRadius.circular(5),
+          border: Border.all({ color: borderColors[index], width: 2 }),
+        }),
+      });
+    },
+    xAxisLabel: (...[{ name }]) => Padding({
+      padding: EdgeInsets.only({ top: 1 }),
+      child: Text(name, {
+        style: new TextStyle({
+          fontFamily: "Noto Sans JP",
+          fontSize: 12,
+          color: "#666666",
+        }),
+      }),
+    }),
+    yAxisLabel: (...[{ name }]) => Padding({
+      padding: EdgeInsets.only({ right: 1 }),
+      child: Text(name, {
+        style: new TextStyle({
+          fontFamily: "Noto Sans JP",
+          fontSize: 12,
+          color: "#666666",
+        }),
+      }),
+    }),
+    xAxisTick: () => Container({
+      height: 6,
+      width: 1,
+      color: "#DDDDDD",
+    }),
+    yAxisTick: () => Container({
+      height: 1,
+      width: 6,
+      color: "#DDDDDD",
+    }),
+    yAxisLine: () => Container({
+      color: "#BBBBBB",
+      width: 1,
+      height: Infinity,
+    }),
+    xAxisLine: () => Container({
+      color: "#BBBBBB",
+      height: 1,
+      width: Infinity,
+    }),
+    legend: (...[{ name, index }]) => 
       Padding({
-        padding: EdgeInsets.only({ top: 1 }),
-        child: Text(name, {
+        padding: EdgeInsets.only({ left: index === 0 ? 0 : 10 }),
+        child: Row({
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container({
+          width: 36,
+          height: 12,
+          decoration: new BoxDecoration({
+            color: backgroundColors[index],
+            border: Border.all({ color: borderColors[index] }),
+          }),
+        }),
+        SizedBox({ width: 5 }),
+        Text(name, {
           style: new TextStyle({
             fontFamily: "Noto Sans JP",
-            fontSize: 12,
+            fontSize: 14,
             color: "#666666",
           }),
         }),
-      }),
-    yAxisLabel: (...[{ name }]) =>
-      Padding({
-        padding: EdgeInsets.only({ right: 1 }),
-        child: Text(name, {
-          style: new TextStyle({
-            fontFamily: "Noto Sans JP",
-            fontSize: 12,
-            color: "#666666",
-          }),
-        }),
-      }),
-    xAxisTick: () =>
-      Container({
-        height: 6,
-        width: 1,
-        color: "#BBBBBB",
-      }),
-    yAxisTick: () =>
-      Container({
-        height: 1,
-        width: 6,
-        color: "#BBBBBB",
-      }),
-    yAxisLine: () =>
-      Container({
-        color: "#BBBBBB",
-        width: 1,
-      }),
-    xAxisLine: () =>
-      Container({
-        color: "#BBBBBB",
-        height: 1,
-      }),
-    gridXLine: () => Container({ height: 1, color: "#DDDDDD" }),
-    gridYLine: () => Container({ width: 1, color: "#DDDDDD" }),
+      ],
+    })
+  }),
+    gridXLine: () => Container({ height: 1, color: "#EEEEEE" }),
+    gridYLine: () => Container({ width: 1, color: "#EEEEEE" }),
   },
 });
 
 export default function App() {
-  return <Widget width="auto" height="400px" widget={chart} renderer="svg" />;
+  return (
+    <Widget
+      width="auto"
+      height="400px"
+      widget={chart}
+      renderer="svg"
+    />
+  );
 }
