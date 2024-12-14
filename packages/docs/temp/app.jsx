@@ -1,11 +1,8 @@
 import Widget from "@meursyphus/flitter-react";
 import { ScatterChart } from "@meursyphus/headless-chart";
 import {
-  VerticalDirection,
-  Opacity,
   Text,
   BoxDecoration,
-  Column,
   Container,
   EdgeInsets,
   Row,
@@ -13,20 +10,8 @@ import {
   TextStyle,
   Padding,
   MainAxisSize,
-  MainAxisAlignment,
   Stack,
   Positioned,
-  Alignment,
-  CrossAxisAlignment,
-  FractionallySizedBox,
-  Curves,
-  CurvedAnimation,
-  AnimationController,
-  Tween,
-  StatefulWidget,
-  State,
-  ConstraintsTransformBox,
-  Transform,
 } from "@meursyphus/flitter";
 
 import defaultColors from "./colors";
