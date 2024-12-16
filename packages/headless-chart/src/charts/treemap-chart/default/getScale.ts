@@ -1,4 +1,4 @@
-import type { TreeMapChartData, TreeMapChartScale } from "../type";
+import type { TreeMapChartData, TreeMapChartScale } from "../types";
 import * as Cartesian from "@shared/cartesian";
 
 export function getScale({

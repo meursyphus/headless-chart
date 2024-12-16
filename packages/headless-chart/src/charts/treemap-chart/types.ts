@@ -18,8 +18,9 @@ export type TreeMapChartCustom = {
   legend: ConfigArgs<{ name: string; index: number }>;
   title: ConfigArgs<{ name: string }>;
   dataLabel: ConfigArgs<{ value: number; label: string; legend: string }>;
-  grid: ConfigArgs<{ xLines: Widget[]; yLines: Widget[] }>;
-  gridLine: ConfigArgs;
+  grid: ConfigArgs<{ xLines: Widget; yLines: Widget }>;
+  gridXLine: ConfigArgs;
+  gridYLine: ConfigArgs;
 };
 
 export type TreeMapChartData = {

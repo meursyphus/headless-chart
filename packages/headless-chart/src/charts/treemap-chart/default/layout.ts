@@ -1,4 +1,4 @@
-import type { TreeMapChartCustom } from "../type";
+import type { TreeMapChartCustom } from "../types";
 import {
   Column,
   Container,

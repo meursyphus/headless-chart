@@ -1,4 +1,5 @@
 import { type Widget, Provider, BuildContext } from "@meursyphus/flitter";
+import { TreeMapChartConfig } from "./types";
 
 const TREE_MAP_CHART_CONTEXT_KEY = Symbol("TreeMapChartKey");
 
@@ -7,7 +8,7 @@ export function TreeMapChartConfigProvider({
   value,
 }: {
   child: Widget;
-  value: any;
+  value: TreeMapChartConfig;
 }): Widget {
   return Provider({
     child,
@@ -16,6 +17,6 @@ export function TreeMapChartConfigProvider({
   });
 }
 
-TreeMapChartConfigProvider.of = (context: BuildContext) => {
+TreeMapChartConfigProvider.of = (context: BuildContext): TreeMapChartConfig => {
   return Provider.of(TREE_MAP_CHART_CONTEXT_KEY, context);
 };
