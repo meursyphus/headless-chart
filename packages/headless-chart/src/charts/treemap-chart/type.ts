@@ -7,12 +7,13 @@ type ConfigArgs<T = undefined> = (
 
 export type TreeMapChartCustom = {
   area: ConfigArgs<{ values: number[]; legend: string; index: number }>;
-  layout: ConfigArgs<{ title: Widget; legends: Widget[]; areas: Widget[] }>;
+  layout: ConfigArgs<{ title: Widget; legends: Widget[]; plot: Widget }>;
   series: ConfigArgs<{ areas: Widget[] }>;
   plot: ConfigArgs<{
-    areas: Widget[];
-    legends: Widget[];
-    dataLabels: Widget[];
+    xAxis: Widget;
+    yAxis: Widget;
+    series: Widget;
+    grid: Widget;
   }>;
   legend: ConfigArgs<{ name: string; index: number }>;
   title: ConfigArgs<{ name: string }>;
