@@ -448,6 +448,8 @@ files:
       CrossAxisAlignment,
       SizedBox,
       Tween,
+      FractionalTranslation,
+      Offset,
     } from "@meursyphus/flitter";
 
     function IgnoreChildWidth({ child, isEdge = false }) {
@@ -514,7 +516,12 @@ files:
             alignment: Alignment.centerRight,
             child: Row({
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: Array(labels.length).fill(0).map(() => tick),
+              children: Array(labels.length).fill(0).map((_, index) => 
+                FractionalTranslation({
+                  translation: new Offset({ x: index === 0 ? -1 : 0, y: 0 }),
+                  child: tick
+                })
+              ),
             }),
           });
 
@@ -553,6 +560,7 @@ files:
       ConstraintsTransformBox,
       Alignment,
       FractionallySizedBox,
+      FractionalTranslation,
       MainAxisSize,
       MainAxisAlignment,
       CrossAxisAlignment,
@@ -626,7 +634,12 @@ files:
             alignment: Alignment.bottomCenter,
             child: Column({
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: Array(labels.length).fill(0).map(() => tick),
+              children: Array(labels.length).fill(0).map((_, index) => 
+                FractionalTranslation({
+                  translation: new Offset({ x: 0, y: index === (labels.length - 1) ? 1 : 0 }),
+                  child: tick
+                })
+              ),
             }),
           });
 

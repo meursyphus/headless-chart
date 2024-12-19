@@ -44,6 +44,8 @@ files:
 
     import defaultColors from "./colors";
     import { getStackValueEdge, getScale } from "./scale";
+    import AnimatedXAxis from "./XAxis";
+    import AnimatedYAxis from "./YAxis";
 
     const data = {
       labels: ["January", "February", "March", "April", "May", "June", "July"],
@@ -146,146 +148,6 @@ files:
               })
             ),
           }),
-        });
-      }
-    }
-
-    class AnimatedXAxis extends StatefulWidget {
-      constructor({ line, labels, tick }) {
-        super();
-        this.line = line;
-        this.labels = labels;
-        this.tick = tick;
-      }
-
-      createState() {
-        return new AnimatedXAxisState();
-      }
-    }
-
-    class AnimatedXAxisState extends State {
-      initState(context) {
-        this.animationController = new AnimationController({ duration: 300 });
-        this.animationController.addListener(() => {
-          this.setState();
-        });
-        const tween = new Tween({ begin: 0, end: 1 });
-        this.tweenAnimation = tween.animated(
-          new CurvedAnimation({
-            parent: this.animationController,
-            curve: Curves.easeInOut,
-          })
-        );
-        this.animationController.forward();
-      }
-
-      build(context) {
-        const { line, labels, tick } = this.widget;
-
-        const HorizontalLine = () => line;
-
-        const Labels = () =>
-          FractionallySizedBox({
-            widthFactor: this.tweenAnimation.value,
-            alignment: Alignment.centerRight,
-            child: Row({
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: labels.map((label) =>
-                IgnoreChildWidth({ child: label })
-              ),
-            }),
-          });
-
-        const Ticks = () =>
-          FractionallySizedBox({
-            widthFactor: this.tweenAnimation.value,
-            alignment: Alignment.centerRight,
-            child: Row({
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: Array(labels.length).fill(0).map(() => tick),
-            }),
-          });
-
-        return Column({
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            HorizontalLine(),
-            Ticks(),
-            SizedBox({ height: 8 }),
-            Labels(),
-          ],
-        });
-      }
-    }
-
-    class AnimatedYAxis extends StatefulWidget {
-      constructor({ line, labels, tick }) {
-        super();
-        this.line = line;
-        this.labels = labels;
-        this.tick = tick;
-      }
-
-      createState() {
-        return new AnimatedYAxisState();
-      }
-    }
-
-    class AnimatedYAxisState extends State {
-      initState(context) {
-        this.animationController = new AnimationController({ duration: 300 });
-        this.animationController.addListener(() => {
-          this.setState();
-        });
-        const tween = new Tween({ begin: 0, end: 1 });
-        this.tweenAnimation = tween.animated(
-          new CurvedAnimation({
-            parent: this.animationController,
-            curve: Curves.easeInOut,
-          })
-        );
-        this.animationController.forward();
-      }
-
-      build(context) {
-        const { line, labels, tick } = this.widget;
-
-        const VerticalLine = () => line;
-
-        const Labels = () =>
-          FractionallySizedBox({
-            heightFactor: this.tweenAnimation.value,
-            alignment: Alignment.bottomCenter,
-            child: Column({
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: labels.map((label) =>
-                IgnoreHeight({ child: label })
-              ),
-            }),
-          });
-
-        const Ticks = () =>
-          FractionallySizedBox({
-            heightFactor: this.tweenAnimation.value,
-            alignment: Alignment.bottomCenter,
-            child: Column({
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: Array(labels.length + 1).fill(0).map(() => tick),
-            }),
-          });
-
-        return Row({
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Labels(),
-            SizedBox({ width: 8 }),
-            Ticks(),
-            VerticalLine(),
-          ],
         });
       }
     }
@@ -547,6 +409,234 @@ files:
         step,
       };
     }
+
+  XAxis.js: |
+    import {
+      Container,
+      Row,
+      Column,
+      StatefulWidget,
+      State,
+      AnimationController,
+      CurvedAnimation,
+      Curves,
+      ConstraintsTransformBox,
+      Alignment,
+      FractionallySizedBox,
+      MainAxisSize,
+      MainAxisAlignment,
+      CrossAxisAlignment,
+      SizedBox,
+      Tween,
+      FractionalTranslation,
+      Offset,
+    } from "@meursyphus/flitter";
+
+    function IgnoreChildWidth({ child, isEdge = false }) {
+      return Container({
+        width: 0,
+        child: ConstraintsTransformBox({
+          constraintsTransform: ConstraintsTransformBox.unconstrained,
+          alignment: isEdge ? Alignment.centerRight : Alignment.center,
+          child,
+        }),
+      });
+    }
+
+    class XAxis extends StatefulWidget {
+      constructor({ line, labels, tick }) {
+        super();
+        this.line = line;
+        this.labels = labels;
+        this.tick = tick;
+      }
+
+      createState() {
+        return new XAxisState();
+      }
+    }
+
+    class XAxisState extends State {
+      initState(context) {
+        this.animationController = new AnimationController({ duration: 300 });
+        this.animationController.addListener(() => {
+          this.setState();
+        });
+        const tween = new Tween({ begin: 0, end: 1 });
+        this.tweenAnimation = tween.animated(
+          new CurvedAnimation({
+            parent: this.animationController,
+            curve: Curves.easeInOut,
+          })
+        );
+        this.animationController.forward();
+      }
+
+      build(context) {
+        const { line, labels, tick } = this.widget;
+
+        const HorizontalLine = () => line;
+
+        const Labels = () =>
+          FractionallySizedBox({
+            widthFactor: this.tweenAnimation.value,
+            alignment: Alignment.centerRight,
+            child: Row({
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: labels.map((label) =>
+                IgnoreChildWidth({ child: label })
+              ),
+            }),
+          });
+
+        const Ticks = () =>
+          FractionallySizedBox({
+            widthFactor: this.tweenAnimation.value,
+            alignment: Alignment.centerRight,
+            child: Row({
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: Array(labels.length).fill(0).map((_, index) => 
+                FractionalTranslation({
+                  translation: new Offset({ x: index === 0 ? -1 : 0, y: 0 }),
+                  child: tick
+                })
+              ),
+            }),
+          });
+
+        return Column({
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            HorizontalLine(),
+            Ticks(),
+            SizedBox({ height: 8 }),
+            Labels(),
+          ],
+        });
+      }
+    }
+
+    export default XAxis;
+
+
+  YAxis.js: |
+    import {
+      Container,
+      Column,
+      Row,
+      Text,
+      TextStyle,
+      EdgeInsets,
+      StatefulWidget,
+      State,
+      AnimationController,
+      CurvedAnimation,
+      Curves,
+      Transform,
+      Offset,
+      Opacity,
+      ConstraintsTransformBox,
+      Alignment,
+      FractionallySizedBox,
+      FractionalTranslation,
+      MainAxisSize,
+      MainAxisAlignment,
+      CrossAxisAlignment,
+      SizedBox,
+      Tween,
+      VerticalDirection,
+    } from "@meursyphus/flitter";
+
+    function IgnoreHeight({ child, isEdge = false }) {
+      return Container({
+        height: 0,
+        child: ConstraintsTransformBox({
+          constraintsTransform: ConstraintsTransformBox.unconstrained,
+          alignment: isEdge ? Alignment.bottomCenter : Alignment.center,
+          child,
+        }),
+      });
+    }
+
+    class YAxis extends StatefulWidget {
+      constructor({ line, labels, tick }) {
+        super();
+        this.line = line;
+        this.labels = labels;
+        this.tick = tick;
+      }
+
+      createState() {
+        return new YAxisState();
+      }
+    }
+
+    class YAxisState extends State {
+      initState(context) {
+        this.animationController = new AnimationController({ duration: 300 });
+        this.animationController.addListener(() => {
+          this.setState();
+        });
+        const tween = new Tween({ begin: 0, end: 1 });
+        this.tweenAnimation = tween.animated(
+          new CurvedAnimation({
+            parent: this.animationController,
+            curve: Curves.easeInOut,
+          })
+        );
+        this.animationController.forward();
+      }
+
+      build(context) {
+        const { line, labels, tick } = this.widget;
+    
+        const VerticalLine = () => line;
+
+        const Labels = () =>
+          FractionallySizedBox({
+            heightFactor: this.tweenAnimation.value,
+            alignment: Alignment.bottomCenter,
+            child: Column({
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              verticalDirection: VerticalDirection.up,
+              children: labels.map((label) =>
+                IgnoreHeight({ child: label })
+              ),
+            }),
+          });
+
+        const Ticks = () =>
+          FractionallySizedBox({
+            heightFactor: this.tweenAnimation.value,
+            alignment: Alignment.bottomCenter,
+            child: Column({
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: Array(labels.length).fill(0).map((_, index) => 
+                FractionalTranslation({
+                  translation: new Offset({ x: 0, y: index === (labels.length - 1) ? 1 : 0 }),
+                  child: tick
+                })
+              ),
+            }),
+          });
+
+        return Row({
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Labels(),
+            SizedBox({ width: 8 }),
+            Ticks(),
+            VerticalLine(),
+          ],
+        });
+      }
+    }
+
+    export default YAxis;
 ---
 
 # Toast UI Chart Inspired
