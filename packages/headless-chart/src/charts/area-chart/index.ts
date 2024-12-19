@@ -5,7 +5,7 @@ import * as Default from "./default";
 import Chart from "./chart";
 import { classToFn } from "@utils/index";
 
-class BarChart extends StatelessWidget {
+class AreaChart extends StatelessWidget {
   #config: AreaChartCustom;
   #data: AreaChartData;
   #getScale: (data: AreaChartData) => AreaChartScale;
@@ -82,4 +82,4 @@ class BarChart extends StatelessWidget {
   }
 }
 
-export default classToFn(BarChart);
+export default classToFn(AreaChart);
