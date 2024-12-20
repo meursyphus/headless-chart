@@ -9,3 +9,6 @@ export * from "./y-axis-tick";
 export * from "./y-axis";
 export * from "./x-axis-line";
 export * from "./y-axis-line";
+export * from './plot'
+export * from './heatmap'
+export * from './segment'
