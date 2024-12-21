@@ -1,0 +1,370 @@
+---
+nav_group: "Line"
+nav_order: 1
+title: "Echarts"
+description: "A headless-chart example inspired by Echarts"
+image: /line-chart/echarts.png
+files:
+  App.js: |
+    import Widget from "@meursyphus/flitter-react";
+    import { LineChart } from "@meursyphus/headless-chart";
+    import {
+      Text,
+      Container,
+      EdgeInsets,
+      Row,
+      SizedBox,
+      TextStyle,
+      Flexible,
+      Padding,
+      Stack,
+      Positioned,
+    } from "@meursyphus/flitter";
+
+    import Line from "./line";
+    import Series from "./series";
+
+    const data = {
+      labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      datasets: [
+        {
+          legend: 'Email',
+          values: [120, 132, 101, 134, 90, 230, 210],
+        },
+        {
+          legend: 'Union Ads',
+          values: [220, 182, 191, 234, 290, 330, 310],
+        },
+        {
+          legend: 'Video Ads',
+          values: [150, 232, 201, 154, 190, 330, 410],
+        },
+        {
+          legend: 'Direct',
+          values: [320, 332, 301, 334, 390, 330, 320],
+        },
+        {
+          legend: 'Search Engine',
+          values: [820, 932, 901, 934, 1290, 1330, 1320],
+        },
+      ],
+    };
+
+    const chart = LineChart({
+      data,
+      getScale: () => ({
+        min: 0,
+        max: 1600,
+        step: 200,
+      }),
+      custom: {
+        layout: (...[{ legends, plot, title }]) =>
+          Container({
+            padding: EdgeInsets.only({ top: 50, left: 50, bottom: 70 }),
+            child: Stack({
+              children: [
+                Positioned({
+                  top: -20,
+                  right: 0,
+                  child: Text("Inspired by Echarts", {
+                    style: new TextStyle({
+                      fontSize: 14,
+                      color: "#999999",
+                      fontFamily: "Noto Sans JP",
+                    }),
+                  }),
+                }),
+                Row({
+                  children: [
+                    Flexible({ flex: 1, child: plot }),
+                    SizedBox({ width: 20 }),
+                  ],
+                }),
+              ],
+            }),
+          }),
+        line: Line,
+        series: ({lines}) => new Series({lines}),
+        xAxisLabel: (...[{ name }]) =>
+          Padding({
+            padding: EdgeInsets.only({ top: 1 }),
+            child: Text(name, {
+              style: new TextStyle({
+                fontFamily: "Noto Sans JP",
+                fontSize: 12,
+                color: "#666666",
+              }),
+            }),
+          }),
+        yAxisLabel: (...[{ name }]) =>
+          Padding({
+            padding: EdgeInsets.only({ right: 8 }),
+            child: Text(name, {
+              style: new TextStyle({
+                fontFamily: "Noto Sans JP",
+                fontSize: 12,
+                color: "#666666",
+              }),
+            }),
+          }),
+        xAxisTick: () =>
+          Container({
+            height: 6,
+            width: 1,
+            color: "black",
+          }),
+        yAxisTick: () => SizedBox.shrink(),
+        yAxisLine: () => SizedBox.shrink(),
+        xAxisLine: () =>
+          Container({
+            color: "black",
+            height: 1,
+          }),
+        gridXLine: () => Container({ height: 1, color: "#DDDDDD" }),
+        gridYLine: () => SizedBox.shrink(),
+      },
+    });
+
+    export default function App() {
+      return <Widget width="auto" height="600px" widget={chart} renderer="svg" />;
+    }
+
+  line.js: |
+    import {
+      CustomPaint,
+      Path,
+      Stack,
+      StackFit,
+      Positioned,
+      Container,
+      BoxDecoration,
+      Border,
+      Align,
+      Alignment,
+      FractionalTranslation,
+      Offset,
+      ConstraintsTransformBox,
+      SizedBox,
+      StatefulWidget,
+      State,
+      AnimationController,
+      Tween,
+      CurvedAnimation,
+      Transform,
+    } from "@meursyphus/flitter";
+
+    const colors = [
+      "#6495ED", "#C6F4D6", "#F7DC6F", "#FFC080", "#87CEEB"
+    ];
+
+    class AnimatedPoint extends StatefulWidget {
+      constructor({ value, index, color, delay = 0 }) {
+        super();
+        this.value = value;
+        this.index = index;
+        this.color = color;
+        this.delay = delay;
+      }
+
+      createState() {
+        return new AnimatedPointState();
+      }
+    }
+
+    class AnimatedPointState extends State {
+      animationController;
+      scaleAnimation;
+
+      initState(context) {
+        this.animationController = new AnimationController({ duration: 300 });
+        this.animationController.addListener(() => {
+          this.setState();
+        });
+        const tween = new Tween({ begin: 0, end: 1 });
+        this.scaleAnimation = tween.animated(
+          new CurvedAnimation({
+            parent: this.animationController,
+          })
+        );
+
+        setTimeout(() => {
+          this.animationController.forward();
+        }, this.widget.delay);
+      }
+
+      dispose() {
+        this.animationController.dispose();
+        super.dispose();
+      }
+
+      build(context) {
+        return Transform.scale({
+          scale: this.scaleAnimation.value,
+          child: Container({
+            width: 6,
+            height: 6,
+            decoration: new BoxDecoration({
+              shape: "circle",
+              color: "white",
+              border: Border.all({ color: this.widget.color, width: 2 }), 
+            }),
+          }),
+        });
+      }
+    }
+
+    export default function Line({ values, index }, { scale }) {
+      return Stack({
+        fit: StackFit.expand,
+        children: [
+          CustomPaint({
+            painter: {
+              svg: {
+                createDefaultSvgEl(context) {
+                  return {
+                    line: context.createSvgEl("path")
+                  };
+                },
+                paint({ line }, { height, width }) {
+                  const linePath = new Path();
+                  const points = values.map((value, index) => {
+                    const y = height - (height * (value - scale.min)) / (scale.max - scale.min);
+                    const x = (index * width) / (values.length - 1);
+                    return { x, y };
+                  });
+
+                  linePath.moveTo(points[0]);
+                  points.slice(1).forEach((point) => {
+                    linePath.lineTo(point);
+                  });
+
+                  line.setAttribute("fill", "none");
+                  line.setAttribute("stroke", colors[index]);
+                  line.setAttribute("stroke-width", "2");
+                  line.setAttribute("d", linePath.getD());
+                },
+              },
+            },
+          }),
+          ...values.map((value, i) => {
+            const xAlign = (i / (values.length - 1)) * 2 - 1;
+            const yAlign = ((value - scale.min) / (scale.max - scale.min)) * -2 + 1;
+            
+            return Align({
+              alignment: new Alignment({ x: xAlign, y: yAlign }),
+              child: IgnoreSize({
+                ignoreHeight: true,
+                ignoreWidth: true,
+                child: new AnimatedPoint({
+                  value,
+                  index: i,
+                  color: colors[index],
+                  delay: i * 100,
+                }),
+              }),
+            });
+          })
+        ],
+      });
+    }
+
+    const IgnoreSize = ({
+      ignoreHeight = false,
+      ignoreWidth = false,
+      child,
+      alignment
+    }) => {
+      let constraintsTransform;
+
+      if (ignoreWidth && ignoreHeight) {
+        constraintsTransform = ConstraintsTransformBox.maxUnconstrained;
+      } else if (ignoreWidth) {
+        constraintsTransform = ConstraintsTransformBox.maxWidthUnconstrained;
+      } else if (ignoreHeight) {
+        constraintsTransform = ConstraintsTransformBox.maxHeightUnconstrained;
+      } else {
+        constraintsTransform = ConstraintsTransformBox.unmodified;
+      }
+
+      return SizedBox({
+        width: ignoreWidth ? 0 : undefined,
+        height: ignoreHeight ? 0 : undefined,
+        child: ConstraintsTransformBox({
+          alignment,
+          constraintsTransform,
+          child
+        })
+      });
+    };
+
+  series.js: |
+    import {
+      Stack,
+      Positioned,
+      StatefulWidget,
+      State,
+      AnimationController,
+      Tween,
+      CurvedAnimation,
+      ClipRect,
+      Rect,
+      Curves,
+    } from "@meursyphus/flitter";
+
+    export default class Series extends StatefulWidget {
+      constructor({ lines }) {
+        super();
+        this.lines = lines;
+      }
+
+      createState() {
+        return new SeriesState();
+      }
+    }
+
+    class SeriesState extends State {
+      animationController;
+      tweenAnimation;
+
+      initState(context) {
+        this.animationController = new AnimationController({ duration: 500 });
+        this.animationController.addListener(() => this.setState());
+
+        const tween = new Tween({ begin: 0, end: 1 });
+        this.tweenAnimation = tween.animated(
+          new CurvedAnimation({
+            parent: this.animationController,
+            curve: Curves.easeInOut,
+          })
+        );
+
+        this.animationController.forward();
+      }
+
+      build(context) {
+        const { lines } = this.widget;
+
+        return ClipRect({
+          clipped: true,
+          clipper: ({ width, height }) =>
+            Rect.fromLTWH({
+              left: 0,
+              top: 0,
+              width: width * this.tweenAnimation.value,
+              height,
+            }),
+          child: Stack({
+            children: lines.map((line) =>
+              Positioned.fill({
+                child: line,
+              })
+            ),
+          }),
+        });
+      }
+    }
+---
+
+# Line Chart Example
+
+A headless-chart example inspired by Echarts.
