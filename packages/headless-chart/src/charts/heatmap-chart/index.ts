@@ -1,14 +1,15 @@
+// index.ts
 import { type Widget, StatelessWidget } from "@meursyphus/flitter";
-import type { AreaChartCustom, AreaChartData, AreaChartScale } from "./types";
-import { AreaChartConfigProvider } from "./provider";
+import type { HeatmapCustom, HeatmapData, HeatmapScale } from "./types";
+import { HeatmapConfigProvider } from "./provider";
 import * as Default from "./default";
 import Chart from "./chart";
 import { classToFn } from "@utils/index";
 
-class AreaChart extends StatelessWidget {
-  #config: AreaChartCustom;
-  #data: AreaChartData;
-  #getScale: (data: AreaChartData) => AreaChartScale;
+class HeatmapChart extends StatelessWidget {
+  #config: HeatmapCustom;
+  #data: HeatmapData;
+  #getScale: (data: HeatmapData) => HeatmapScale;
   #title: string;
 
   constructor({
@@ -19,34 +20,30 @@ class AreaChart extends StatelessWidget {
       yAxis = Default.YAxis,
       yAxisLabel = Default.YAxisLabel,
       yAxisTick = Default.YAxisTick,
-      series = Default.Series,
+      heatmap = Default.Heatmap,
+      segment = Default.Segment,
       layout = Default.Layout,
       plot = Default.Plot,
-      legend = Default.Legend,
       title: titleWidget = Default.Title,
-      dataLabel = Default.DataLabel,
-      area: line = Default.Line,
       xAxisLine = Default.XAxisLine,
       yAxisLine = Default.YAxisLine,
-      grid = Default.Grid,
-      gridXLine = Default.GridXLine,
-      gridYLine = Default.GridYLine,
     } = {},
     getScale = Default.getScale,
     data,
     title = "",
   }: {
-    custom?: Partial<AreaChartCustom>;
+    custom?: Partial<HeatmapCustom>;
     title?: string;
-    data: AreaChartData;
-    getScale?: (data: AreaChartData) => AreaChartScale;
+    data: HeatmapData;
+    getScale?: (data: HeatmapData) => HeatmapScale;
   }) {
     super();
     this.#data = data;
     this.#getScale = getScale;
     this.#title = title;
     this.#config = {
-      area: line,
+      layout,
+      plot,
       xAxis,
       xAxisLabel,
       xAxisTick,
@@ -55,22 +52,16 @@ class AreaChart extends StatelessWidget {
       yAxisLabel,
       yAxisTick,
       yAxisLine,
-      series,
-      layout,
-      plot,
-      legend,
+      heatmap,
+      segment,
       title: titleWidget,
-      dataLabel,
-      grid,
-      gridXLine,
-      gridYLine,
     };
   }
 
   override build(): Widget {
     const scale = this.#getScale(this.#data);
 
-    return AreaChartConfigProvider({
+    return HeatmapConfigProvider({
       value: {
         custom: this.#config,
         data: this.#data,
@@ -82,4 +73,4 @@ class AreaChart extends StatelessWidget {
   }
 }
 
-export default classToFn(AreaChart);
+export default classToFn(HeatmapChart);
