@@ -1,9 +1,9 @@
 ---
-nav_group: "Scatter"
+nav_group: "Heatmap"
 nav_order: 1
 title: "Toast"
 description: "A headless-chart example inspired by Toast Chart using the same color scheme"
-image: /scatter-chart/toast.png
+image: /heatmap-chart/toast.png
 files:
   App.js: |
     import Widget from "@meursyphus/flitter-react";
@@ -17,8 +17,8 @@ files:
       Stack,
       Positioned,
     } from "@meursyphus/flitter";
-    import YAxis from "./YAxis";
-    import XAxis from "./XAxis";
+    import AnimatedYAxis from "./YAxis";
+    import AnimatedXAxis from "./XAxis";
 
     const chart = HeatmapChart({
       data: {
@@ -35,7 +35,7 @@ files:
       custom: {
         layout: ({ plot }) =>
           Container({
-            padding: EdgeInsets.only({ left: 70, bottom: 30 }),
+            padding: EdgeInsets.only({ left: 70, bottom: 30, top: 30, right: 30 }),
             child: Stack({
               children: [
                 Positioned({
@@ -105,6 +105,17 @@ files:
             width: 1,
             height: Infinity,
           }),
+        segment: ({value}, {scale}) => {
+          const ratio = (value - scale.min) / (scale.max - scale.min);
+          const redComponent = Math.round(255);
+          const greenComponent = Math.round(255 * (1 - ratio));
+          const blueComponent = 0;
+          return Container({
+            width: Infinity,
+            height: Infinity,
+            color: `rgba(${redComponent}, ${greenComponent}, ${blueComponent}, 0.7)`
+          });
+        }
       },
     });
 
