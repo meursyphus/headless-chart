@@ -599,7 +599,7 @@ files:
             heightFactor: this.tweenAnimation.value,
             alignment: Alignment.bottomCenter,
             child: Column({
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.end,
               verticalDirection: VerticalDirection.up,
               children: labels.map((label) =>
@@ -614,7 +614,7 @@ files:
             alignment: Alignment.bottomCenter,
             child: Column({
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: Array(labels.length).fill(0).map((_, index) => 
+              children: Array(labels.length + 1).fill(0).map((_, index) => 
                 FractionalTranslation({
                   translation: new Offset({ x: 0, y: index === (labels.length - 1) ? 1 : 0 }),
                   child: tick
