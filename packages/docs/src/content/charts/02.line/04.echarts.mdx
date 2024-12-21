@@ -52,6 +52,11 @@ files:
 
     const chart = LineChart({
       data,
+      getScale: () => ({
+        min: 0,
+        max: 1600,
+        step: 200,
+      }),
       custom: {
         layout: (...[{ legends, plot, title }]) =>
           Container({
@@ -93,7 +98,7 @@ files:
           }),
         yAxisLabel: (...[{ name }]) =>
           Padding({
-            padding: EdgeInsets.only({ right: 1 }),
+            padding: EdgeInsets.only({ right: 8 }),
             child: Text(name, {
               style: new TextStyle({
                 fontFamily: "Noto Sans JP",
@@ -121,44 +126,117 @@ files:
     });
 
     export default function App() {
-      return <Widget width="auto" height="400px" widget={chart} renderer="svg" />;
+      return <Widget width="auto" height="700px" widget={chart} renderer="svg" />;
     }
 
   line.js: |
-    import { CustomPaint, Path, Stack } from "@meursyphus/flitter";
-    import colors from "./colors";           
+    import {
+      CustomPaint,
+      Path,
+      Stack,
+      StackFit,
+      Positioned,
+      Container,
+      BoxDecoration,
+      Border,
+      Align,
+      Alignment,
+      FractionalTranslation,
+      Offset,
+      ConstraintsTransformBox,
+      SizedBox,
+    } from "@meursyphus/flitter";
+
+    const colors = [
+      "#6495ED", "#C6F4D6", "#F7DC6F", "#FFC080", "#87CEEB"
+    ];
 
     export default function Line({ values, index }, { scale }) {
-      return CustomPaint({
-        painter: {
-          svg: {
-            createDefaultSvgEl(context) {
-              return {
-                line: context.createSvgEl("path")
-              };
-            },
-            paint({ line }, { height, width }) {
-              const linePath = new Path();
-              const points = values.map((value, index) => {
-                const y = height - (height * (value - scale.min)) / (scale.max - scale.min);
-                const x = (index * width) / (values.length - 1);
-                return { x, y };
-              });
+      return Stack({
+        fit: StackFit.expand,
+        children: [
+          CustomPaint({
+            painter: {
+              svg: {
+                createDefaultSvgEl(context) {
+                  return {
+                    line: context.createSvgEl("path")
+                  };
+                },
+                paint({ line }, { height, width }) {
+                  const linePath = new Path();
+                  const points = values.map((value, index) => {
+                    const y = height - (height * (value - scale.min)) / (scale.max - scale.min);
+                    const x = (index * width) / (values.length - 1);
+                    return { x, y };
+                  });
 
-              linePath.moveTo(points[0]);
-              points.slice(1).forEach((point) => {
-                linePath.lineTo(point);
-              });
+                  linePath.moveTo(points[0]);
+                  points.slice(1).forEach((point) => {
+                    linePath.lineTo(point);
+                  });
 
-              line.setAttribute("fill", "none");
-              line.setAttribute("stroke", colors[index]);
-              line.setAttribute("stroke-width", "2");
-              line.setAttribute("d", linePath.getD());
+                  line.setAttribute("fill", "none");
+                  line.setAttribute("stroke", colors[index]);
+                  line.setAttribute("stroke-width", "2");
+                  line.setAttribute("d", linePath.getD());
+                },
+              },
             },
-          },
-        },
+          }),
+          ...values.map((value, i) => {
+            const xAlign = (i / (values.length - 1)) * 2 - 1;
+            const yAlign = ((value - scale.min) / (scale.max - scale.min)) * -2 + 1;
+            
+            return Align({
+              alignment: new Alignment({ x: xAlign, y: yAlign }),
+              child: IgnoreSize({
+                ignoreHeight: true,
+                ignoreWidth: true,
+                child: Container({
+                  width: 6,
+                  height: 6,
+                  decoration: new BoxDecoration({
+                    shape: "circle",
+                    color: "white",
+                    border: Border.all({ color: colors[index], width: 2 }), 
+                  }),
+                }),
+              }),
+            });
+          })
+        ],
       });
     }
+
+    const IgnoreSize = ({
+      ignoreHeight = false,
+      ignoreWidth = false,
+      child,
+      alignment
+    }) => {
+      let constraintsTransform;
+
+      if (ignoreWidth && ignoreHeight) {
+        constraintsTransform = ConstraintsTransformBox.maxUnconstrained;
+      } else if (ignoreWidth) {
+        constraintsTransform = ConstraintsTransformBox.maxWidthUnconstrained;
+      } else if (ignoreHeight) {
+        constraintsTransform = ConstraintsTransformBox.maxHeightUnconstrained;
+      } else {
+        constraintsTransform = ConstraintsTransformBox.unmodified;
+      }
+
+      return SizedBox({
+        width: ignoreWidth ? 0 : undefined,
+        height: ignoreHeight ? 0 : undefined,
+        child: ConstraintsTransformBox({
+          alignment,
+          constraintsTransform,
+          child
+        })
+      });
+    };
 
   series.js: |
     import {
@@ -226,51 +304,6 @@ files:
         });
       }
     }
-
-  colors.js: |
-    const defaultColors = [
-      "#00a9ff",
-      "#ffb840",
-      "#ff5a46",
-      "#00bd9f",
-      "#785fff",
-      "#f28b8c",
-      "#989486",
-      "#516f7d",
-      "#28e6eb",
-      "#28695f",
-      "#96c85a",
-      "#45ba3f",
-      "#295ba0",
-      "#2a4175",
-      "#289399",
-      "#66c8d3",
-      "#617178",
-      "#8a9a9a",
-      "#bebebe",
-      "#374b5a",
-      "#64eba0",
-      "#ffe155",
-      "#ff9141",
-      "#af4beb",
-      "#ff73fa",
-      "#ff55b2",
-      "#2869f5",
-      "#3296ff",
-      "#8cc3ff",
-      "#2828b9",
-      "#fa8787",
-      "#e13782",
-      "#7d5aaa",
-      "#643c91",
-      "#d25f5f",
-      "#fabe6e",
-      "#c3a9eb",
-      "#b9c8f5",
-      "#73a0cd",
-      "#0f5a8c",
-    ];
-    export default defaultColors;
 ---
 
 # Bubble Chart Example
