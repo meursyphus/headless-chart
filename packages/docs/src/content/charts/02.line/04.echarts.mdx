@@ -145,11 +145,73 @@ files:
       Offset,
       ConstraintsTransformBox,
       SizedBox,
+      StatefulWidget,
+      State,
+      AnimationController,
+      Tween,
+      CurvedAnimation,
+      Transform,
     } from "@meursyphus/flitter";
 
     const colors = [
       "#6495ED", "#C6F4D6", "#F7DC6F", "#FFC080", "#87CEEB"
     ];
+
+    class AnimatedPoint extends StatefulWidget {
+      constructor({ value, index, color, delay = 0 }) {
+        super();
+        this.value = value;
+        this.index = index;
+        this.color = color;
+        this.delay = delay;
+      }
+
+      createState() {
+        return new AnimatedPointState();
+      }
+    }
+
+    class AnimatedPointState extends State {
+      animationController;
+      scaleAnimation;
+
+      initState(context) {
+        this.animationController = new AnimationController({ duration: 300 });
+        this.animationController.addListener(() => {
+          this.setState();
+        });
+        const tween = new Tween({ begin: 0, end: 1 });
+        this.scaleAnimation = tween.animated(
+          new CurvedAnimation({
+            parent: this.animationController,
+          })
+        );
+
+        setTimeout(() => {
+          this.animationController.forward();
+        }, this.widget.delay);
+      }
+
+      dispose() {
+        this.animationController.dispose();
+        super.dispose();
+      }
+
+      build(context) {
+        return Transform.scale({
+          scale: this.scaleAnimation.value,
+          child: Container({
+            width: 6,
+            height: 6,
+            decoration: new BoxDecoration({
+              shape: "circle",
+              color: "white",
+              border: Border.all({ color: this.widget.color, width: 2 }), 
+            }),
+          }),
+        });
+      }
+    }
 
     export default function Line({ values, index }, { scale }) {
       return Stack({
@@ -193,14 +255,11 @@ files:
               child: IgnoreSize({
                 ignoreHeight: true,
                 ignoreWidth: true,
-                child: Container({
-                  width: 6,
-                  height: 6,
-                  decoration: new BoxDecoration({
-                    shape: "circle",
-                    color: "white",
-                    border: Border.all({ color: colors[index], width: 2 }), 
-                  }),
+                child: new AnimatedPoint({
+                  value,
+                  index: i,
+                  color: colors[index],
+                  delay: i * 100,
                 }),
               }),
             });
