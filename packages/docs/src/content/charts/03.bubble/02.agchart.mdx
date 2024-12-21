@@ -193,34 +193,6 @@ files:
             }),
           }),
     
-        xAxisTick: () =>
-          Container({
-            height: 6,
-            width: 1,
-            color: "#DDDDDD",
-          }),
-    
-        yAxisTick: () =>
-          Container({
-            height: 1,
-            width: 6,
-            color: "#DDDDDD",
-          }),
-    
-        xAxisLine: () =>
-          Container({
-            color: "#BBBBBB",
-            width: Infinity,
-            height: 1,
-          }),
-    
-        yAxisLine: () =>
-          Container({
-            color: "#BBBBBB",
-            width: 1,
-            height: Infinity,
-          }),
-    
         legend: ({ name }) => {
           const legendIndex = data.datasets.findIndex(d => d.legend === name);
           const color = defaultColors[legendIndex % defaultColors.length];
@@ -255,12 +227,6 @@ files:
           const color = "#4682B4";
           return new AnimatedBubble({ value, label, legend, index, color, scale });
         },
-    
-    
-        dataLabel: () => SizedBox.shrink(),
-    
-        gridXLine: () => Container({ height: 1, color: "#EEEEEE" }),
-        gridYLine: () => Container({ width: 1, color: "#EEEEEE" }),
     
         xAxisLabel: ({ name }) =>
           Padding({
