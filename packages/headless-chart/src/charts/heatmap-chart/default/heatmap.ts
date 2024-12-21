@@ -1,8 +1,8 @@
-import { Column, Flexible, Row, SizedBox } from "@meursyphus/flitter";
+import { Column, Flexible, Row } from "@meursyphus/flitter";
 import type { HeatmapCustom } from "../types";
 
 export function Heatmap(
-  ...[{ segments }]: Parameters<HeatmapCustom["heatmap"]>
+  ...[{ segments },]: Parameters<HeatmapCustom["heatmap"]>
 ) {
   const rows = segments.map((row) => {
     return Row({

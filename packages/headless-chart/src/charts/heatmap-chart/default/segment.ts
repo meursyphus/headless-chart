@@ -1,12 +1,17 @@
-import { Container } from "@meursyphus/flitter";
+import { Container, Opacity } from "@meursyphus/flitter";
 import type { HeatmapCustom } from "../types";
 
 export function Segment(
-  ...[{ value, xIndex, yIndex }]: Parameters<HeatmapCustom["segment"]>
+  ...[{ value, xIndex, yIndex }, { scale }]: Parameters<
+    HeatmapCustom["segment"]
+  >
 ) {
-  return Container({
-    width: 100,
-    height: 100,
-    color: "black",
+  return Opacity({
+    opacity: (value - scale.min) / (scale.max - scale.min),
+    child: Container({
+      width: 100,
+      height: 100,
+      color: "black",
+    }),
   });
 }
