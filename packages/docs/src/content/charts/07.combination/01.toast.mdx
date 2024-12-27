@@ -1,0 +1,51 @@
+---
+nav_group: "Combination"
+nav_order: 1
+title: "Toast"
+description: "A headless-chart example inspired by Toast Chart using the same color scheme"
+image: ""
+files: 
+   App.js: |
+     import Widget from "@meursyphus/flitter-react";
+     import { BarChart, LineChart } from "@meursyphus/headless-chart";
+     import {
+       Text,
+       Container,
+       EdgeInsets,
+       Stack,
+       Positioned,
+       Row,
+       Flexible,
+       SizedBox,
+     } from "@meursyphus/flitter";
+
+     const barData = {
+       labels: ["January", "February", "March", "April", "May", "June", "July"],
+       datasets: [
+        {
+          legend: "Bar Dataset 1",
+          values: [65, 59, 80, 81, 56, 55, 40],
+        },
+        {
+          legend: "Bar Dataset 2",
+          values: [28, 48, 40, 19, 86, 27, 90],
+        },
+      ],
+     }
+
+      const lineData = {
+        labels: ["January", "February", "March", "April", "May", "June", "July"],
+        datasets: [
+        {
+          legend: "Line Dataset 1",
+          values: [45, 38, 55, 63, 42, 38, 70],
+        },
+        {
+          legend: "Line Dataset 2",
+          values: [20, 35, 45, 32, 48, 52, 35],
+        },
+      ],
+     };
+---
+
+# Combination Chart Example
