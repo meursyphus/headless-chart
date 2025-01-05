@@ -16,3 +16,7 @@ export function PieChartConfigProvider({
     value,
   });
 }
+
+PieChartConfigProvider.of = (context: BuildContext): PieChartConfig => {
+  return Provider.of(PIE_CHART_CONTEXT_KEY, context);
+};

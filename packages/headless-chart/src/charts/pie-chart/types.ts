@@ -3,17 +3,26 @@ import type { Widget } from "@meursyphus/flitter";
 type ConfigArgs<T = undefined> = (args: T, context: PieChartConfig) => Widget;
 
 export type PieChartData = {
-  pie: {
+  datasets: {
     legend: string;
-    value: number;
-    label: string;
+    data: {
+      value: number;
+      label: string;
+      legend: string;
+    }[];
   }[];
 };
 
-export type PieChartScale = {
+export type PieScale = {
   centerX: number;
   centerY: number;
   radius: number;
+};
+
+export type PieChartScale = {
+  scale: PieScale;
+  maxRadius?: number;
+  minRadius?: number;
 };
 
 export type PieChartCustom = {
@@ -38,7 +47,12 @@ export type PieChartCustom = {
     index: number;
   }>;
   layout: ConfigArgs<{ title: Widget; legends: Widget[]; plot: Widget }>;
-  plot: ConfigArgs<{ series: Widget; grid: Widget }>;
+  plot: ConfigArgs<{
+    xAxis: Widget;
+    yAxis: Widget;
+    series: Widget;
+    grid: Widget;
+  }>;
   legend: ConfigArgs<{ name: string; index: number }>;
   title: ConfigArgs<{ name: string }>;
   dataLabel: ConfigArgs<{
@@ -48,6 +62,7 @@ export type PieChartCustom = {
     label: string;
     legend: string;
   }>;
+  grid: ConfigArgs<{ xLine: Widget; yLine: Widget }>;
 };
 
 export type PieChartConfig = {
