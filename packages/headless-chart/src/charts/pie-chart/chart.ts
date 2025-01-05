@@ -59,43 +59,33 @@ class TitleWidget extends StatelessWidget {
 class Plot extends StatelessWidget {
   override build(context: BuildContext): Widget {
     const config = PieChartConfigProvider.of(context);
-    const { custom } = config;
+    const { custom, data, scale } = config;
     return custom.plot(
       {
         xAxis: new Widget(),
         yAxis: new Widget(),
-        series: new Series(),
-        grid: new Grid(),
+        series: new Series({ data: data.datasets, scale }),
+        grid: new Widget(),
       },
       config,
     );
   }
 }
 
-class Series extends StatelessWidget {}
-
-class Grid extends StatelessWidget {
+class Series extends StatelessWidget {
   override build(context: BuildContext): Widget {
     const config = PieChartConfigProvider.of(context);
-    const { custom } = config;
-    return custom.grid(
-      { xLine: new GridXLine(), yLine: new GridYLine() },
-      config,
+    const { custom, data, scale } = config;
+
+    const pie = data.datasets.flatMap((dataset, index) =>
+      dataset.data.map((slice, index) => ({
+        value: slice.value,
+        label: slice.label,
+        legend: dataset.legend,
+        index: index,
+      })),
     );
-  }
-}
 
-class GridXLine extends StatelessWidget {
-  override build(context: BuildContext): Widget {
-    const config = PieChartConfigProvider.of(context);
-    const { custom } = config;
-    return new Widget();
-  }
-}
-class GridYLine extends StatelessWidget {
-  override build(context: BuildContext): Widget {
-    const config = PieChartConfigProvider.of(context);
-    const { custom } = config;
-    return new Widget();
+    return custom.series({ pie, scale }, config);
   }
 }

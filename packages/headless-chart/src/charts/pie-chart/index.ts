@@ -15,7 +15,15 @@ export default function PieChart({
   data: PieChartData;
   getScale?: (data: PieChartData) => PieChartScale;
 }): Widget {
-  const mergedConfig: PieChartCustom = {};
+  const mergedConfig: PieChartCustom = {
+    pie: custom.pie ?? Default.Pie,
+    series: custom.series ?? Default.Series,
+    layout: custom.layout ?? Default.Layout,
+    plot: custom.plot ?? Default.Plot,
+    legend: custom.legend ?? Default.Legend,
+    title: custom.title ?? Default.Title,
+    dataLabel: custom.dataLabel ?? Default.DataLabel,
+  };
 
   const scale = getScale(data);
 

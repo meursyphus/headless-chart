@@ -62,7 +62,6 @@ export type PieChartCustom = {
     label: string;
     legend: string;
   }>;
-  grid: ConfigArgs<{ xLine: Widget; yLine: Widget }>;
 };
 
 export type PieChartConfig = {
