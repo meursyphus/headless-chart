@@ -1,0 +1,62 @@
+---
+nav_group: "Pie"
+nav_order: 1
+title: "Toast"
+description: "A headless-chart example inspired by Toast Chart using the same color scheme"
+image: /heatmap-chart/toast.png
+files:
+  App.js: |
+    import Widget from "@meursyphus/flitter-react";
+    import { PieChart } from "@meursyphus/headless-chart";
+    import {
+      Text,
+      Container,
+      EdgeInsets,
+      TextStyle,
+      Padding,
+      Stack,
+      Positioned,
+    } from "@meursyphus/flitter";
+
+    const chart = PieChart({
+      data: {
+        
+      },
+      custom: {
+       layout: ({ plot }) => 
+         Container({
+           padding: EdgeInsets.only({ left: 70, bottom: 30, top: 30, right: 30 }),
+           child: Stack({
+             children: [
+               Positioned({
+                 top: 0,
+                 right: 0,
+                 child: Text("Inspired by Toast", {
+                   style: new TextStyle({
+                     fontSize: 14,
+                     color: "#999999",
+                     fontFamily: "Noto Sans JP",
+                   }),
+                 }),
+               }),
+               plot,
+             ],
+           }),
+         }),
+        }
+    })
+
+   
+    export default function App() {
+      return <Widget
+        width="auto"
+        height="400px"
+        widget={chart}
+        renderer="svg"
+      />
+    }
+---
+
+# Pie Chart Example
+
+A headless-chart example inspired by Toast UI Chart.
