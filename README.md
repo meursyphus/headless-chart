@@ -1,6 +1,6 @@
 # Headless Chart
 
-A powerful chart library built on top of the [Flitter](https://filitter.dev) framework that provides a headless way to define and compose charts. Unlike traditional chart libraries where you are constrained by predefined components, headless-chart gives you building blocks that you can shape and style to meet your exact needs.
+A powerful chart library built on top of the [Flitter](https://flitter.dev/) framework that provides a headless way to define and compose charts. Unlike traditional chart libraries where you are constrained by predefined components, headless-chart gives you building blocks that you can shape and style to meet your exact needs.
 
 ## Why Headless Chart?
 
