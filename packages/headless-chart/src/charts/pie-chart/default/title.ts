@@ -1,4 +1,4 @@
-import { Center, Container, Text, type Widget } from "@meursyphus/flitter";
+import { Center, Container, Text, TextStyle, type Widget } from "@meursyphus/flitter";
 import type { PieChartConfig } from "../types";
 
 export const Title = (
@@ -7,12 +7,11 @@ export const Title = (
 ): Widget => {
   return Container({
     child: Center({
-      child: Text({
-        text: name,
-        style: {
+      child: Text(name, {
+        style: new TextStyle({
           fontSize: 18,
           fontWeight: "bold",
-        },
+        }),
       }),
     }),
   });

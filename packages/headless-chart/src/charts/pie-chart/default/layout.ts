@@ -1,4 +1,4 @@
-import { Column, Container, Row, SizedBox, type Widget } from "@meursyphus/flitter";
+import { Column, Container, Row, SizedBox, EdgeInsets, type Widget } from "@meursyphus/flitter";
 import type { PieChartConfig } from "../types";
 
 export const Layout = (
@@ -11,18 +11,16 @@ export const Layout = (
       SizedBox({ height: 20 }),
       Row({
         children: [
-          // 플롯은 메인 영역을 차지
           Container({
             child: plot,
-            width: 300, // 기본 크기, 실제로는 조정 가능
+            width: 300,
             height: 300,
           }),
-          // 범례는 오른쪽에 배치
           Container({
             child: Column({
               children: legends,
             }),
-            padding: { left: 20 },
+            padding: EdgeInsets.only({ left: 20 }),
           }),
         ],
       }),

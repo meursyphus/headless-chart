@@ -1,4 +1,4 @@
-import { CustomPaint, type Widget } from "@meursyphus/flitter";
+import { CustomPaint, type Widget, Path } from "@meursyphus/flitter";
 import type { PieChartConfig } from "../types";
 
 export const Slice = (
@@ -10,13 +10,11 @@ export const Slice = (
   },
   config: PieChartConfig
 ): Widget => {
-  // 기본 색상 배열 (실제로는 더 많은 색상이나 사용자 정의 색상을 사용할 수 있음)
   const colors = [
     "#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", 
     "#9966FF", "#FF9F40", "#F95738", "#20A39E"
   ];
   
-  // 인덱스에 해당하는 색상 (색상 배열의 범위를 벗어나면 순환)
   const color = colors[index % colors.length];
   
   return CustomPaint({
@@ -28,76 +26,127 @@ export const Slice = (
           };
         },
         paint: ({ path }, { width, height }) => {
-          // 이전 각도 계산 (누적)
-          let startAngle = config.startAngle || 0;
-          if (index > 0) {
-            // 실제 구현에서는 이전 슬라이스들의 퍼센트를 합산하여 시작 각도 계산
-            // 간단한 예시를 위해 여기서는 생략
+          const centerX = width / 2;
+          const centerY = height / 2;
+          const radius = Math.min(width, height) / 2 - 10;
+          
+          // 누적 각도 계산 (이전 슬라이스들의 퍼센트를 합산)
+          let cumulativePercentage = 0;
+          for (let i = 0; i < index; i++) {
+            const dataset = config.data.datasets[0];
+            const values = dataset.values;
+            const total = values.reduce((sum, v) => sum + v, 0);
+            if (total > 0) {
+              cumulativePercentage += (values[i] / total) * 100;
+            }
           }
           
-          // 종료 각도 계산
+          const startAngle = (config.startAngle || 0) + (cumulativePercentage / 100) * 360;
           const angleExtent = (percentage / 100) * 360;
           const endAngle = startAngle + angleExtent;
           
-          // 중심점과 반지름 계산
-          const centerX = width / 2;
-          const centerY = height / 2;
-          const radius = Math.min(width, height) / 2;
+          const startAngleRad = (startAngle - 90) * Math.PI / 180;
+          const endAngleRad = (endAngle - 90) * Math.PI / 180;
           
-          // 도넛 차트인 경우 내부 반지름 계산
-          let innerRadius = 0;
-          if (config.isDonut) {
-            innerRadius = radius * (config.innerRadiusRatio || 0.6);
-          }
+          const innerRadius = config.isDonut ? radius * (config.innerRadiusRatio || 0.6) : 0;
           
-          // SVG path 데이터 생성
-          let pathData = '';
-          
-          // path 데이터 생성 로직 (실제 구현에서는 더 정확한 계산 필요)
-          // 이 부분은 예시일 뿐이며 실제 구현에서는 정확한 SVG path 계산이 필요함
+          const pathData = createPieSlicePath({
+            centerX,
+            centerY,
+            radius,
+            innerRadius,
+            startAngle: startAngleRad,
+            endAngle: endAngleRad,
+            isDonut: config.isDonut || false
+          });
           
           path.setAttribute("d", pathData);
           path.setAttribute("fill", color);
           path.setAttribute("stroke", "white");
-          path.setAttribute("stroke-width", "1");
+          path.setAttribute("stroke-width", "2");
         },
       },
       canvas: {
         paint: (context, { width, height }) => {
-          // Canvas 구현도 SVG와 유사하게 진행
-          // 중심점과 반지름 계산
           const centerX = width / 2;
           const centerY = height / 2;
-          const radius = Math.min(width, height) / 2;
+          const radius = Math.min(width, height) / 2 - 10;
           
-          // 시작 및 종료 각도 계산 (라디안으로 변환)
-          let startAngle = (config.startAngle || 0) * Math.PI / 180;
-          // 실제 구현에서는 이전 슬라이스들의 퍼센트를 합산하여 시작 각도 계산
+          // 누적 각도 계산
+          let cumulativePercentage = 0;
+          for (let i = 0; i < index; i++) {
+            const dataset = config.data.datasets[0];
+            const values = dataset.values;
+            const total = values.reduce((sum, v) => sum + v, 0);
+            if (total > 0) {
+              cumulativePercentage += (values[i] / total) * 100;
+            }
+          }
           
+          const startAngle = ((config.startAngle || 0) + (cumulativePercentage / 100) * 360 - 90) * Math.PI / 180;
           const angleExtent = (percentage / 100) * 2 * Math.PI;
           const endAngle = startAngle + angleExtent;
           
-          // 도넛 차트인 경우 내부 반지름 계산
-          let innerRadius = 0;
+          const innerRadius = config.isDonut ? radius * (config.innerRadiusRatio || 0.6) : 0;
+          
+          context.canvas.beginPath();
+          
           if (config.isDonut) {
-            innerRadius = radius * (config.innerRadiusRatio || 0.6);
+            // 도넛 차트 그리기
+            context.canvas.arc(centerX, centerY, radius, startAngle, endAngle);
+            context.canvas.arc(centerX, centerY, innerRadius, endAngle, startAngle, true);
+            context.canvas.closePath();
+          } else {
+            // 일반 파이 차트 그리기
+            context.canvas.moveTo(centerX, centerY);
+            context.canvas.arc(centerX, centerY, radius, startAngle, endAngle);
+            context.canvas.closePath();
           }
           
-          // Canvas 드로잉 경로 시작
-          context.beginPath();
+          context.canvas.fillStyle = color;
+          context.canvas.fill();
           
-          // 파이 조각 그리기 (실제 구현에서는 더 정확한 계산 필요)
-          
-          // 채우기 색상 설정
-          context.fillStyle = color;
-          context.fill();
-          
-          // 테두리 그리기
-          context.strokeStyle = "white";
-          context.lineWidth = 1;
-          context.stroke();
+          context.canvas.strokeStyle = "white";
+          context.canvas.lineWidth = 2;
+          context.canvas.stroke();
         },
       },
     },
   });
 };
+
+function createPieSlicePath({
+  centerX,
+  centerY,
+  radius,
+  innerRadius,
+  startAngle,
+  endAngle,
+  isDonut
+}: {
+  centerX: number;
+  centerY: number;
+  radius: number;
+  innerRadius: number;
+  startAngle: number;
+  endAngle: number;
+  isDonut: boolean;
+}): string {
+  const largeArcFlag = endAngle - startAngle > Math.PI ? 1 : 0;
+  
+  const x1 = centerX + radius * Math.cos(startAngle);
+  const y1 = centerY + radius * Math.sin(startAngle);
+  const x2 = centerX + radius * Math.cos(endAngle);
+  const y2 = centerY + radius * Math.sin(endAngle);
+  
+  if (isDonut) {
+    const x3 = centerX + innerRadius * Math.cos(endAngle);
+    const y3 = centerY + innerRadius * Math.sin(endAngle);
+    const x4 = centerX + innerRadius * Math.cos(startAngle);
+    const y4 = centerY + innerRadius * Math.sin(startAngle);
+    
+    return `M ${x1} ${y1} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2} L ${x3} ${y3} A ${innerRadius} ${innerRadius} 0 ${largeArcFlag} 0 ${x4} ${y4} Z`;
+  } else {
+    return `M ${centerX} ${centerY} L ${x1} ${y1} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2} Z`;
+  }
+}
