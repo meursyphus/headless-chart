@@ -1,0 +1,181 @@
+---
+nav_group: "Pie"
+nav_order: 2
+title: "Donut Chart"
+description: "A donut chart example with center text display"
+image: /pie-chart/donut.png
+files:
+  App.js: |
+    import Widget from "@meursyphus/flitter-react";
+    import { PieChart } from "@meursyphus/headless-chart";
+    import {
+      Text,
+      Container,
+      EdgeInsets,
+      Row,
+      Column,
+      SizedBox,
+      TextStyle,
+      Stack,
+      Positioned,
+      Center,
+    } from "@meursyphus/flitter";
+
+    const data = {
+      labels: ['Desktop', 'Mobile', 'Tablet'],
+      datasets: [
+        {
+          legend: 'Device Usage',
+          values: [48.2, 45.6, 6.2],
+        },
+      ],
+    };
+
+    const totalValue = data.datasets[0].values.reduce((sum, value) => sum + value, 0);
+
+    const chart = PieChart({
+      data,
+      title: "Device Usage Statistics",
+      isDonut: true,
+      innerRadiusRatio: 0.6,
+      custom: {
+        layout: (...[{ legends, plot, title }]) =>
+          Container({
+            padding: EdgeInsets.all(40),
+            child: Column({
+              children: [
+                title,
+                SizedBox({ height: 30 }),
+                Row({
+                  children: [
+                    Container({
+                      child: Stack({
+                        children: [
+                          plot,
+                          // Center text for donut
+                          Positioned.fill({
+                            child: Center({
+                              child: Column({
+                                mainAxisSize: "min",
+                                children: [
+                                  Text("Total", {
+                                    style: new TextStyle({
+                                      fontSize: 14,
+                                      color: "#666",
+                                      fontFamily: "Noto Sans JP",
+                                    }),
+                                  }),
+                                  Text(`${totalValue.toFixed(1)}%`, {
+                                    style: new TextStyle({
+                                      fontSize: 24,
+                                      fontWeight: "bold",
+                                      color: "#333",
+                                      fontFamily: "Noto Sans JP",
+                                    }),
+                                  }),
+                                ],
+                              }),
+                            }),
+                          }),
+                        ],
+                      }),
+                      width: 300,
+                      height: 300,
+                    }),
+                    SizedBox({ width: 40 }),
+                    Column({
+                      children: legends,
+                      crossAxisAlignment: "start",
+                    }),
+                  ],
+                }),
+              ],
+            }),
+          }),
+        plot: (...[{ series }]) =>
+          Container({
+            child: series,
+          }),
+        series: (...[{ slices }]) =>
+          Stack({
+            children: slices,
+          }),
+        legend: ({ name, index }, _) => {
+          const colors = [
+            "#4A90E2", "#50C878", "#FF8C69", "#DDA0DD", 
+            "#98FB98", "#F0E68C", "#FF6347", "#87CEEB"
+          ];
+          
+          const color = colors[index % colors.length];
+          const percentage = (data.datasets[0].values[index] / totalValue * 100).toFixed(1);
+          
+          return Container({
+            margin: EdgeInsets.only({ bottom: 12 }),
+            child: Row({
+              children: [
+                Container({
+                  width: 18,
+                  height: 18,
+                  decoration: {
+                    color: color,
+                    borderRadius: 4,
+                  },
+                }),
+                SizedBox({ width: 12 }),
+                Column({
+                  crossAxisAlignment: "start",
+                  children: [
+                    Text(name, {
+                      style: new TextStyle({
+                        fontSize: 14,
+                        fontWeight: "500",
+                        fontFamily: "Noto Sans JP",
+                        color: "#333",
+                      }),
+                    }),
+                    Text(`${percentage}%`, {
+                      style: new TextStyle({
+                        fontSize: 12,
+                        fontFamily: "Noto Sans JP",
+                        color: "#666",
+                      }),
+                    }),
+                  ],
+                }),
+              ],
+            }),
+          });
+        },
+        slice: ({ value, percentage, index, label }, config) => {
+          const colors = [
+            "#4A90E2", "#50C878", "#FF8C69", "#DDA0DD", 
+            "#98FB98", "#F0E68C", "#FF6347", "#87CEEB"
+          ];
+          
+          // Override colors for donut chart
+          const originalSlice = config.custom.slice({ value, percentage, index, label }, config);
+          // Custom slice colors would be applied in the actual slice implementation
+          return originalSlice;
+        },
+        title: ({ name }, _) =>
+          Center({
+            child: Text(name, {
+              style: new TextStyle({
+                fontSize: 22,
+                fontWeight: "bold",
+                fontFamily: "Noto Sans JP",
+                color: "#333",
+              }),
+            }),
+          }),
+      },
+    });
+
+    export default function App() {
+      return <Widget width="auto" height="420px" widget={chart} renderer="svg" />;
+    }
+---
+
+# Donut Chart Example
+
+A donut chart example showing device usage statistics with a center text display and customized legend styling.

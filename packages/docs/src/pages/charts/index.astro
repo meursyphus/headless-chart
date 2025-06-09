@@ -83,13 +83,20 @@ const chartGroups = [
   },
   {
     type: "Pie Charts",
-    description: "Coming Soon",
-    charts: []
-  },
-  {
-    type: "Scatter Charts",
-    description: "Coming Soon",
-    charts: []
+    charts: [
+      {
+        title: "Toast Style Pie Chart",
+        description: "A headless-chart pie chart example inspired by Toast UI Chart",
+        link: "/charts/pie/toast",
+        image: "/pie-chart/toast.png"
+      },
+      {
+        title: "Donut Chart",
+        description: "A donut chart example with center text display",
+        link: "/charts/pie/donut",
+        image: "/pie-chart/donut.png"
+      }
+    ]
   },
   {
     type: "Bubble Charts",
@@ -153,7 +160,7 @@ const chartGroups = [
       chartGroups.map(group => (
         <section class="chart-group">
           <h2 class="group-title">{group.type}</h2>
-          {group.description && <p class="group-description">{group.description}</p>}
+          {(group as any).description && <p class="group-description">{(group as any).description}</p>}
           <div class="charts-grid">
             {
               group.charts.map(chart => (

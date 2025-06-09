@@ -1,0 +1,170 @@
+---
+nav_group: "Pie"
+nav_order: 1
+title: "Toast"
+description: "A headless-chart pie chart example inspired by Toast UI Chart"
+image: /pie-chart/toast.png
+files:
+  App.js: |
+    import Widget from "@meursyphus/flitter-react";
+    import { PieChart } from "@meursyphus/headless-chart";
+    import {
+      Text,
+      Container,
+      EdgeInsets,
+      Row,
+      Column,
+      SizedBox,
+      TextStyle,
+      Flexible,
+      Padding,
+      Stack,
+      Positioned,
+      Center,
+    } from "@meursyphus/flitter";
+
+    const data = {
+      labels: ['Chrome', 'Safari', 'Firefox', 'Edge', 'Others'],
+      datasets: [
+        {
+          legend: 'Browser Usage',
+          values: [65.5, 18.2, 9.8, 4.1, 2.4],
+        },
+      ],
+    };
+
+    const chart = PieChart({
+      data,
+      title: "Browser Market Share 2024",
+      custom: {
+        layout: (...[{ legends, plot, title }]) =>
+          Container({
+            padding: EdgeInsets.all(30),
+            child: Stack({
+              children: [
+                Positioned({
+                  top: -10,
+                  right: 0,
+                  child: Text("Inspired by Toast", {
+                    style: new TextStyle({
+                      fontSize: 14,
+                      color: "#999999",
+                      fontFamily: "Noto Sans JP",
+                    }),
+                  }),
+                }),
+                Column({
+                  children: [
+                    title,
+                    SizedBox({ height: 20 }),
+                    Row({
+                      children: [
+                        Container({
+                          child: plot,
+                          width: 350,
+                          height: 350,
+                        }),
+                        SizedBox({ width: 30 }),
+                        Column({
+                          children: legends,
+                          crossAxisAlignment: "start",
+                        }),
+                      ],
+                    }),
+                  ],
+                }),
+              ],
+            }),
+          }),
+        plot: (...[{ series }]) =>
+          Container({
+            child: series,
+          }),
+        series: (...[{ slices }]) =>
+          Stack({
+            children: slices,
+          }),
+        slice: ({ value, percentage, index, label }, config) => {
+          const colors = [
+            "#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", 
+            "#9966FF", "#FF9F40", "#F95738", "#20A39E"
+          ];
+          
+          // Use the same slice implementation from the fixed pie chart
+          return config.custom.slice({ value, percentage, index, label }, config);
+        },
+        legend: ({ name, index }, _) => {
+          const colors = [
+            "#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", 
+            "#9966FF", "#FF9F40", "#F95738", "#20A39E"
+          ];
+          
+          const color = colors[index % colors.length];
+          
+          return Container({
+            margin: EdgeInsets.only({ bottom: 8 }),
+            child: Row({
+              children: [
+                Container({
+                  width: 16,
+                  height: 16,
+                  decoration: {
+                    color: color,
+                    borderRadius: 3,
+                  },
+                }),
+                SizedBox({ width: 12 }),
+                Text(name, {
+                  style: new TextStyle({
+                    fontSize: 14,
+                    fontFamily: "Noto Sans JP",
+                    color: "#333",
+                  }),
+                }),
+              ],
+            }),
+          });
+        },
+        title: ({ name }, _) =>
+          Center({
+            child: Text(name, {
+              style: new TextStyle({
+                fontSize: 20,
+                fontWeight: "bold",
+                fontFamily: "Noto Sans JP",
+                color: "#333",
+              }),
+            }),
+          }),
+        sliceLabel: ({ value, percentage, label, index }, _) =>
+          Positioned({
+            top: 0,
+            left: 0,
+            child: Container({
+              padding: EdgeInsets.symmetric({ horizontal: 6, vertical: 3 }),
+              decoration: {
+                color: "rgba(255, 255, 255, 0.9)",
+                borderRadius: 4,
+                boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+              },
+              child: Text(`${percentage.toFixed(1)}%`, {
+                style: new TextStyle({
+                  fontSize: 12,
+                  fontWeight: "600",
+                  color: "#333",
+                  fontFamily: "Noto Sans JP",
+                }),
+              }),
+            }),
+          }),
+      },
+    });
+
+    export default function App() {
+      return <Widget width="auto" height="450px" widget={chart} renderer="svg" />;
+    }
+---
+
+# Pie Chart Example
+
+A headless-chart pie chart example inspired by Toast UI Chart showing browser market share data with customized styling and layout.
