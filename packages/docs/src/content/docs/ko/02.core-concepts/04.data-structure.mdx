@@ -7,4 +7,378 @@ description: "차트 데이터 포맷과 타입 시스템"
 
 # 데이터 구조
 
-(내용 작성 예정)
+Headless Chart는 일관되고 직관적인 데이터 구조를 사용합니다. 이 장에서는 차트에 데이터를 전달하는 방법과 타입 시스템을 알아봅니다.
+
+## 기본 데이터 구조
+
+### CartesianData 타입
+
+대부분의 2D 차트(Bar, Line, Area, Scatter)는 공통 데이터 구조를 사용합니다:
+
+```typescript
+type CartesianData = {
+  labels: string[];
+  datasets: {
+    legend: string;
+    values: number[];
+  }[];
+};
+```
+
+### 기본 예제
+
+```javascript
+const data = {
+  labels: ['1월', '2월', '3월', '4월', '5월'],
+  datasets: [
+    {
+      legend: '2023년 매출',
+      values: [120, 190, 300, 250, 420]
+    },
+    {
+      legend: '2024년 매출',
+      values: [150, 230, 280, 320, 480]
+    }
+  ]
+};
+```
+
+## 차트별 데이터 구조
+
+### Bar Chart
+
+기본 CartesianData 구조를 그대로 사용합니다:
+
+```javascript
+const barData = {
+  labels: ['서울', '부산', '대구', '인천', '광주'],
+  datasets: [
+    {
+      legend: '인구수',
+      values: [9.7, 3.4, 2.4, 2.9, 1.5]
+    }
+  ]
+};
+
+BarChart({ data: barData });
+```
+
+### Line Chart
+
+Line Chart도 동일한 구조를 사용합니다:
+
+```javascript
+const lineData = {
+  labels: ['월', '화', '수', '목', '금'],
+  datasets: [
+    {
+      legend: '방문자수',
+      values: [1200, 1900, 3000, 2500, 4200]
+    },
+    {
+      legend: '페이지뷰',
+      values: [3400, 4800, 7200, 6100, 9800]
+    }
+  ]
+};
+
+LineChart({ data: lineData });
+```
+
+### Scatter Chart
+
+Scatter Chart는 x, y 좌표를 사용하는 다른 구조를 가집니다:
+
+```javascript
+const scatterData = {
+  datasets: [
+    {
+      legend: '그룹 A',
+      data: [
+        { x: 10, y: 20 },
+        { x: 15, y: 35 },
+        { x: 20, y: 30 }
+      ]
+    },
+    {
+      legend: '그룹 B',
+      data: [
+        { x: 25, y: 40 },
+        { x: 30, y: 50 },
+        { x: 35, y: 45 }
+      ]
+    }
+  ]
+};
+
+ScatterChart({ data: scatterData });
+```
+
+### Bubble Chart
+
+Bubble Chart는 크기 정보가 추가됩니다:
+
+```javascript
+const bubbleData = {
+  datasets: [
+    {
+      legend: '제품 A',
+      data: [
+        { x: 10, y: 20, r: 5 },   // r은 반지름
+        { x: 15, y: 35, r: 10 },
+        { x: 20, y: 30, r: 15 }
+      ]
+    }
+  ]
+};
+
+BubbleChart({ data: bubbleData });
+```
+
+### Heatmap Chart
+
+Heatmap은 2차원 배열 구조를 사용합니다:
+
+```javascript
+const heatmapData = {
+  xLabels: ['월', '화', '수', '목', '금'],
+  yLabels: ['오전', '오후', '저녁'],
+  data: [
+    [10, 20, 30, 25, 15],  // 오전
+    [25, 30, 35, 40, 30],  // 오후
+    [15, 10, 20, 15, 10]   // 저녁
+  ]
+};
+
+HeatmapChart({ data: heatmapData });
+```
+
+## 데이터 검증과 타입 안전성
+
+### TypeScript 타입 활용
+
+```typescript
+import type { CartesianData } from '@meursyphus/headless-chart';
+
+// 타입 검증
+const validateData = (data: CartesianData): boolean => {
+  // labels와 values 길이가 일치하는지 확인
+  return data.datasets.every(
+    dataset => dataset.values.length === data.labels.length
+  );
+};
+
+// 타입이 보장된 데이터
+const typedData: CartesianData = {
+  labels: ['A', 'B', 'C'],
+  datasets: [
+    {
+      legend: 'Series 1',
+      values: [1, 2, 3]  // labels와 같은 길이
+    }
+  ]
+};
+```
+
+### 데이터 변환 헬퍼
+
+```javascript
+// 객체 배열을 차트 데이터로 변환
+const transformData = (rawData) => {
+  const labels = rawData.map(item => item.month);
+  const salesValues = rawData.map(item => item.sales);
+  const profitValues = rawData.map(item => item.profit);
+  
+  return {
+    labels,
+    datasets: [
+      { legend: '매출', values: salesValues },
+      { legend: '이익', values: profitValues }
+    ]
+  };
+};
+
+// 사용 예
+const rawData = [
+  { month: '1월', sales: 100, profit: 20 },
+  { month: '2월', sales: 120, profit: 25 },
+  { month: '3월', sales: 140, profit: 30 }
+];
+
+const chartData = transformData(rawData);
+```
+
+## 동적 데이터 처리
+
+### 실시간 데이터 업데이트
+
+```javascript
+function RealtimeChart() {
+  const [data, setData] = useState({
+    labels: [],
+    datasets: [{ legend: '실시간 데이터', values: [] }]
+  });
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setData(prev => {
+        const newLabels = [...prev.labels, new Date().toLocaleTimeString()];
+        const newValues = [...prev.datasets[0].values, Math.random() * 100];
+        
+        // 최근 10개만 유지
+        if (newLabels.length > 10) {
+          newLabels.shift();
+          newValues.shift();
+        }
+        
+        return {
+          labels: newLabels,
+          datasets: [{ legend: '실시간 데이터', values: newValues }]
+        };
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return <Widget widget={LineChart({ data })} />;
+}
+```
+
+### 필터링과 정렬
+
+```javascript
+// 데이터 필터링
+const filterByDateRange = (data, startDate, endDate) => {
+  const startIndex = data.labels.findIndex(label => label >= startDate);
+  const endIndex = data.labels.findIndex(label => label > endDate);
+  
+  return {
+    labels: data.labels.slice(startIndex, endIndex),
+    datasets: data.datasets.map(dataset => ({
+      ...dataset,
+      values: dataset.values.slice(startIndex, endIndex)
+    }))
+  };
+};
+
+// 데이터 정렬
+const sortByValue = (data, ascending = true) => {
+  const indices = [...Array(data.labels.length).keys()];
+  indices.sort((a, b) => {
+    const sumA = data.datasets.reduce((sum, d) => sum + d.values[a], 0);
+    const sumB = data.datasets.reduce((sum, d) => sum + d.values[b], 0);
+    return ascending ? sumA - sumB : sumB - sumA;
+  });
+  
+  return {
+    labels: indices.map(i => data.labels[i]),
+    datasets: data.datasets.map(dataset => ({
+      ...dataset,
+      values: indices.map(i => dataset.values[i])
+    }))
+  };
+};
+```
+
+## 스케일 설정
+
+### 자동 스케일 vs 수동 스케일
+
+```javascript
+// 자동 스케일 (기본값)
+BarChart({ data: myData });
+
+// 수동 스케일 설정
+BarChart({
+  data: myData,
+  getScale: ({ data }) => {
+    // 최대값의 110%를 상한으로 설정
+    const maxValue = Math.max(
+      ...data.datasets.flatMap(d => d.values)
+    );
+    
+    return {
+      min: 0,
+      max: Math.ceil(maxValue * 1.1),
+      step: Math.ceil(maxValue / 5)
+    };
+  }
+});
+```
+
+### 로그 스케일 구현
+
+```javascript
+const logScale = ({ data }) => {
+  const values = data.datasets.flatMap(d => d.values);
+  const minValue = Math.min(...values.filter(v => v > 0));
+  const maxValue = Math.max(...values);
+  
+  return {
+    min: Math.pow(10, Math.floor(Math.log10(minValue))),
+    max: Math.pow(10, Math.ceil(Math.log10(maxValue))),
+    transform: (value) => Math.log10(value),
+    inverse: (value) => Math.pow(10, value)
+  };
+};
+```
+
+## 데이터 포맷팅
+
+### 레이블 포맷터
+
+```javascript
+// 숫자 포맷팅
+const formatNumber = (value) => {
+  if (value >= 1000000) return `${(value / 1000000).toFixed(1)}M`;
+  if (value >= 1000) return `${(value / 1000).toFixed(1)}K`;
+  return value.toString();
+};
+
+// 날짜 포맷팅
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('ko-KR', {
+    month: 'short',
+    day: 'numeric'
+  });
+};
+
+// 사용
+BarChart({
+  data: myData,
+  custom: {
+    yAxisLabel: ({ name }) => Text(formatNumber(name)),
+    xAxisLabel: ({ name }) => Text(formatDate(name))
+  }
+});
+```
+
+## 빈 데이터 처리
+
+```javascript
+// 빈 데이터 체크
+const EmptyAwareChart = ({ data }) => {
+  if (!data.datasets.length || !data.labels.length) {
+    return Container({
+      child: Center({
+        child: Text('데이터가 없습니다', {
+          style: new TextStyle({
+            fontSize: 16,
+            color: '#6b7280'
+          })
+        })
+      })
+    });
+  }
+  
+  return BarChart({ data });
+};
+```
+
+## 다음 단계
+
+데이터 구조를 이해했다면, 이제 실제로 차트를 만들어볼 시간입니다!
+
+[Bar Chart 가이드](../03.chart-guide/01.bar-chart.mdx)에서 실제 차트 구현을 시작해보세요.

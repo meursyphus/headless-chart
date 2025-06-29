@@ -7,4 +7,257 @@ description: "Headless Chart의 기반이 되는 Flitter 프레임워크 이해�
 
 # Flitter 기초
 
-(내용 작성 예정)
+Headless Chart는 Flitter 프레임워크 위에 구축되었습니다. Flitter를 이해하면 차트를 자유자재로 커스터마이징할 수 있습니다.
+
+## Flitter란?
+
+Flitter는 Flutter의 위젯 시스템을 웹에서 구현한 JavaScript 렌더링 엔진입니다. Flutter의 강력한 UI 구성 방식을 웹에서도 사용할 수 있게 해줍니다.
+
+### 주요 특징
+
+- **선언적 UI**: "어떻게"가 아닌 "무엇을" 그릴지 선언
+- **위젯 트리**: 작은 위젯들을 조합해 복잡한 UI 구성
+- **크로스 렌더러**: SVG와 Canvas 모두 지원
+- **자동 레이아웃**: Flutter의 레이아웃 알고리즘 그대로 구현
+
+## 핵심 개념
+
+### 1. 위젯(Widget)
+
+모든 UI 요소는 위젯입니다. 위젯은 UI의 일부를 선언적으로 설명합니다.
+
+```javascript
+// 간단한 컨테이너 위젯
+Container({
+  width: 200,
+  height: 100,
+  color: '#3b82f6'
+})
+
+// 텍스트 위젯
+Text('안녕하세요', {
+  style: new TextStyle({
+    fontSize: 16,
+    color: '#1f2937'
+  })
+})
+```
+
+### 2. 위젯 트리
+
+위젯들은 트리 구조로 조합됩니다. 부모 위젯은 자식 위젯을 포함합니다.
+
+```javascript
+Container({
+  child: Column({
+    children: [
+      Text('제목'),
+      Text('내용'),
+      Container({ height: 50, color: '#f3f4f6' })
+    ]
+  })
+})
+```
+
+### 3. 레이아웃 시스템
+
+Flitter는 Flutter와 동일한 레이아웃 제약 시스템을 사용합니다.
+
+- **제약은 아래로 전달됩니다** (Constraints go down)
+- **크기는 위로 전달됩니다** (Sizes go up)
+- **부모가 위치를 결정합니다** (Parent sets position)
+
+## 중요한 문법 규칙
+
+### 1. Import 규칙
+
+```javascript
+// ✅ 올바른 방법
+import Widget from '@meursyphus/flitter-react';  // 기본 내보내기
+import { Container, Text, Row } from '@meursyphus/flitter';  // 명명된 내보내기
+
+// ❌ 잘못된 방법
+import { Widget } from '@meursyphus/flitter-react';  // 에러!
+```
+
+### 2. 위젯 vs 타입 클래스
+
+```javascript
+// 위젯: new 키워드 없이 사용
+Container({ width: 100 })
+Text('Hello')
+Row({ children: [] })
+
+// 타입 클래스: new 키워드 필수
+new TextStyle({ fontSize: 16 })
+new BoxDecoration({ color: '#FF0000' })
+new EdgeInsets.all(10)
+```
+
+### 3. 색상 표현
+
+```javascript
+// ✅ 올바른 색상 표현
+color: '#FF0000'              // HEX 문자열
+color: 'rgba(255, 0, 0, 0.5)' // RGBA 문자열
+color: 'red'                  // 색상 이름
+
+// ❌ 잘못된 색상 표현
+color: 0xFFFF0000  // Flutter 스타일 숫자는 사용 불가
+```
+
+## 기본 위젯 소개
+
+### Container
+
+가장 기본적인 레이아웃 위젯입니다.
+
+```javascript
+Container({
+  width: 200,
+  height: 100,
+  padding: EdgeInsets.all(16),
+  margin: EdgeInsets.symmetric({ horizontal: 8 }),
+  decoration: new BoxDecoration({
+    color: '#ffffff',
+    borderRadius: BorderRadius.circular(8),
+    border: Border.all({ color: '#e5e7eb', width: 1 })
+  }),
+  child: Text('컨테이너 안의 텍스트')
+})
+```
+
+### Row & Column
+
+수평/수직으로 자식들을 배치합니다.
+
+```javascript
+// 수평 배치
+Row({
+  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  crossAxisAlignment: CrossAxisAlignment.center,
+  children: [
+    Text('왼쪽'),
+    Text('중간'),
+    Text('오른쪽')
+  ]
+})
+
+// 수직 배치
+Column({
+  mainAxisAlignment: MainAxisAlignment.start,
+  crossAxisAlignment: CrossAxisAlignment.stretch,
+  children: [
+    Text('상단'),
+    SizedBox({ height: 20 }),  // 간격
+    Text('하단')
+  ]
+})
+```
+
+### Stack & Positioned
+
+위젯들을 겹쳐서 배치합니다.
+
+```javascript
+Stack({
+  children: [
+    Container({ width: 200, height: 200, color: '#3b82f6' }),
+    Positioned({
+      top: 10,
+      right: 10,
+      child: Text('우측 상단')
+    }),
+    Positioned({
+      bottom: 10,
+      left: 10,
+      child: Text('좌측 하단')
+    })
+  ]
+})
+```
+
+## 실제 차트 예제
+
+Flitter 개념을 차트에 적용해보겠습니다.
+
+```javascript
+// 간단한 막대 차트 레이아웃
+Container({
+  padding: EdgeInsets.all(20),
+  child: Row({
+    crossAxisAlignment: CrossAxisAlignment.end,
+    children: [
+      // 첫 번째 막대
+      Container({
+        width: 50,
+        height: 100,
+        color: '#3b82f6',
+        margin: EdgeInsets.symmetric({ horizontal: 5 })
+      }),
+      // 두 번째 막대
+      Container({
+        width: 50,
+        height: 150,
+        color: '#10b981',
+        margin: EdgeInsets.symmetric({ horizontal: 5 })
+      }),
+      // 세 번째 막대
+      Container({
+        width: 50,
+        height: 80,
+        color: '#f59e0b',
+        margin: EdgeInsets.symmetric({ horizontal: 5 })
+      })
+    ]
+  })
+})
+```
+
+## 스타일링
+
+### TextStyle
+
+텍스트의 모양을 정의합니다.
+
+```javascript
+Text('스타일이 적용된 텍스트', {
+  style: new TextStyle({
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#1f2937',
+    fontFamily: 'Pretendard',
+    letterSpacing: -0.5
+  })
+})
+```
+
+### BoxDecoration
+
+컨테이너의 장식을 정의합니다.
+
+```javascript
+Container({
+  decoration: new BoxDecoration({
+    color: '#ffffff',
+    borderRadius: BorderRadius.circular(12),
+    boxShadow: [{
+      color: 'rgba(0, 0, 0, 0.1)',
+      blurRadius: 10,
+      offset: { x: 0, y: 4 }
+    }],
+    gradient: {
+      type: 'linear',
+      colors: ['#3b82f6', '#8b5cf6'],
+      begin: { x: 0, y: 0 },
+      end: { x: 1, y: 1 }
+    }
+  })
+})
+```
+
+## 다음 단계
+
+이제 Flitter의 기본을 이해했으니, [위젯 시스템](./02.widget-system.mdx)에서 더 깊이 있는 내용을 학습해보세요.
+
+차트를 만들 때 이런 Flitter 지식이 어떻게 활용되는지 [차트 가이드](../03.chart-guide/01.bar-chart.mdx)에서 확인할 수 있습니다.

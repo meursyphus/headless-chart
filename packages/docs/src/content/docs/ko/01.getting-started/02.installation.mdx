@@ -7,4 +7,245 @@ description: "Headless Chart 설치 및 기본 설정 가이드"
 
 # 설치
 
-(내용 작성 예정)
+## 패키지 설치
+
+Headless Chart는 npm 또는 yarn을 통해 설치할 수 있습니다.
+
+```bash
+# npm 사용
+npm install @meursyphus/headless-chart
+
+# yarn 사용
+yarn add @meursyphus/headless-chart
+
+# pnpm 사용
+pnpm add @meursyphus/headless-chart
+```
+
+## React 프로젝트 설정
+
+React에서 사용하려면 `@meursyphus/flitter-react` 패키지도 함께 설치해야 합니다.
+
+```bash
+npm install @meursyphus/headless-chart @meursyphus/flitter-react
+```
+
+### 기본 설정
+
+```typescript
+// React 프로젝트
+import { Widget } from '@meursyphus/flitter-react';
+import { BarChart } from '@meursyphus/headless-chart';
+
+function App() {
+  const chart = BarChart({
+    data: {
+      labels: ['1월', '2월', '3월'],
+      datasets: [{
+        label: '매출',
+        data: [100, 200, 150]
+      }]
+    }
+  });
+
+  return <Widget widget={chart} />;
+}
+```
+
+## Svelte 프로젝트 설정
+
+Svelte에서는 `@meursyphus/flitter-svelte` 패키지를 사용합니다.
+
+```bash
+npm install @meursyphus/headless-chart @meursyphus/flitter-svelte
+```
+
+### 기본 설정
+
+```svelte
+<script>
+  import Widget from '@meursyphus/flitter-svelte';
+  import { BarChart } from '@meursyphus/headless-chart';
+
+  const chart = BarChart({
+    data: {
+      labels: ['1월', '2월', '3월'],
+      datasets: [{
+        label: '매출',
+        data: [100, 200, 150]
+      }]
+    }
+  });
+</script>
+
+<Widget widget={chart} />
+```
+
+## TypeScript 설정
+
+Headless Chart는 TypeScript로 작성되어 완벽한 타입 지원을 제공합니다.
+
+### tsconfig.json 권장 설정
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  }
+}
+```
+
+### 타입 정의 활용
+
+```typescript
+import type { ChartData, CustomCartesianChart } from '@meursyphus/headless-chart';
+
+// 데이터 타입
+const data: ChartData = {
+  labels: ['1월', '2월', '3월'],
+  datasets: [{
+    label: '매출',
+    data: [100, 200, 150]
+  }]
+};
+
+// 커스텀 컴포넌트 타입
+const customComponents: CustomCartesianChart = {
+  bar: MyCustomBar,
+  axis: MyCustomAxis
+};
+```
+
+## 번들러 설정
+
+### Vite
+
+Vite는 별도의 설정 없이 바로 사용할 수 있습니다.
+
+```javascript
+// vite.config.js
+export default {
+  // 특별한 설정 필요 없음
+}
+```
+
+### Webpack
+
+Webpack 5를 사용하는 경우:
+
+```javascript
+// webpack.config.js
+module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx|ts|tsx)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              '@babel/preset-env',
+              '@babel/preset-react',
+              '@babel/preset-typescript'
+            ]
+          }
+        }
+      }
+    ]
+  },
+  resolve: {
+    extensions: ['.js', '.jsx', '.ts', '.tsx']
+  }
+};
+```
+
+## 렌더러 선택
+
+Headless Chart는 SVG와 Canvas 두 가지 렌더러를 지원합니다.
+
+### SVG 렌더러 (기본값)
+
+```jsx
+<Widget 
+  widget={chart} 
+  renderer="svg"  // 기본값
+/>
+```
+
+**SVG 렌더러 장점:**
+- 벡터 기반으로 확대해도 선명함
+- CSS로 스타일링 가능
+- DOM 요소로 접근 가능
+
+### Canvas 렌더러
+
+```jsx
+<Widget 
+  widget={chart} 
+  renderer="canvas"
+/>
+```
+
+**Canvas 렌더러 장점:**
+- 대용량 데이터 처리에 유리
+- 더 나은 애니메이션 성능
+- 메모리 사용량 적음
+
+## 개발 환경 설정
+
+### ESLint 설정
+
+```json
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "rules": {
+    // 프로젝트에 맞는 규칙 설정
+  }
+}
+```
+
+### Prettier 설정
+
+```json
+{
+  "semi": true,
+  "trailingComma": "es5",
+  "singleQuote": true,
+  "printWidth": 80,
+  "tabWidth": 2
+}
+```
+
+## 문제 해결
+
+### 모듈을 찾을 수 없는 경우
+
+```bash
+# node_modules 재설치
+rm -rf node_modules package-lock.json
+npm install
+```
+
+### TypeScript 타입 오류
+
+```bash
+# TypeScript 버전 확인
+npx tsc --version
+
+# 최신 버전으로 업데이트
+npm install typescript@latest -D
+```
+
+## 다음 단계
+
+설치가 완료되었다면 [빠른 시작](./03.quick-start.mdx) 가이드에서 첫 번째 차트를 만들어보세요!
