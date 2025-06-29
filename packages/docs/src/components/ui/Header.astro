@@ -11,7 +11,7 @@ let current: "docs" | "charts" | "i18n" | "none" = pathname.startsWith("/docs")
       : "none";
 ---
 
-<header class="header-container glass">
+<header class="header-container glass-header">
   <div class="header-inner">
     <a href="/" class="logo-area">
       <img class="logo-img scale-150" src="/logo.png" alt="logo" />
@@ -45,6 +45,8 @@ let current: "docs" | "charts" | "i18n" | "none" = pathname.startsWith("/docs")
 </header>
 
 <style>
+  @import '../../styles/glass.css';
+  
   .header-container {
     position: fixed;
     top: 0;
@@ -52,8 +54,7 @@ let current: "docs" | "charts" | "i18n" | "none" = pathname.startsWith("/docs")
     right: 0;
     height: 64px;
     z-index: 100;
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(229, 231, 235, 0.2);
+    /* Glass styles are now handled by .glass-header class */
   }
 
   .header-inner {
@@ -96,18 +97,24 @@ let current: "docs" | "charts" | "i18n" | "none" = pathname.startsWith("/docs")
   }
 
   .nav-link {
-    color: #666666;
+    color: rgba(0, 0, 0, 0.6);
     text-decoration: none;
     font-size: 1rem;
-    transition: color 0.2s;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: all 0.2s ease;
   }
 
   .nav-link:hover {
-    color: #1a1a1a;
+    color: rgba(0, 0, 0, 0.9);
+    background: rgba(0, 0, 0, 0.04);
   }
 
   .nav-link.active {
-    color: #1a1a1a;
+    color: rgba(0, 0, 0, 0.9);
+    background: rgba(0, 0, 0, 0.06);
+    font-weight: 600;
   }
 
   .external-links {
@@ -121,10 +128,46 @@ let current: "docs" | "charts" | "i18n" | "none" = pathname.startsWith("/docs")
     height: 24px;
     border-radius: 50%;
     object-fit: contain;
-    transition: transform 0.2s;
+    transition: all 0.2s;
+    opacity: 0.7;
   }
 
   .icon:hover {
     transform: scale(1.1);
+    opacity: 1;
+  }
+  
+  /* Mobile styles */
+  @media (max-width: 768px) {
+    .header-container {
+      height: 56px;
+    }
+    
+    .logo-text {
+      display: none;
+    }
+    
+    .logo-img {
+      width: 28px;
+      height: 28px;
+    }
+    
+    .nav {
+      gap: 0.5rem;
+    }
+    
+    .nav-link {
+      font-size: 0.875rem;
+      padding: 0.375rem 0.75rem;
+    }
+    
+    .external-links {
+      gap: 0.75rem;
+    }
+    
+    .icon {
+      width: 20px;
+      height: 20px;
+    }
   }
 </style>
