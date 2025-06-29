@@ -58,25 +58,49 @@ const fullCanonicalUrl = `${BASE_ORIGIN}${Astro.url.pathname}`;
 :root {
   --header: 64px; /* 헤더 높이 */
   --px: 64px; /* 좌우 패딩 */
+  
+  /* Neumorphic Design System */
+  --neu-bg: #e6e7ee;
+  --neu-bg-alt: #f0f0f3;
+  --neu-text: #31344b;
+  --neu-text-secondary: #44476a;
+  --neu-accent: #7b61ff;
+  --neu-accent-light: #9d8bff;
+  
+  /* Neumorphic Shadows */
+  --neu-shadow-light: #ffffff;
+  --neu-shadow-dark: #c8cad0;
+  --neu-shadow-inset-light: #ffffff;
+  --neu-shadow-inset-dark: #a3a5aa;
+  
+  /* Shadow Values */
+  --neu-shadow-sm: 
+    6px 6px 12px var(--neu-shadow-dark),
+    -6px -6px 12px var(--neu-shadow-light);
+  --neu-shadow-md: 
+    12px 12px 24px var(--neu-shadow-dark),
+    -12px -12px 24px var(--neu-shadow-light);
+  --neu-shadow-lg: 
+    20px 20px 40px var(--neu-shadow-dark),
+    -20px -20px 40px var(--neu-shadow-light);
+  --neu-shadow-inset: 
+    inset 6px 6px 12px var(--neu-shadow-inset-dark),
+    inset -6px -6px 12px var(--neu-shadow-inset-light);
 }
 
 html, body {
   margin:0; padding:0;
   font-family: 'Inter', sans-serif;
-  color: #333;
+  color: var(--neu-text);
   min-height: 100vh;
   overflow-x: hidden;
 }
 
 body {
-  background-color: #fff;
+  background: var(--neu-bg);
   background-image: 
-    linear-gradient(to right top, #e0e0e0 0%, transparent 50%),
-    linear-gradient(to left bottom, #d8d8d8 0%, transparent 50%),
-    linear-gradient(#e5e5e5 1px, transparent 1px),
-    linear-gradient(90deg, #e5e5e5 1px, transparent 1px);
-  background-size: 100% 100%, 100% 100%, 20px 20px, 20px 20px;
-  background-position: 0 0, 0 0, 0 0, 0 0;
+    radial-gradient(ellipse at top left, rgba(123, 97, 255, 0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom right, rgba(123, 97, 255, 0.02) 0%, transparent 50%);
 }
 
 .layout {
@@ -105,20 +129,58 @@ body {
 }
 
 .glass {
-  background:
-    linear-gradient(to bottom right, rgba(255,255,255,0.5), rgba(255,255,255,0.2)), 
-    linear-gradient(to right top, #e0e0e0 0%, transparent 50%),
-    linear-gradient(to left bottom, #d8d8d8 0%, transparent 50%),
-    linear-gradient(#e5e5e5 1px, transparent 1px),
-    linear-gradient(90deg, #e5e5e5 1px, transparent 1px);
-  
-  background-blend-mode: lighten, normal, normal, normal, normal;
-  background-size: cover, 100% 100%, 100% 100%, 20px 20px, 20px 20px;
-  background-position: center, 0 0, 0 0, 0 0, 0 0;
+  background: rgba(230, 231, 238, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 12px;
+}
 
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+/* Neumorphic Components */
+.neu-card {
+  background: var(--neu-bg);
+  border-radius: 20px;
+  box-shadow: var(--neu-shadow-md);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-  border-radius: 4px;
+.neu-card:hover {
+  box-shadow: var(--neu-shadow-sm);
+}
+
+.neu-button {
+  background: var(--neu-bg);
+  border: none;
+  border-radius: 12px;
+  padding: 12px 24px;
+  color: var(--neu-text);
+  font-weight: 500;
+  box-shadow: var(--neu-shadow-sm);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.neu-button:hover {
+  box-shadow: var(--neu-shadow-md);
+  transform: translateY(-2px);
+}
+
+.neu-button:active {
+  box-shadow: var(--neu-shadow-inset);
+  transform: translateY(0);
+}
+
+.neu-inset {
+  background: var(--neu-bg);
+  border-radius: 12px;
+  box-shadow: var(--neu-shadow-inset);
+}
+
+/* Gradient Text */
+.gradient-text {
+  background: linear-gradient(135deg, var(--neu-accent) 0%, var(--neu-accent-light) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 </style>

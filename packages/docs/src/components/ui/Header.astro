@@ -11,7 +11,7 @@ let current: "docs" | "charts" | "i18n" | "none" = pathname.startsWith("/docs")
       : "none";
 ---
 
-<header class="header-container glass-header">
+<header class="header-container neu-header">
   <div class="header-inner">
     <a href="/" class="logo-area">
       <img class="logo-img scale-150" src="/logo.png" alt="logo" />
@@ -45,7 +45,6 @@ let current: "docs" | "charts" | "i18n" | "none" = pathname.startsWith("/docs")
 </header>
 
 <style>
-  @import '../../styles/glass.css';
   
   .header-container {
     position: fixed;
@@ -54,7 +53,8 @@ let current: "docs" | "charts" | "i18n" | "none" = pathname.startsWith("/docs")
     right: 0;
     height: 64px;
     z-index: 100;
-    /* Glass styles are now handled by .glass-header class */
+    background: var(--neu-bg);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   }
 
   .header-inner {
@@ -84,7 +84,7 @@ let current: "docs" | "charts" | "i18n" | "none" = pathname.startsWith("/docs")
   .logo-text {
     font-size: 1.25rem;
     font-weight: 600;
-    color: #1a1a1a;
+    color: var(--neu-text);
   }
 
   .nav {
@@ -97,23 +97,26 @@ let current: "docs" | "charts" | "i18n" | "none" = pathname.startsWith("/docs")
   }
 
   .nav-link {
-    color: rgba(0, 0, 0, 0.6);
+    color: var(--neu-text-secondary);
     text-decoration: none;
     font-size: 1rem;
     font-weight: 500;
     padding: 0.5rem 1rem;
-    border-radius: 8px;
-    transition: all 0.2s ease;
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: var(--neu-bg);
+    box-shadow: none;
   }
 
   .nav-link:hover {
-    color: rgba(0, 0, 0, 0.9);
-    background: rgba(0, 0, 0, 0.04);
+    color: var(--neu-text);
+    box-shadow: var(--neu-shadow-sm);
+    transform: translateY(-1px);
   }
 
   .nav-link.active {
-    color: rgba(0, 0, 0, 0.9);
-    background: rgba(0, 0, 0, 0.06);
+    color: var(--neu-accent);
+    box-shadow: var(--neu-shadow-inset);
     font-weight: 600;
   }
 
@@ -128,13 +131,15 @@ let current: "docs" | "charts" | "i18n" | "none" = pathname.startsWith("/docs")
     height: 24px;
     border-radius: 50%;
     object-fit: contain;
-    transition: all 0.2s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     opacity: 0.7;
+    filter: grayscale(1);
   }
 
   .icon:hover {
-    transform: scale(1.1);
+    transform: scale(1.1) translateY(-2px);
     opacity: 1;
+    filter: grayscale(0);
   }
   
   /* Mobile styles */
