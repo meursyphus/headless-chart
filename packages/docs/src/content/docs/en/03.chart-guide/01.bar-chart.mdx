@@ -1,0 +1,524 @@
+---
+nav_group: "Chart Guide"
+nav_order: 1
+title: "Bar Chart"
+description: "Guide to creating and customizing bar charts"
+---
+
+# Bar Chart
+
+Bar charts are the most effective way to compare categorical data. Headless Chart's Bar Chart is built with a widget-based architecture that allows complete customization.
+
+## Interface
+
+### BarChart Props
+
+```typescript
+interface BarChartProps {
+  // Required properties
+  data: BarChartData;
+  
+  // Optional properties
+  custom?: Partial<BarChartCustom>;
+  title?: string;
+  direction?: 'vertical' | 'horizontal';
+  getScale?: (data: BarChartData) => BarChartScale;
+}
+```
+
+### Data Structure
+
+```typescript
+type BarChartData = {
+  labels: string[];     // X-axis labels (categories)
+  datasets: {
+    legend: string;     // Dataset name
+    values: number[];   // Y-axis values
+  }[];
+};
+
+type BarChartScale = {
+  min: number;
+  max: number;
+  step: number;
+};
+```
+
+## Basic Usage
+
+```javascript
+import Widget from '@meursyphus/flitter-react';
+import { BarChart } from '@meursyphus/headless-chart';
+
+const data = {
+  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+  datasets: [{
+    legend: 'Sales',
+    values: [120, 190, 300, 250, 420]
+  }]
+};
+
+function BasicBarChart() {
+  return (
+    <Widget 
+      width="600px" 
+      height="400px" 
+      widget={BarChart({ data })} 
+    />
+  );
+}
+```
+
+## Chart Components
+
+Bar Chart consists of the following hierarchical structure:
+
+```
+BarChart
+└── Layout (overall layout)
+    ├── Title (chart title)
+    ├── Legend (legend)
+    └── Plot (plot area)
+        ├── XAxis (X-axis)
+        ├── YAxis (Y-axis)
+        ├── Grid (grid)
+        └── Series (data series)
+            └── BarGroup (bar group)
+                └── Bar (individual bar)
+```
+
+## Customizable Elements
+
+You can customize 21 components through the `custom` prop:
+
+### 1. Layout Elements
+
+#### layout
+Controls the overall chart layout. Manages the arrangement of title, legend, and plot area.
+
+```javascript
+const chart = BarChart({
+  data,
+  custom: {
+    layout: ({ title, legends, plot }) => {
+      return Container({
+        padding: EdgeInsets.all(20),
+        child: Column({
+          children: [
+            Row({
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [title, Row({ children: legends })]
+            }),
+            SizedBox({ height: 16 }),
+            Expanded({ child: plot })
+          ]
+        })
+      });
+    }
+  }
+});
+```
+
+#### title
+Displays the chart title.
+
+```javascript
+custom: {
+  title: ({ title }) => Text(title, {
+    style: new TextStyle({
+      fontSize: 20,
+      fontWeight: 'bold',
+      color: '#1a202c'
+    })
+  })
+}
+```
+
+#### legend
+Renders individual legend items.
+
+```javascript
+custom: {
+  legend: ({ legend, color }) => Row({
+    children: [
+      Container({
+        width: 12,
+        height: 12,
+        decoration: new BoxDecoration({
+          color: color,
+          borderRadius: BorderRadius.circular(2)
+        })
+      }),
+      SizedBox({ width: 8 }),
+      Text(legend, {
+        style: new TextStyle({ fontSize: 14 })
+      })
+    ]
+  })
+}
+```
+
+### 2. Plot Area Elements
+
+#### plot
+The main plot area containing axes, grid, and series.
+
+```javascript
+custom: {
+  plot: ({ xAxis, yAxis, grid, series }) => {
+    return Stack({
+      children: [grid, xAxis, yAxis, series]
+    });
+  }
+}
+```
+
+### 3. Data Visualization Elements
+
+#### series
+Container for all bar groups.
+
+#### barGroup
+Group of bars belonging to the same label (used in multi-dataset charts).
+
+#### bar
+Individual bar element. This is the most commonly customized element.
+
+```javascript
+custom: {
+  bar: ({ value, label, legend, index, datasetIndex }) => {
+    const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444'];
+    
+    return Container({
+      width: Infinity,
+      height: Infinity,
+      margin: EdgeInsets.symmetric({ horizontal: 4 }),
+      decoration: new BoxDecoration({
+        color: colors[datasetIndex % colors.length],
+        borderRadius: BorderRadius.only({
+          topLeft: 8,
+          topRight: 8
+        })
+      })
+    });
+  }
+}
+```
+
+#### dataLabel
+Data value labels displayed on or near the bars.
+
+```javascript
+custom: {
+  dataLabel: ({ value }) => Text(value.toString(), {
+    style: new TextStyle({
+      fontSize: 12,
+      fontWeight: 'bold'
+    })
+  })
+}
+```
+
+### 4. Axis Elements
+
+#### xAxis / yAxis
+Containers for the entire axis.
+
+#### xAxisLine / yAxisLine
+The baseline of the axis.
+
+```javascript
+custom: {
+  xAxisLine: () => Container({
+    height: 1,
+    color: '#e5e7eb'
+  })
+}
+```
+
+#### xAxisLabel / yAxisLabel
+Displays axis labels.
+
+```javascript
+custom: {
+  xAxisLabel: ({ name, index }) => {
+    return Transform.rotate({
+      angle: -45 * Math.PI / 180,
+      child: Text(name, {
+        style: new TextStyle({
+          fontSize: 12,
+          color: '#6b7280'
+        })
+      })
+    });
+  },
+  
+  yAxisLabel: ({ name }) => {
+    const formatted = Number(name).toLocaleString('en-US');
+    return Text(`$${formatted}`, {
+      style: new TextStyle({
+        fontSize: 11,
+        color: '#6b7280'
+      })
+    });
+  }
+}
+```
+
+#### xAxisTick / yAxisTick
+Tick marks on the axis.
+
+### 5. Grid Elements
+
+#### grid
+Container for the entire grid.
+
+#### gridXLine / gridYLine
+Vertical/horizontal grid lines.
+
+```javascript
+custom: {
+  gridYLine: ({ value }) => Container({
+    height: 1,
+    color: value === 0 ? '#9ca3af' : '#f3f4f6'
+  })
+}
+```
+
+## Real-World Usage Examples
+
+### 1. Gradient Bar Chart
+
+```javascript
+import { Container, BoxDecoration, EdgeInsets, BorderRadius } from '@meursyphus/flitter';
+
+const gradientChart = BarChart({
+  data,
+  custom: {
+    bar: ({ datasetIndex }) => {
+      const gradients = [
+        { start: '#667eea', end: '#764ba2' },
+        { start: '#f093fb', end: '#f5576c' },
+        { start: '#4facfe', end: '#00f2fe' }
+      ];
+      
+      const { start, end } = gradients[datasetIndex % gradients.length];
+      
+      return Container({
+        width: Infinity,
+        height: Infinity,
+        margin: EdgeInsets.symmetric({ horizontal: 2 }),
+        decoration: new BoxDecoration({
+          gradient: {
+            type: 'linear',
+            colors: [start, end],
+            begin: { x: 0, y: 1 },
+            end: { x: 0, y: 0 }
+          },
+          borderRadius: BorderRadius.circular(4)
+        })
+      });
+    }
+  }
+});
+```
+
+### 2. Chart with Data Labels
+
+```javascript
+import { Stack, Positioned, Center, Text, TextStyle } from '@meursyphus/flitter';
+
+const labeledChart = BarChart({
+  data,
+  custom: {
+    bar: ({ value, datasetIndex }) => {
+      const colors = ['#3b82f6', '#10b981', '#f59e0b'];
+      
+      return Stack({
+        clipBehavior: 'none',
+        children: [
+          // Bar
+          Container({
+            width: Infinity,
+            height: Infinity,
+            decoration: new BoxDecoration({
+              color: colors[datasetIndex % colors.length],
+              borderRadius: BorderRadius.circular(4)
+            })
+          }),
+          // Data label
+          Positioned({
+            top: -25,
+            left: 0,
+            right: 0,
+            child: Center({
+              child: Container({
+                padding: EdgeInsets.symmetric({ horizontal: 8, vertical: 4 }),
+                decoration: new BoxDecoration({
+                  color: '#1f2937',
+                  borderRadius: BorderRadius.circular(4)
+                }),
+                child: Text(value.toString(), {
+                  style: new TextStyle({
+                    fontSize: 12,
+                    fontWeight: 'bold',
+                    color: '#ffffff'
+                  })
+                })
+              })
+            })
+          })
+        ]
+      });
+    }
+  }
+});
+```
+
+### 3. Horizontal Bar Chart
+
+```javascript
+const horizontalChart = BarChart({
+  data,
+  direction: 'horizontal',
+  custom: {
+    bar: ({ value, label }) => {
+      return Container({
+        width: Infinity,
+        height: Infinity,
+        margin: EdgeInsets.symmetric({ vertical: 4 }),
+        decoration: new BoxDecoration({
+          color: '#3b82f6',
+          borderRadius: BorderRadius.only({
+            topRight: 8,
+            bottomRight: 8
+          })
+        })
+      });
+    },
+    
+    // In horizontal charts, axis label positioning may need adjustment
+    yAxisLabel: ({ name }) => {
+      return Container({
+        width: 100,
+        child: Text(name, {
+          style: new TextStyle({
+            fontSize: 12,
+            color: '#4b5563'
+          }),
+          overflow: 'ellipsis'
+        })
+      });
+    }
+  }
+});
+```
+
+### 4. Custom Scale Chart
+
+```javascript
+const customScaleChart = BarChart({
+  data,
+  getScale: ({ datasets }) => {
+    // Find maximum value among all values
+    const allValues = datasets.flatMap(d => d.values);
+    const maxValue = Math.max(...allValues);
+    
+    // Add 10% padding
+    const padding = maxValue * 0.1;
+    const maxWithPadding = maxValue + padding;
+    
+    // Round to clean numbers
+    const roundedMax = Math.ceil(maxWithPadding / 100) * 100;
+    
+    return {
+      min: 0,
+      max: roundedMax,
+      step: roundedMax / 5
+    };
+  }
+});
+```
+
+## Adding Animation
+
+While Headless Chart doesn't provide animations by default, you can implement animations using Stateful Widgets:
+
+```javascript
+import { StatefulWidget, State, AnimationController, Animation } from '@meursyphus/flitter';
+
+class AnimatedBar extends StatefulWidget {
+  constructor({ value, color }) {
+    super();
+    this.value = value;
+    this.color = color;
+  }
+
+  createState() {
+    return new AnimatedBarState();
+  }
+}
+
+class AnimatedBarState extends State {
+  initState() {
+    super.initState();
+    this.controller = new AnimationController({
+      duration: { milliseconds: 800 }
+    });
+    this.animation = new Animation({
+      controller: this.controller,
+      value: Tween({ begin: 0, end: 1 })
+    });
+    this.controller.forward();
+  }
+
+  build() {
+    return AnimatedBuilder({
+      animation: this.animation,
+      builder: () => {
+        return Container({
+          width: Infinity,
+          height: Infinity,
+          transform: `scaleY(${this.animation.value})`,
+          transformOrigin: { x: 0.5, y: 1 },
+          decoration: new BoxDecoration({
+            color: this.widget.color,
+            borderRadius: BorderRadius.circular(4)
+          })
+        });
+      }
+    });
+  }
+
+  dispose() {
+    this.controller.dispose();
+    super.dispose();
+  }
+}
+
+// Usage
+const animatedChart = BarChart({
+  data,
+  custom: {
+    bar: ({ value, datasetIndex }) => {
+      const colors = ['#3b82f6', '#10b981', '#f59e0b'];
+      return new AnimatedBar({
+        value,
+        color: colors[datasetIndex % colors.length]
+      });
+    }
+  }
+});
+```
+
+## Performance Optimization Tips
+
+1. **Large Data Sets**: Limit the number of bars or aggregate data when dealing with large datasets
+2. **Complex Customizations**: Use memoization for heavy computations
+3. **Animations**: Use sparingly and monitor performance
+
+## Next Steps
+
+- For more examples, check out the [demo page](/charts/bar)
+- For time series data, see [Line Chart](./02.line-chart.mdx)
+- For proportional data, see [Pie Chart](./03.pie-chart.mdx)

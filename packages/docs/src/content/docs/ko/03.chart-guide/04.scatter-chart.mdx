@@ -1,0 +1,504 @@
+---
+nav_group: "차트 가이드"
+nav_order: 4
+title: "Scatter Chart"
+description: "산점도 차트 생성 및 커스터마이징 가이드"
+---
+
+# Scatter Chart
+
+산점도 차트는 두 변수 간의 관계를 시각화하는데 최적화된 차트입니다. X-Y 좌표 평면에 데이터 포인트를 표시하여 상관관계, 분포, 패턴을 효과적으로 보여줍니다.
+
+## 인터페이스
+
+### ScatterChart Props
+
+```typescript
+interface ScatterChartProps {
+  // 필수 속성
+  data: ScatterChartData;
+  
+  // 선택 속성
+  custom?: Partial<ScatterChartCustom>;
+  title?: string;
+  getScale?: (data: ScatterChartData) => ScatterChartScale;
+}
+```
+
+### 데이터 구조
+
+```typescript
+type ScatterChartData = {
+  datasets: {
+    legend: string;     // 데이터셋 이름
+    data: {
+      x: number;       // X축 값
+      y: number;       // Y축 값
+      label: string;   // 데이터 포인트 레이블
+    }[];
+  }[];
+};
+
+type ScatterChartScale = {
+  x: {
+    min: number;
+    max: number;
+    step: number;
+  };
+  y: {
+    min: number;
+    max: number;
+    step: number;
+  };
+};
+```
+
+## 기본 사용법
+
+```javascript
+import Widget from '@meursyphus/flitter-react';
+import { ScatterChart } from '@meursyphus/headless-chart';
+
+const data = {
+  datasets: [{
+    legend: '2024년',
+    data: [
+      { x: 10, y: 20, label: '서울' },
+      { x: 15, y: 35, label: '부산' },
+      { x: 25, y: 30, label: '대구' },
+      { x: 30, y: 45, label: '인천' },
+      { x: 40, y: 55, label: '광주' }
+    ]
+  }]
+};
+
+function BasicScatterChart() {
+  return (
+    <Widget 
+      width="600px" 
+      height="400px" 
+      widget={ScatterChart({ data })} 
+    />
+  );
+}
+```
+
+## 차트 구성 요소
+
+Scatter Chart는 다음과 같은 계층 구조로 구성됩니다:
+
+```
+ScatterChart
+└── Layout (전체 레이아웃)
+    ├── Title (차트 제목)
+    ├── Legend (범례)
+    └── Plot (플롯 영역)
+        ├── XAxis (X축)
+        ├── YAxis (Y축)
+        ├── Grid (그리드)
+        └── Series (데이터 시리즈)
+            └── Scatter (개별 데이터 포인트)
+```
+
+## 커스터마이징 가능한 요소
+
+`custom` prop을 통해 18개의 구성 요소를 커스터마이징할 수 있습니다:
+
+### 1. 레이아웃 요소
+
+#### layout, title, legend
+다른 차트들과 동일한 방식으로 커스터마이징 가능합니다.
+
+### 2. 데이터 시각화 요소
+
+#### series
+모든 데이터 포인트를 담는 컨테이너입니다.
+
+```javascript
+custom: {
+  series: ({ points, scale }) => {
+    return Stack({
+      children: points.map(point => 
+        Positioned({
+          left: calculateX(point.x, scale.x),
+          top: calculateY(point.y, scale.y),
+          child: createScatterPoint(point)
+        })
+      )
+    });
+  }
+}
+```
+
+#### scatter
+개별 데이터 포인트 요소입니다. 가장 많이 커스터마이징되는 요소입니다.
+
+```javascript
+custom: {
+  scatter: ({ label, legend, index }) => {
+    const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444'];
+    const color = colors[index % colors.length];
+    
+    return Container({
+      width: 10,
+      height: 10,
+      decoration: new BoxDecoration({
+        color: color,
+        shape: 'circle',
+        border: Border.all({ color: '#ffffff', width: 2 })
+      })
+    });
+  }
+}
+```
+
+### 3. 축 및 그리드 요소
+
+#### xAxis, yAxis
+Scatter Chart는 X, Y 모두 수치 축을 사용합니다.
+
+```javascript
+custom: {
+  xAxisLabel: ({ name }) => {
+    return Text(formatNumber(name), {
+      style: new TextStyle({
+        fontSize: 11,
+        color: '#6b7280'
+      })
+    });
+  },
+  
+  yAxisLabel: ({ name }) => {
+    return Text(formatNumber(name), {
+      style: new TextStyle({
+        fontSize: 11,
+        color: '#6b7280'
+      })
+    });
+  }
+}
+```
+
+## 실제 사용 예제
+
+### 1. 다양한 모양의 데이터 포인트
+
+```javascript
+import { CustomPaint, Path, Rect } from '@meursyphus/flitter';
+
+const shapeScatterChart = ScatterChart({
+  data,
+  custom: {
+    scatter: ({ index }) => {
+      const shapes = ['circle', 'square', 'triangle', 'star'];
+      const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444'];
+      
+      const shape = shapes[index % shapes.length];
+      const color = colors[index % colors.length];
+      
+      return CustomPaint({
+        size: { width: 12, height: 12 },
+        painter: {
+          svg: {
+            createDefaultSvgEl: (context) => ({
+              shape: context.createSvgEl("path")
+            }),
+            paint: ({ shape: shapeEl }, { width, height }) => {
+              const path = createShapePath(shape, width);
+              shapeEl.setAttribute("fill", color);
+              shapeEl.setAttribute("stroke", '#ffffff');
+              shapeEl.setAttribute("stroke-width", "2");
+              shapeEl.setAttribute("d", path.getD());
+            }
+          }
+        }
+      });
+    }
+  }
+});
+
+function createShapePath(shape, size) {
+  const path = new Path();
+  const halfSize = size / 2;
+  
+  switch (shape) {
+    case 'circle':
+      path.addOval(Rect.fromCircle({ 
+        center: { x: halfSize, y: halfSize }, 
+        radius: halfSize 
+      }));
+      break;
+      
+    case 'square':
+      path.addRect(Rect.fromLTWH({ 
+        left: 0, top: 0, 
+        width: size, height: size 
+      }));
+      break;
+      
+    case 'triangle':
+      path.moveTo({ x: halfSize, y: 0 });
+      path.lineTo({ x: size, y: size });
+      path.lineTo({ x: 0, y: size });
+      path.close();
+      break;
+      
+    case 'star':
+      const outerRadius = halfSize;
+      const innerRadius = halfSize * 0.4;
+      for (let i = 0; i < 10; i++) {
+        const radius = i % 2 === 0 ? outerRadius : innerRadius;
+        const angle = (i * Math.PI) / 5;
+        const x = halfSize + radius * Math.sin(angle);
+        const y = halfSize - radius * Math.cos(angle);
+        if (i === 0) {
+          path.moveTo({ x, y });
+        } else {
+          path.lineTo({ x, y });
+        }
+      }
+      path.close();
+      break;
+  }
+  
+  return path;
+}
+```
+
+### 2. 버블 차트 스타일 (크기 포함)
+
+```javascript
+const bubbleChart = ScatterChart({
+  data: {
+    datasets: [{
+      legend: '도시별 데이터',
+      data: [
+        { x: 10, y: 20, label: '서울', size: 100 },
+        { x: 15, y: 35, label: '부산', size: 60 },
+        { x: 25, y: 30, label: '대구', size: 40 },
+        { x: 30, y: 45, label: '인천', size: 55 },
+        { x: 40, y: 55, label: '광주', size: 35 }
+      ]
+    }]
+  },
+  custom: {
+    scatter: ({ label, index }, context) => {
+      const data = context.data.datasets[0].data.find(d => d.label === label);
+      const size = Math.sqrt(data.size) * 2; // 크기 스케일링
+      
+      return Container({
+        width: size,
+        height: size,
+        decoration: new BoxDecoration({
+          color: 'rgba(59, 130, 246, 0.6)',
+          shape: 'circle',
+          border: Border.all({ 
+            color: '#3b82f6', 
+            width: 2 
+          })
+        })
+      });
+    }
+  }
+});
+```
+
+### 3. 데이터 포인트 레이블
+
+```javascript
+import { Stack, Center, Text, TextStyle } from '@meursyphus/flitter';
+
+const labeledScatterChart = ScatterChart({
+  data,
+  custom: {
+    scatter: ({ label, index }) => {
+      const colors = ['#3b82f6', '#10b981', '#f59e0b'];
+      const color = colors[index % colors.length];
+      
+      return Stack({
+        clipBehavior: 'none',
+        children: [
+          // 데이터 포인트
+          Container({
+            width: 10,
+            height: 10,
+            decoration: new BoxDecoration({
+              color: color,
+              shape: 'circle'
+            })
+          }),
+          // 레이블
+          Positioned({
+            top: -20,
+            left: -20,
+            right: -20,
+            child: Center({
+              child: Container({
+                padding: EdgeInsets.symmetric({ horizontal: 6, vertical: 2 }),
+                decoration: new BoxDecoration({
+                  color: '#1f2937',
+                  borderRadius: BorderRadius.circular(4)
+                }),
+                child: Text(label, {
+                  style: new TextStyle({
+                    fontSize: 10,
+                    color: '#ffffff'
+                  })
+                })
+              })
+            })
+          })
+        ]
+      });
+    }
+  }
+});
+```
+
+### 4. 회귀선이 있는 산점도
+
+```javascript
+const regressionScatterChart = ScatterChart({
+  data,
+  custom: {
+    series: ({ points, scale }) => {
+      // 회귀선 계산
+      const regression = calculateLinearRegression(points);
+      
+      return Stack({
+        children: [
+          // 회귀선
+          CustomPaint({
+            painter: {
+              svg: {
+                createDefaultSvgEl: (context) => ({
+                  line: context.createSvgEl("line")
+                }),
+                paint: ({ line }, { width, height }) => {
+                  const x1 = 0;
+                  const y1 = calculateRegressionY(scale.x.min, regression);
+                  const x2 = width;
+                  const y2 = calculateRegressionY(scale.x.max, regression);
+                  
+                  line.setAttribute("x1", x1.toString());
+                  line.setAttribute("y1", ((1 - (y1 - scale.y.min) / (scale.y.max - scale.y.min)) * height).toString());
+                  line.setAttribute("x2", x2.toString());
+                  line.setAttribute("y2", ((1 - (y2 - scale.y.min) / (scale.y.max - scale.y.min)) * height).toString());
+                  line.setAttribute("stroke", "#ef4444");
+                  line.setAttribute("stroke-width", "2");
+                  line.setAttribute("stroke-dasharray", "5 5");
+                }
+              }
+            }
+          }),
+          // 데이터 포인트
+          ...points.map(point => 
+            Positioned({
+              left: calculateX(point.x, scale.x),
+              top: calculateY(point.y, scale.y),
+              child: createScatterPoint(point)
+            })
+          )
+        ]
+      });
+    }
+  }
+});
+
+function calculateLinearRegression(points) {
+  const n = points.length;
+  const sumX = points.reduce((sum, p) => sum + p.x, 0);
+  const sumY = points.reduce((sum, p) => sum + p.y, 0);
+  const sumXY = points.reduce((sum, p) => sum + p.x * p.y, 0);
+  const sumX2 = points.reduce((sum, p) => sum + p.x * p.x, 0);
+  
+  const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+  const intercept = (sumY - slope * sumX) / n;
+  
+  return { slope, intercept };
+}
+```
+
+## 애니메이션 추가하기
+
+```javascript
+import { StatefulWidget, State, AnimationController, Animation, Transform } from '@meursyphus/flitter';
+
+class AnimatedScatter extends StatefulWidget {
+  constructor({ label, color, shape }) {
+    super();
+    this.label = label;
+    this.color = color;
+    this.shape = shape;
+  }
+
+  createState() {
+    return new AnimatedScatterState();
+  }
+}
+
+class AnimatedScatterState extends State {
+  initState() {
+    super.initState();
+    this.controller = new AnimationController({
+      duration: { milliseconds: 500 }
+    });
+    this.scaleAnimation = new Animation({
+      controller: this.controller,
+      value: Tween({ 
+        begin: 0, 
+        end: 1 
+      }).chain(
+        CurveTween({ curve: Curves.elasticOut })
+      )
+    });
+    
+    // 지연된 애니메이션 시작
+    setTimeout(() => {
+      this.controller.forward();
+    }, Math.random() * 300);
+  }
+
+  build() {
+    return AnimatedBuilder({
+      animation: this.scaleAnimation,
+      builder: () => {
+        return Transform.scale({
+          scale: this.scaleAnimation.value,
+          child: Container({
+            width: 12,
+            height: 12,
+            decoration: new BoxDecoration({
+              color: this.widget.color,
+              shape: 'circle',
+              boxShadow: [{
+                color: 'rgba(0, 0, 0, 0.2)',
+                blurRadius: 4,
+                offset: { x: 0, y: 2 }
+              }]
+            })
+          })
+        });
+      }
+    });
+  }
+
+  dispose() {
+    this.controller.dispose();
+    super.dispose();
+  }
+}
+```
+
+## 성능 최적화 팁
+
+1. **데이터 클러스터링**: 많은 데이터 포인트는 클러스터링하여 표시
+2. **가상화**: 보이는 영역의 포인트만 렌더링
+3. **단순화**: 복잡한 모양보다는 단순한 원이나 사각형 사용
+4. **캔버스 렌더링**: 많은 포인트는 SVG보다 Canvas가 효율적
+
+## 다음 단계
+
+- 더 많은 예제는 [데모 페이지](/charts/scatter)를 참고하세요
+- 비율을 표시하려면 [Pie Chart](./05.pie-chart.mdx)를 확인하세요
+- 다차원 데이터를 표시하려면 [Heatmap](./08.heatmap.mdx)을 참고하세요

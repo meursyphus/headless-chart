@@ -1,0 +1,304 @@
+---
+nav_group: "시작하기"
+nav_order: 3
+title: "빠른 시작"
+description: "첫 번째 차트 만들기 - 5분 안에 시작하기"
+---
+
+# 빠른 시작
+
+5분 안에 첫 번째 차트를 만들어보겠습니다. 이 가이드는 React를 기준으로 설명하지만, 다른 프레임워크도 비슷합니다.
+
+## 1단계: 기본 Bar Chart 만들기
+
+가장 간단한 형태의 막대 차트부터 시작해봅시다.
+
+```jsx
+import { Widget } from '@meursyphus/flitter-react';
+import { BarChart } from '@meursyphus/headless-chart';
+
+function MyFirstChart() {
+  const chart = BarChart({
+    data: {
+      labels: ['1월', '2월', '3월', '4월', '5월'],
+      datasets: [{
+        label: '월별 매출',
+        data: [120, 190, 300, 250, 420]
+      }]
+    }
+  });
+
+  return (
+    <Widget 
+      width="600px" 
+      height="400px" 
+      widget={chart} 
+    />
+  );
+}
+```
+
+이게 전부입니다! 기본 스타일로 차트가 렌더링됩니다.
+
+## 2단계: 여러 데이터셋 추가하기
+
+실제로는 여러 데이터를 비교하는 경우가 많죠. 데이터셋을 추가해봅시다.
+
+```jsx
+const chart = BarChart({
+  data: {
+    labels: ['1월', '2월', '3월', '4월', '5월'],
+    datasets: [
+      {
+        label: '2023년',
+        data: [120, 190, 300, 250, 420]
+      },
+      {
+        label: '2024년',
+        data: [150, 230, 280, 320, 480]
+      }
+    ]
+  }
+});
+```
+
+## 3단계: 첫 번째 커스터마이징
+
+이제 차트의 색상을 바꿔봅시다. `custom` prop을 사용합니다.
+
+```jsx
+import { Container } from '@meursyphus/flitter';
+
+const chart = BarChart({
+  data: {
+    labels: ['1월', '2월', '3월', '4월', '5월'],
+    datasets: [{
+      label: '월별 매출',
+      data: [120, 190, 300, 250, 420]
+    }]
+  },
+  custom: {
+    bar: ({ datasetIndex }) => {
+      // 데이터셋별로 다른 색상 적용
+      const colors = ['#3b82f6', '#ef4444', '#10b981'];
+      
+      return Container({
+        width: Infinity,
+        height: Infinity,
+        color: colors[datasetIndex] || '#3b82f6'
+      });
+    }
+  }
+});
+```
+
+## 4단계: 다른 차트 타입 시도하기
+
+Line Chart도 비슷한 방식으로 만들 수 있습니다.
+
+```jsx
+import { LineChart } from '@meursyphus/headless-chart';
+
+const lineChart = LineChart({
+  data: {
+    labels: ['1월', '2월', '3월', '4월', '5월'],
+    datasets: [{
+      label: '방문자 수',
+      data: [1200, 1900, 3000, 2500, 4200]
+    }]
+  }
+});
+```
+
+## 5단계: 인터랙티브 기능 추가
+
+툴팁과 호버 효과를 추가해봅시다.
+
+```jsx
+import { GestureDetector, MouseRegion } from '@meursyphus/flitter';
+import { useState } from 'react';
+
+function InteractiveChart() {
+  const [hoveredBar, setHoveredBar] = useState(null);
+  
+  const chart = BarChart({
+    data: {
+      labels: ['1월', '2월', '3월', '4월', '5월'],
+      datasets: [{
+        label: '월별 매출',
+        data: [120, 190, 300, 250, 420]
+      }]
+    },
+    custom: {
+      bar: ({ label, value }) => {
+        const isHovered = hoveredBar === label;
+        
+        return MouseRegion({
+          onEnter: () => setHoveredBar(label),
+          onExit: () => setHoveredBar(null),
+          child: Container({
+            width: Infinity,
+            height: Infinity,
+            color: isHovered ? '#2563eb' : '#3b82f6',
+            // 호버시 확대 효과
+            transform: isHovered ? 'scale(1.05)' : 'scale(1)',
+            transition: 'all 0.2s ease'
+          })
+        });
+      }
+    }
+  });
+
+  return (
+    <div>
+      <Widget width="600px" height="400px" widget={chart} />
+      {hoveredBar && (
+        <p>선택된 월: {hoveredBar}</p>
+      )}
+    </div>
+  );
+}
+```
+
+## 실전 예제: 대시보드 차트
+
+실제 프로젝트에서 사용할 수 있는 좀 더 완성도 있는 예제입니다.
+
+```jsx
+import { 
+  Container, 
+  EdgeInsets, 
+  BoxDecoration,
+  BorderRadius,
+  Text,
+  TextStyle,
+  Row,
+  MainAxisAlignment
+} from '@meursyphus/flitter';
+
+function DashboardChart() {
+  const chart = BarChart({
+    data: {
+      labels: ['월', '화', '수', '목', '금'],
+      datasets: [
+        {
+          label: '완료',
+          data: [12, 19, 15, 25, 22]
+        },
+        {
+          label: '진행중',
+          data: [5, 8, 7, 4, 6]
+        }
+      ]
+    },
+    custom: {
+      // 커스텀 레이아웃
+      layout: ({ plot, xAxis, yAxis, legends }) => {
+        return Container({
+          padding: EdgeInsets.all(20),
+          decoration: new BoxDecoration({
+            color: '#ffffff',
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [{
+              color: 'rgba(0, 0, 0, 0.1)',
+              blurRadius: 10,
+              offset: { x: 0, y: 4 }
+            }]
+          }),
+          child: Column({
+            children: [
+              // 제목
+              Text('주간 업무 현황', {
+                style: new TextStyle({
+                  fontSize: 18,
+                  fontWeight: 'bold',
+                  color: '#1f2937'
+                })
+              }),
+              SizedBox({ height: 20 }),
+              // 범례
+              Row({
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: legends
+              }),
+              SizedBox({ height: 20 }),
+              // 차트
+              plot
+            ]
+          })
+        });
+      },
+      
+      // 커스텀 막대
+      bar: ({ datasetIndex }) => {
+        const colors = ['#3b82f6', '#fbbf24'];
+        
+        return Container({
+          width: Infinity,
+          height: Infinity,
+          margin: EdgeInsets.symmetric({ horizontal: 4 }),
+          decoration: new BoxDecoration({
+            color: colors[datasetIndex],
+            borderRadius: BorderRadius.only({
+              topLeft: 4,
+              topRight: 4
+            })
+          })
+        });
+      },
+      
+      // 커스텀 그리드
+      gridXLine: () => Container({
+        height: 1,
+        color: '#f3f4f6'
+      })
+    }
+  });
+
+  return <Widget width="100%" height="400px" widget={chart} />;
+}
+```
+
+## 다음 단계
+
+축하합니다! 🎉 첫 번째 차트를 성공적으로 만들었습니다.
+
+이제 다음을 학습해보세요:
+
+1. **[핵심 개념](../02.core-concepts/01.flitter-basics.mdx)**: Flitter 위젯 시스템 이해하기
+2. **[차트 가이드](../03.chart-guide/01.bar-chart.mdx)**: 각 차트 타입별 상세 가이드
+3. **[고급 기능](../04.advanced/01.custom-components.mdx)**: 더 복잡한 커스터마이징
+
+## 팁과 모범 사례
+
+### 1. 작게 시작하기
+기본 차트로 시작해서 점진적으로 커스터마이징하세요.
+
+### 2. 타입 활용하기
+TypeScript의 자동 완성을 활용하면 개발이 훨씬 쉬워집니다.
+
+### 3. 재사용 가능한 컴포넌트 만들기
+자주 사용하는 커스텀 컴포넌트는 별도로 분리하세요.
+
+```jsx
+// 재사용 가능한 커스텀 막대
+const BrandBar = ({ color = '#3b82f6' }) => {
+  return Container({
+    width: Infinity,
+    height: Infinity,
+    decoration: new BoxDecoration({
+      color,
+      borderRadius: BorderRadius.circular(4)
+    })
+  });
+};
+
+// 여러 차트에서 재사용
+const chart1 = BarChart({
+  custom: { bar: () => BrandBar({ color: '#3b82f6' }) }
+});
+
+const chart2 = BarChart({
+  custom: { bar: () => BrandBar({ color: '#10b981' }) }
+});
+```

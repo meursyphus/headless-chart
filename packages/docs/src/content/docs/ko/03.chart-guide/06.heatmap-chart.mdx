@@ -1,0 +1,498 @@
+---
+nav_group: "차트 가이드"
+nav_order: 6
+title: "Heatmap Chart"
+description: "히트맵 차트 생성 및 커스터마이징 가이드"
+---
+
+# Heatmap Chart
+
+히트맵 차트는 2차원 데이터를 색상의 강도로 표현하는 차트입니다. 행렬 형태의 데이터에서 패턴, 상관관계, 시간대별 변화 등을 시각적으로 파악하는데 최적화되어 있습니다.
+
+## 인터페이스
+
+### HeatmapChart Props
+
+```typescript
+interface HeatmapChartProps {
+  // 필수 속성
+  data: HeatmapData;
+  
+  // 선택 속성
+  custom?: Partial<HeatmapCustom>;
+  title?: string;
+  getScale?: (data: HeatmapData) => HeatmapScale;
+}
+```
+
+### 데이터 구조
+
+```typescript
+type HeatmapData = {
+  xLabels: string[];     // X축 라벨 배열
+  yLabels: string[];     // Y축 라벨 배열
+  values: number[][];    // 2차원 값 배열 [yIndex][xIndex]
+};
+
+type HeatmapScale = {
+  min: number;           // 최소값
+  max: number;           // 최대값
+};
+```
+
+## 기본 사용법
+
+```javascript
+import Widget from '@meursyphus/flitter-react';
+import { HeatmapChart } from '@meursyphus/headless-chart';
+
+const data = {
+  xLabels: ['1월', '2월', '3월', '4월', '5월', '6월'],
+  yLabels: ['서울', '부산', '대구', '인천'],
+  values: [
+    [5, 8, 12, 15, 20, 22],    // 서울
+    [8, 10, 14, 18, 23, 25],   // 부산
+    [6, 9, 13, 17, 21, 24],    // 대구
+    [4, 7, 11, 14, 19, 21]     // 인천
+  ]
+};
+
+function BasicHeatmapChart() {
+  return (
+    <Widget 
+      width="600px" 
+      height="400px" 
+      widget={HeatmapChart({ data })} 
+    />
+  );
+}
+```
+
+## 차트 구성 요소
+
+Heatmap Chart는 다음과 같은 계층 구조로 구성됩니다:
+
+```
+HeatmapChart
+└── Layout (전체 레이아웃)
+    ├── Title (차트 제목)
+    └── Plot (플롯 영역)
+        ├── XAxis (X축)
+        ├── YAxis (Y축)
+        └── Heatmap (히트맵 영역)
+            └── Segment (개별 셀)
+```
+
+## 커스터마이징 가능한 요소
+
+`custom` prop을 통해 13개의 구성 요소를 커스터마이징할 수 있습니다:
+
+### 1. 레이아웃 요소
+
+#### layout
+차트의 전체 레이아웃을 정의합니다.
+
+```javascript
+custom: {
+  layout: ({ title, plot }) => {
+    return Container({
+      padding: EdgeInsets.all(20),
+      child: Column({
+        children: [
+          title,
+          SizedBox({ height: 20 }),
+          Expanded({ child: plot })
+        ]
+      })
+    });
+  }
+}
+```
+
+#### title
+차트 제목을 커스터마이징합니다.
+
+```javascript
+custom: {
+  title: ({ name }) => {
+    return Text(name, {
+      style: new TextStyle({
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#1f2937'
+      })
+    });
+  }
+}
+```
+
+#### plot
+히트맵과 축을 포함하는 플롯 영역입니다.
+
+```javascript
+custom: {
+  plot: ({ xAxis, yAxis, heatmap }) => {
+    return Container({
+      child: Column({
+        children: [
+          Expanded({
+            child: Row({
+              children: [
+                yAxis,
+                SizedBox({ width: 10 }),
+                Expanded({ child: heatmap })
+              ]
+            })
+          }),
+          SizedBox({ height: 10 }),
+          xAxis
+        ]
+      })
+    });
+  }
+}
+```
+
+### 2. 데이터 시각화 요소
+
+#### heatmap
+모든 세그먼트를 담는 히트맵 컨테이너입니다.
+
+```javascript
+custom: {
+  heatmap: ({ segments }) => {
+    return Container({
+      decoration: new BoxDecoration({
+        border: Border.all({ color: '#e5e7eb', width: 1 })
+      }),
+      child: Column({
+        children: segments.map(row => 
+          Expanded({
+            child: Row({
+              children: row.map(segment => 
+                Expanded({ child: segment })
+              )
+            })
+          })
+        )
+      })
+    });
+  }
+}
+```
+
+#### segment
+개별 히트맵 셀입니다. 가장 많이 커스터마이징되는 요소입니다.
+
+```javascript
+custom: {
+  segment: ({ value, xIndex, yIndex }, { scale }) => {
+    // 값을 0-1 범위로 정규화
+    const normalizedValue = (value - scale.min) / (scale.max - scale.min);
+    
+    return Container({
+      margin: EdgeInsets.all(1),
+      decoration: new BoxDecoration({
+        color: `rgba(59, 130, 246, ${normalizedValue})`,
+        borderRadius: BorderRadius.circular(4)
+      })
+    });
+  }
+}
+```
+
+### 3. 축 요소
+
+#### xAxis, yAxis
+X축과 Y축의 전체 구조를 정의합니다.
+
+```javascript
+custom: {
+  xAxis: ({ line, labels, tick }) => {
+    return Column({
+      children: [
+        line,
+        SizedBox({ height: 5 }),
+        Row({
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: labels
+        })
+      ]
+    });
+  },
+  
+  yAxis: ({ line, labels, tick }) => {
+    return Row({
+      children: [
+        Column({
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: labels
+        }),
+        SizedBox({ width: 5 }),
+        line
+      ]
+    });
+  }
+}
+```
+
+#### xAxisLabel, yAxisLabel
+축 라벨을 커스터마이징합니다.
+
+```javascript
+custom: {
+  xAxisLabel: ({ name, index }) => {
+    return Container({
+      padding: EdgeInsets.symmetric({ horizontal: 4, vertical: 2 }),
+      child: Text(name, {
+        style: new TextStyle({
+          fontSize: 12,
+          color: '#6b7280'
+        })
+      })
+    });
+  },
+  
+  yAxisLabel: ({ name, index }) => {
+    return Container({
+      padding: EdgeInsets.symmetric({ horizontal: 4, vertical: 2 }),
+      child: Text(name, {
+        style: new TextStyle({
+          fontSize: 12,
+          color: '#6b7280'
+        })
+      })
+    });
+  }
+}
+```
+
+#### xAxisLine, yAxisLine, xAxisTick, yAxisTick
+축 라인과 틱 마크를 정의합니다.
+
+```javascript
+custom: {
+  xAxisLine: () => Container({ height: 1, color: '#e5e7eb' }),
+  yAxisLine: () => Container({ width: 1, color: '#e5e7eb' }),
+  xAxisTick: () => Container({ width: 1, height: 5, color: '#9ca3af' }),
+  yAxisTick: () => Container({ width: 5, height: 1, color: '#9ca3af' })
+}
+```
+
+## 실제 사용 예제
+
+### 1. 색상 스키마 커스터마이징
+
+```javascript
+import { Container, BoxDecoration } from '@meursyphus/flitter';
+
+const colorSchemeHeatmap = HeatmapChart({
+  data,
+  custom: {
+    segment: ({ value, xIndex, yIndex }, { scale }) => {
+      const normalizedValue = (value - scale.min) / (scale.max - scale.min);
+      
+      // 온도 색상 스키마 (파란색 → 빨간색)
+      const getTemperatureColor = (value) => {
+        const r = Math.round(255 * value);
+        const b = Math.round(255 * (1 - value));
+        const g = Math.round(128 * (1 - Math.abs(value - 0.5) * 2));
+        return `rgb(${r}, ${g}, ${b})`;
+      };
+      
+      return Container({
+        decoration: new BoxDecoration({
+          color: getTemperatureColor(normalizedValue),
+          borderRadius: BorderRadius.circular(2)
+        })
+      });
+    }
+  }
+});
+```
+
+### 2. 값이 표시되는 히트맵
+
+```javascript
+import { Center, Text, TextStyle } from '@meursyphus/flitter';
+
+const valueLabeledHeatmap = HeatmapChart({
+  data,
+  custom: {
+    segment: ({ value, xIndex, yIndex }, { scale }) => {
+      const normalizedValue = (value - scale.min) / (scale.max - scale.min);
+      const backgroundColor = `rgba(99, 102, 241, ${normalizedValue})`;
+      const textColor = normalizedValue > 0.6 ? '#ffffff' : '#1f2937';
+      
+      return Container({
+        decoration: new BoxDecoration({
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(4)
+        }),
+        child: Center({
+          child: Text(value.toFixed(1), {
+            style: new TextStyle({
+              fontSize: 11,
+              fontWeight: 'bold',
+              color: textColor
+            })
+          })
+        })
+      });
+    }
+  }
+});
+```
+
+### 3. 단계별 색상 히트맵
+
+```javascript
+const steppedColorHeatmap = HeatmapChart({
+  data,
+  custom: {
+    segment: ({ value }, { scale }) => {
+      const normalizedValue = (value - scale.min) / (scale.max - scale.min);
+      
+      // 5단계 색상 구분
+      const getStepColor = (v) => {
+        if (v < 0.2) return '#dbeafe';  // 매우 낮음
+        if (v < 0.4) return '#93c5fd';  // 낮음
+        if (v < 0.6) return '#3b82f6';  // 중간
+        if (v < 0.8) return '#1d4ed8';  // 높음
+        return '#1e3a8a';               // 매우 높음
+      };
+      
+      return Container({
+        margin: EdgeInsets.all(0.5),
+        decoration: new BoxDecoration({
+          color: getStepColor(normalizedValue),
+          border: Border.all({ 
+            color: 'rgba(255, 255, 255, 0.3)', 
+            width: 1 
+          })
+        })
+      });
+    }
+  }
+});
+```
+
+### 4. 원형 히트맵 셀
+
+```javascript
+const circularHeatmap = HeatmapChart({
+  data,
+  custom: {
+    segment: ({ value }, { scale }) => {
+      const normalizedValue = (value - scale.min) / (scale.max - scale.min);
+      const size = 10 + normalizedValue * 30; // 10-40 크기 범위
+      
+      return Center({
+        child: Container({
+          width: size,
+          height: size,
+          decoration: new BoxDecoration({
+            shape: 'circle',
+            color: `rgba(239, 68, 68, ${normalizedValue})`,
+            boxShadow: [{
+              color: 'rgba(0, 0, 0, 0.1)',
+              blurRadius: 4,
+              offset: { x: 0, y: 2 }
+            }]
+          })
+        })
+      });
+    }
+  }
+});
+```
+
+## 애니메이션 추가하기
+
+```javascript
+import { StatefulWidget, State, AnimationController, Animation } from '@meursyphus/flitter';
+
+class AnimatedSegment extends StatefulWidget {
+  constructor({ value, scale }) {
+    super();
+    this.value = value;
+    this.scale = scale;
+  }
+
+  createState() {
+    return new AnimatedSegmentState();
+  }
+}
+
+class AnimatedSegmentState extends State {
+  initState() {
+    super.initState();
+    this.controller = new AnimationController({
+      duration: { milliseconds: 800 }
+    });
+    
+    const normalizedValue = (this.widget.value - this.widget.scale.min) / 
+                          (this.widget.scale.max - this.widget.scale.min);
+    
+    this.colorAnimation = new Animation({
+      controller: this.controller,
+      value: Tween({ 
+        begin: 0, 
+        end: normalizedValue 
+      }).chain(
+        CurveTween({ curve: Curves.easeInOut })
+      )
+    });
+    
+    // 랜덤 지연으로 순차적 애니메이션 효과
+    setTimeout(() => {
+      this.controller.forward();
+    }, Math.random() * 500);
+  }
+
+  build() {
+    return AnimatedBuilder({
+      animation: this.colorAnimation,
+      builder: () => {
+        const opacity = this.colorAnimation.value;
+        
+        return Container({
+          margin: EdgeInsets.all(1),
+          decoration: new BoxDecoration({
+            color: `rgba(16, 185, 129, ${opacity})`,
+            borderRadius: BorderRadius.circular(4)
+          })
+        });
+      }
+    });
+  }
+
+  dispose() {
+    this.controller.dispose();
+    super.dispose();
+  }
+}
+
+// 사용 예제
+const animatedHeatmap = HeatmapChart({
+  data,
+  custom: {
+    segment: ({ value, xIndex, yIndex }, { scale }) => {
+      return new AnimatedSegment({ value, scale });
+    }
+  }
+});
+```
+
+## 성능 최적화 팁
+
+1. **대규모 데이터셋**: 많은 셀이 있을 때는 복잡한 장식보다 단순한 색상만 사용
+2. **가상화**: 보이는 영역의 셀만 렌더링하는 가상화 기법 적용
+3. **메모이제이션**: 색상 계산 등 반복적인 연산은 캐싱
+4. **단순한 렌더링**: SVG보다는 단순한 Container 사용
+
+## 다음 단계
+
+- 더 많은 예제는 [데모 페이지](/charts/heatmap)를 참고하세요
+- 상관관계를 표시하려면 여러 히트맵을 조합해보세요
+- 시계열 데이터는 애니메이션과 함께 사용하면 효과적입니다

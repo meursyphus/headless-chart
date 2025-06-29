@@ -1,0 +1,498 @@
+---
+nav_group: "Chart Guide"
+nav_order: 6
+title: "Heatmap Chart"
+description: "Guide to creating and customizing heatmap charts"
+---
+
+# Heatmap Chart
+
+Heatmap charts represent two-dimensional data through color intensity. They are optimized for visually identifying patterns, correlations, and temporal changes in matrix-form data.
+
+## Interface
+
+### HeatmapChart Props
+
+```typescript
+interface HeatmapChartProps {
+  // Required properties
+  data: HeatmapData;
+  
+  // Optional properties
+  custom?: Partial<HeatmapCustom>;
+  title?: string;
+  getScale?: (data: HeatmapData) => HeatmapScale;
+}
+```
+
+### Data Structure
+
+```typescript
+type HeatmapData = {
+  xLabels: string[];     // X-axis label array
+  yLabels: string[];     // Y-axis label array
+  values: number[][];    // 2D value array [yIndex][xIndex]
+};
+
+type HeatmapScale = {
+  min: number;           // Minimum value
+  max: number;           // Maximum value
+};
+```
+
+## Basic Usage
+
+```javascript
+import Widget from '@meursyphus/flitter-react';
+import { HeatmapChart } from '@meursyphus/headless-chart';
+
+const data = {
+  xLabels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+  yLabels: ['New York', 'Los Angeles', 'Chicago', 'Houston'],
+  values: [
+    [5, 8, 12, 15, 20, 22],    // New York
+    [8, 10, 14, 18, 23, 25],   // Los Angeles
+    [6, 9, 13, 17, 21, 24],    // Chicago
+    [4, 7, 11, 14, 19, 21]     // Houston
+  ]
+};
+
+function BasicHeatmapChart() {
+  return (
+    <Widget 
+      width="600px" 
+      height="400px" 
+      widget={HeatmapChart({ data })} 
+    />
+  );
+}
+```
+
+## Chart Components
+
+Heatmap Chart consists of the following hierarchical structure:
+
+```
+HeatmapChart
+└── Layout (overall layout)
+    ├── Title (chart title)
+    └── Plot (plot area)
+        ├── XAxis (X-axis)
+        ├── YAxis (Y-axis)
+        └── Heatmap (heatmap area)
+            └── Segment (individual cell)
+```
+
+## Customizable Elements
+
+You can customize 13 components through the `custom` prop:
+
+### 1. Layout Elements
+
+#### layout
+Defines the overall chart layout.
+
+```javascript
+custom: {
+  layout: ({ title, plot }) => {
+    return Container({
+      padding: EdgeInsets.all(20),
+      child: Column({
+        children: [
+          title,
+          SizedBox({ height: 20 }),
+          Expanded({ child: plot })
+        ]
+      })
+    });
+  }
+}
+```
+
+#### title
+Customizes the chart title.
+
+```javascript
+custom: {
+  title: ({ name }) => {
+    return Text(name, {
+      style: new TextStyle({
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#1f2937'
+      })
+    });
+  }
+}
+```
+
+#### plot
+The plot area containing the heatmap and axes.
+
+```javascript
+custom: {
+  plot: ({ xAxis, yAxis, heatmap }) => {
+    return Container({
+      child: Column({
+        children: [
+          Expanded({
+            child: Row({
+              children: [
+                yAxis,
+                SizedBox({ width: 10 }),
+                Expanded({ child: heatmap })
+              ]
+            })
+          }),
+          SizedBox({ height: 10 }),
+          xAxis
+        ]
+      })
+    });
+  }
+}
+```
+
+### 2. Data Visualization Elements
+
+#### heatmap
+Container for all segments in the heatmap.
+
+```javascript
+custom: {
+  heatmap: ({ segments }) => {
+    return Container({
+      decoration: new BoxDecoration({
+        border: Border.all({ color: '#e5e7eb', width: 1 })
+      }),
+      child: Column({
+        children: segments.map(row => 
+          Expanded({
+            child: Row({
+              children: row.map(segment => 
+                Expanded({ child: segment })
+              )
+            })
+          })
+        )
+      })
+    });
+  }
+}
+```
+
+#### segment
+Individual heatmap cell. This is the most commonly customized element.
+
+```javascript
+custom: {
+  segment: ({ value, xIndex, yIndex }, { scale }) => {
+    // Normalize value to 0-1 range
+    const normalizedValue = (value - scale.min) / (scale.max - scale.min);
+    
+    return Container({
+      margin: EdgeInsets.all(1),
+      decoration: new BoxDecoration({
+        color: `rgba(59, 130, 246, ${normalizedValue})`,
+        borderRadius: BorderRadius.circular(4)
+      })
+    });
+  }
+}
+```
+
+### 3. Axis Elements
+
+#### xAxis, yAxis
+Define the overall structure of X and Y axes.
+
+```javascript
+custom: {
+  xAxis: ({ line, labels, tick }) => {
+    return Column({
+      children: [
+        line,
+        SizedBox({ height: 5 }),
+        Row({
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: labels
+        })
+      ]
+    });
+  },
+  
+  yAxis: ({ line, labels, tick }) => {
+    return Row({
+      children: [
+        Column({
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: labels
+        }),
+        SizedBox({ width: 5 }),
+        line
+      ]
+    });
+  }
+}
+```
+
+#### xAxisLabel, yAxisLabel
+Customize axis labels.
+
+```javascript
+custom: {
+  xAxisLabel: ({ name, index }) => {
+    return Container({
+      padding: EdgeInsets.symmetric({ horizontal: 4, vertical: 2 }),
+      child: Text(name, {
+        style: new TextStyle({
+          fontSize: 12,
+          color: '#6b7280'
+        })
+      })
+    });
+  },
+  
+  yAxisLabel: ({ name, index }) => {
+    return Container({
+      padding: EdgeInsets.symmetric({ horizontal: 4, vertical: 2 }),
+      child: Text(name, {
+        style: new TextStyle({
+          fontSize: 12,
+          color: '#6b7280'
+        })
+      })
+    });
+  }
+}
+```
+
+#### xAxisLine, yAxisLine, xAxisTick, yAxisTick
+Define axis lines and tick marks.
+
+```javascript
+custom: {
+  xAxisLine: () => Container({ height: 1, color: '#e5e7eb' }),
+  yAxisLine: () => Container({ width: 1, color: '#e5e7eb' }),
+  xAxisTick: () => Container({ width: 1, height: 5, color: '#9ca3af' }),
+  yAxisTick: () => Container({ width: 5, height: 1, color: '#9ca3af' })
+}
+```
+
+## Real-World Usage Examples
+
+### 1. Custom Color Scheme
+
+```javascript
+import { Container, BoxDecoration } from '@meursyphus/flitter';
+
+const colorSchemeHeatmap = HeatmapChart({
+  data,
+  custom: {
+    segment: ({ value, xIndex, yIndex }, { scale }) => {
+      const normalizedValue = (value - scale.min) / (scale.max - scale.min);
+      
+      // Temperature color scheme (blue → red)
+      const getTemperatureColor = (value) => {
+        const r = Math.round(255 * value);
+        const b = Math.round(255 * (1 - value));
+        const g = Math.round(128 * (1 - Math.abs(value - 0.5) * 2));
+        return `rgb(${r}, ${g}, ${b})`;
+      };
+      
+      return Container({
+        decoration: new BoxDecoration({
+          color: getTemperatureColor(normalizedValue),
+          borderRadius: BorderRadius.circular(2)
+        })
+      });
+    }
+  }
+});
+```
+
+### 2. Heatmap with Value Labels
+
+```javascript
+import { Center, Text, TextStyle } from '@meursyphus/flitter';
+
+const valueLabeledHeatmap = HeatmapChart({
+  data,
+  custom: {
+    segment: ({ value, xIndex, yIndex }, { scale }) => {
+      const normalizedValue = (value - scale.min) / (scale.max - scale.min);
+      const backgroundColor = `rgba(99, 102, 241, ${normalizedValue})`;
+      const textColor = normalizedValue > 0.6 ? '#ffffff' : '#1f2937';
+      
+      return Container({
+        decoration: new BoxDecoration({
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(4)
+        }),
+        child: Center({
+          child: Text(value.toFixed(1), {
+            style: new TextStyle({
+              fontSize: 11,
+              fontWeight: 'bold',
+              color: textColor
+            })
+          })
+        })
+      });
+    }
+  }
+});
+```
+
+### 3. Stepped Color Heatmap
+
+```javascript
+const steppedColorHeatmap = HeatmapChart({
+  data,
+  custom: {
+    segment: ({ value }, { scale }) => {
+      const normalizedValue = (value - scale.min) / (scale.max - scale.min);
+      
+      // 5-step color classification
+      const getStepColor = (v) => {
+        if (v < 0.2) return '#dbeafe';  // Very low
+        if (v < 0.4) return '#93c5fd';  // Low
+        if (v < 0.6) return '#3b82f6';  // Medium
+        if (v < 0.8) return '#1d4ed8';  // High
+        return '#1e3a8a';               // Very high
+      };
+      
+      return Container({
+        margin: EdgeInsets.all(0.5),
+        decoration: new BoxDecoration({
+          color: getStepColor(normalizedValue),
+          border: Border.all({ 
+            color: 'rgba(255, 255, 255, 0.3)', 
+            width: 1 
+          })
+        })
+      });
+    }
+  }
+});
+```
+
+### 4. Circular Heatmap Cells
+
+```javascript
+const circularHeatmap = HeatmapChart({
+  data,
+  custom: {
+    segment: ({ value }, { scale }) => {
+      const normalizedValue = (value - scale.min) / (scale.max - scale.min);
+      const size = 10 + normalizedValue * 30; // Size range 10-40
+      
+      return Center({
+        child: Container({
+          width: size,
+          height: size,
+          decoration: new BoxDecoration({
+            shape: 'circle',
+            color: `rgba(239, 68, 68, ${normalizedValue})`,
+            boxShadow: [{
+              color: 'rgba(0, 0, 0, 0.1)',
+              blurRadius: 4,
+              offset: { x: 0, y: 2 }
+            }]
+          })
+        })
+      });
+    }
+  }
+});
+```
+
+## Adding Animation
+
+```javascript
+import { StatefulWidget, State, AnimationController, Animation } from '@meursyphus/flitter';
+
+class AnimatedSegment extends StatefulWidget {
+  constructor({ value, scale }) {
+    super();
+    this.value = value;
+    this.scale = scale;
+  }
+
+  createState() {
+    return new AnimatedSegmentState();
+  }
+}
+
+class AnimatedSegmentState extends State {
+  initState() {
+    super.initState();
+    this.controller = new AnimationController({
+      duration: { milliseconds: 800 }
+    });
+    
+    const normalizedValue = (this.widget.value - this.widget.scale.min) / 
+                          (this.widget.scale.max - this.widget.scale.min);
+    
+    this.colorAnimation = new Animation({
+      controller: this.controller,
+      value: Tween({ 
+        begin: 0, 
+        end: normalizedValue 
+      }).chain(
+        CurveTween({ curve: Curves.easeInOut })
+      )
+    });
+    
+    // Random delay for sequential animation effect
+    setTimeout(() => {
+      this.controller.forward();
+    }, Math.random() * 500);
+  }
+
+  build() {
+    return AnimatedBuilder({
+      animation: this.colorAnimation,
+      builder: () => {
+        const opacity = this.colorAnimation.value;
+        
+        return Container({
+          margin: EdgeInsets.all(1),
+          decoration: new BoxDecoration({
+            color: `rgba(16, 185, 129, ${opacity})`,
+            borderRadius: BorderRadius.circular(4)
+          })
+        });
+      }
+    });
+  }
+
+  dispose() {
+    this.controller.dispose();
+    super.dispose();
+  }
+}
+
+// Usage example
+const animatedHeatmap = HeatmapChart({
+  data,
+  custom: {
+    segment: ({ value, xIndex, yIndex }, { scale }) => {
+      return new AnimatedSegment({ value, scale });
+    }
+  }
+});
+```
+
+## Performance Optimization Tips
+
+1. **Large Datasets**: Use simple colors rather than complex decorations when there are many cells
+2. **Virtualization**: Apply virtualization techniques to render only visible cells
+3. **Memoization**: Cache repetitive calculations like color computations
+4. **Simple Rendering**: Use simple Containers rather than SVG
+
+## Next Steps
+
+- For more examples, check out the [demo page](/charts/heatmap)
+- To display correlations, try combining multiple heatmaps
+- Time series data works effectively with animations

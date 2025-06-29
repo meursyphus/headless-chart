@@ -2,92 +2,250 @@
 nav_group: "Getting Started"
 nav_order: 2
 title: "Installation"
-description: "Step-by-step guide on installing headless-chart and integrating it with Flitter"
+description: "Headless Chart installation and basic setup guide"
 ---
 
 # Installation
 
-This section will guide you through the installation of **headless-chart** and the necessary Flitter dependencies. We'll also demonstrate how to run Flitter and headless-chart in a pure Vite setup and prepare you to integrate with frameworks like React.
+## Package Installation
 
-## Setting Up Your Project
-
-### 1. Create a New Vite Project
-
-If you haven't already, start by creating a new Vite project. For example, to create a new Vite+React project:
+Headless Chart can be installed via npm or yarn.
 
 ```bash
-npm create vite@latest my-chart-app -- --template react
-cd my-chart-app
+# Using npm
+npm install @meursyphus/headless-chart
+
+# Using yarn
+yarn add @meursyphus/headless-chart
+
+# Using pnpm
+pnpm add @meursyphus/headless-chart
+```
+
+## React Project Setup
+
+For React usage, you need to install the `@meursyphus/flitter-react` package as well.
+
+```bash
+npm install @meursyphus/headless-chart @meursyphus/flitter-react
+```
+
+### Basic Setup
+
+```typescript
+// React project
+import { Widget } from '@meursyphus/flitter-react';
+import { BarChart } from '@meursyphus/headless-chart';
+
+function App() {
+  const chart = BarChart({
+    data: {
+      labels: ['Jan', 'Feb', 'Mar'],
+      datasets: [{
+        label: 'Sales',
+        data: [100, 200, 150]
+      }]
+    }
+  });
+
+  return <Widget widget={chart} />;
+}
+```
+
+## Svelte Project Setup
+
+For Svelte, use the `@meursyphus/flitter-svelte` package.
+
+```bash
+npm install @meursyphus/headless-chart @meursyphus/flitter-svelte
+```
+
+### Basic Setup
+
+```svelte
+<script>
+  import Widget from '@meursyphus/flitter-svelte';
+  import { BarChart } from '@meursyphus/headless-chart';
+
+  const chart = BarChart({
+    data: {
+      labels: ['Jan', 'Feb', 'Mar'],
+      datasets: [{
+        label: 'Sales',
+        data: [100, 200, 150]
+      }]
+    }
+  });
+</script>
+
+<Widget widget={chart} />
+```
+
+## TypeScript Setup
+
+Headless Chart is written in TypeScript and provides complete type support.
+
+### Recommended tsconfig.json
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  }
+}
+```
+
+### Using Type Definitions
+
+```typescript
+import type { ChartData, CustomCartesianChart } from '@meursyphus/headless-chart';
+
+// Data types
+const data: ChartData = {
+  labels: ['Jan', 'Feb', 'Mar'],
+  datasets: [{
+    label: 'Sales',
+    data: [100, 200, 150]
+  }]
+};
+
+// Custom component types
+const customComponents: CustomCartesianChart = {
+  bar: MyCustomBar,
+  axis: MyCustomAxis
+};
+```
+
+## Bundler Configuration
+
+### Vite
+
+Vite works out of the box without any special configuration.
+
+```javascript
+// vite.config.js
+export default {
+  // No special configuration needed
+}
+```
+
+### Webpack
+
+For Webpack 5:
+
+```javascript
+// webpack.config.js
+module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx|ts|tsx)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              '@babel/preset-env',
+              '@babel/preset-react',
+              '@babel/preset-typescript'
+            ]
+          }
+        }
+      }
+    ]
+  },
+  resolve: {
+    extensions: ['.js', '.jsx', '.ts', '.tsx']
+  }
+};
+```
+
+## Renderer Selection
+
+Headless Chart supports both SVG and Canvas renderers.
+
+### SVG Renderer (Default)
+
+```jsx
+<Widget 
+  widget={chart} 
+  renderer="svg"  // default
+/>
+```
+
+**SVG Renderer Advantages:**
+- Vector-based, stays crisp when scaled
+- Can be styled with CSS
+- Accessible as DOM elements
+
+### Canvas Renderer
+
+```jsx
+<Widget 
+  widget={chart} 
+  renderer="canvas"
+/>
+```
+
+**Canvas Renderer Advantages:**
+- Better for large datasets
+- Better animation performance
+- Lower memory usage
+
+## Development Environment Setup
+
+### ESLint Configuration
+
+```json
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "rules": {
+    // Configure rules for your project
+  }
+}
+```
+
+### Prettier Configuration
+
+```json
+{
+  "semi": true,
+  "trailingComma": "es5",
+  "singleQuote": true,
+  "printWidth": 80,
+  "tabWidth": 2
+}
+```
+
+## Troubleshooting
+
+### Module Not Found
+
+```bash
+# Reinstall node_modules
+rm -rf node_modules package-lock.json
 npm install
 ```
 
-### 2. Install headless-chart and Flitter
-
-headless-chart is built on Flitter, so you'll need both:
+### TypeScript Type Errors
 
 ```bash
-npm install @meursyphus/flitter @meursyphus/headless-chart
-```
+# Check TypeScript version
+npx tsc --version
 
-This gives you access to Flitter's widget system and the headless-chart components like BarChart.
-
-## Running Flitter in a Pure Vite Environment
-
-To run Flitter without any UI framework (just plain Vite + vanilla JS/TS), you can:
-
-Import and initialize Flitter's AppRunner with an SVG or Canvas element in your main.js:
-
-```js
-import { AppRunner, Container, Text } from '@meursyphus/flitter';
-
-const svgElement = document.getElementById('root'); // An <svg> element in your index.html
-const runner = new AppRunner({ view: svgElement });
-
-const widget = Container({
-  width: 300,
-  height: 200,
-  color: "lightblue",
-  child: Text("Flitter + Vite is running!")
-});
-
-runner.runApp(widget);
-```
-
-This approach does not require React or any additional frameworks.
-
-## Integrating Flitter-React
-
-For a more React-friendly approach, install flitter-react:
-
-```bash
-npm install @meursyphus/flitter-react
-```
-
-Then you can wrap your Flitter widgets in React components without manually handling refs or lifecycle events:
-
-```jsx
-import ReactWidget from "@meursyphus/flitter-react";
-import { Container, Text } from "@meursyphus/flitter";
-
-export default function App() {
-  const widget = Container({
-    width: 300,
-    height: 200,
-    color: "lightblue",
-    child: Text("Hello from Flitter in React!")
-  });
-
-  return (
-    <ReactWidget 
-      width="100%" 
-      height="300px" 
-      widget={widget} 
-      renderer="svg" 
-    />
-  );
-}
+# Update to latest version
+npm install typescript@latest -D
 ```
 
 ## Next Steps
 
-With headless-chart and Flitter installed, you're ready to create and customize charts. Next, we'll look at how to use Flitter-React more deeply and how to utilize headless-chart's customization features for building complex bar charts.
+Once installation is complete, check out the [Quick Start](./03.quick-start.mdx) guide to create your first chart!

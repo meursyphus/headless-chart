@@ -2,33 +2,86 @@
 nav_group: "Getting Started"
 nav_order: 1
 title: "Introduction"
-description: "An introduction to the headless-chart library, its relationship with Flitter, and core concepts"
+description: "Introduction to Headless Chart Library - Why Headless Chart?"
 ---
 
 # Introduction
 
-**headless-chart** is a highly customizable chart library built on top of the [Flitter](https://github.com/meursyphus/flitter) framework. It provides a powerful, **headless** way to define and compose charts. Unlike traditional chart libraries where you are constrained by predefined components, headless-chart gives you building blocks (in the form of Flitter widgets) that you can shape and style to meet your exact needs.
+## Why Headless Chart?
 
-## Key Features
+Have you ever had these concerns when creating charts?
 
-- **Full Customization:** Instead of tweaking chart options, you directly modify widget structures.  
-- **Flitter-Powered Layout:** Automatic layout calculations, dual renderer support (SVG/Canvas), built-in interactions and animations are inherited from Flitter.  
-- **Extendable & Flexible:** Compose your own bars, legends, axes, and grids by implementing custom widget functions.
+- "This chart library has great features, but it doesn't match our design system..."
+- "The customization options are too limited"
+- "Building from scratch would take too much time..."
 
-In other words, headless-chart provides a chart "backbone" on top of Flitter's widget system, allowing you to build any type of chart with minimal restrictions.
+**Headless Chart** was created to solve exactly these problems.
 
-## What You'll Learn
+## What is Headless?
 
-By following this guide, you will learn:
+"Headless" means providing only the logic without the UI. Headless Chart:
 
-1. How to install and set up headless-chart in your project.  
-2. How to integrate with Flitter and run your chart in a pure Vite environment.  
-3. How to use `@meursyphus/flitter-react` to simplify rendering in React apps.  
-4. The fundamental concepts of customizing chart components using `BarChartCustom` configurations.
+- ✅ **Provides core chart logic** (data calculations, scales, layouts)
+- ✅ **You decide the design** (colors, shapes, animations)
+- ✅ **Fully customizable** (all components are replaceable)
 
-## Prerequisites
+## Widget System Based on Flitter
 
-- **Basic Knowledge of Flitter:** While headless-chart works seamlessly with Flitter, having a fundamental understanding of Flitter's widget system will be beneficial.  
-- **React (Optional):** For those looking to integrate with React, a basic understanding of React is helpful, though not strictly required.
+Headless Chart is built on the [Flitter](https://github.com/meursyphus/flitter) framework. Flitter implements Flutter's widget system for the web with these characteristics:
 
-Let's get started by installing headless-chart and setting up our environment.
+- **Declarative UI**: Declare the UI appearance rather than state
+- **Composition-based**: Build complex UI by composing small widgets
+- **Cross-renderer**: Supports both SVG and Canvas
+
+## Difference from Traditional Chart Libraries
+
+### Traditional Chart Libraries
+```javascript
+// Customization through options
+new Chart({
+  type: 'bar',
+  options: {
+    color: 'blue',
+    borderWidth: 2,
+    // Limited options...
+  }
+})
+```
+
+### Headless Chart
+```javascript
+// Directly replace components
+BarChart({
+  data: myData,
+  custom: {
+    bar: MyCustomBar,      // Your custom bar
+    axis: MyCustomAxis,    // Your custom axis
+    legend: MyCustomLegend // Your custom legend
+  }
+})
+```
+
+## Key Benefits
+
+### 1. Complete Design Freedom
+Customize every element exactly as you want. Perfect for matching your company's design system.
+
+### 2. Progressive Customization
+Start with default components and replace only what you need, one by one.
+
+### 3. Type Safety
+Written in TypeScript with complete type support.
+
+### 4. Framework Independent
+Works with React, Svelte, Vue, or any other framework.
+
+## Recommended For
+
+- 🎨 **Developers working with designers**: Those who want to implement design specs 100%
+- 🏢 **Teams managing design systems**: Those who need consistent chart components
+- 🚀 **Those needing new chart types**: Those who want to create charts not available in existing libraries
+- 💡 **Those who want to learn**: Those who want to understand how charts work
+
+## Next Steps
+
+Now that you understand the concept of Headless Chart, proceed to the [Installation](./02.installation.mdx) guide to set it up in your project!

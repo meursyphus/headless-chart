@@ -1,0 +1,478 @@
+---
+nav_group: "차트 가이드"
+nav_order: 3
+title: "Area Chart"
+description: "영역 차트 생성 및 커스터마이징 가이드"
+---
+
+# Area Chart
+
+영역 차트는 시간에 따른 데이터의 변화를 표현하면서 동시에 크기와 볼륨을 시각적으로 강조하는 차트입니다. Line Chart의 변형으로, 라인 아래 영역을 채워 누적값이나 전체 규모를 효과적으로 표현합니다.
+
+## 인터페이스
+
+### AreaChart Props
+
+```typescript
+interface AreaChartProps {
+  // 필수 속성
+  data: AreaChartData;
+  
+  // 선택 속성
+  custom?: Partial<AreaChartCustom>;
+  title?: string;
+  getScale?: (data: AreaChartData) => AreaChartScale;
+}
+```
+
+### 데이터 구조
+
+```typescript
+type AreaChartData = {
+  labels: string[];     // X축 레이블 (시간/카테고리)
+  datasets: {
+    legend: string;     // 데이터셋 이름
+    values: number[];   // Y축 값
+  }[];
+};
+
+type AreaChartScale = {
+  min: number;
+  max: number;
+  step: number;
+};
+```
+
+## 기본 사용법
+
+```javascript
+import Widget from '@meursyphus/flitter-react';
+import { AreaChart } from '@meursyphus/headless-chart';
+
+const data = {
+  labels: ['1월', '2월', '3월', '4월', '5월', '6월'],
+  datasets: [{
+    legend: '매출액',
+    values: [1200, 1900, 3000, 2500, 4200, 3800]
+  }]
+};
+
+function BasicAreaChart() {
+  return (
+    <Widget 
+      width="600px" 
+      height="400px" 
+      widget={AreaChart({ data })} 
+    />
+  );
+}
+```
+
+## 차트 구성 요소
+
+Area Chart는 Line Chart와 동일한 계층 구조를 가지지만, `line` 대신 `area` 요소를 사용합니다:
+
+```
+AreaChart
+└── Layout (전체 레이아웃)
+    ├── Title (차트 제목)
+    ├── Legend (범례)
+    └── Plot (플롯 영역)
+        ├── XAxis (X축)
+        ├── YAxis (Y축)
+        ├── Grid (그리드)
+        └── Series (데이터 시리즈)
+            └── Area (개별 영역)
+```
+
+## 커스터마이징 가능한 요소
+
+`custom` prop을 통해 18개의 구성 요소를 커스터마이징할 수 있습니다:
+
+### 1. 레이아웃 요소
+
+#### layout, title, legend
+Line Chart와 동일한 방식으로 커스터마이징 가능합니다.
+
+### 2. 데이터 시각화 요소
+
+#### series
+모든 영역을 담는 컨테이너입니다.
+
+```javascript
+custom: {
+  series: ({ areas }) => {
+    return Stack({
+      children: areas
+    });
+  }
+}
+```
+
+#### area
+개별 영역 요소입니다. 가장 많이 커스터마이징되는 요소입니다.
+
+```javascript
+custom: {
+  area: ({ values, legend, index }) => {
+    return CustomPaint({
+      painter: {
+        svg: {
+          createDefaultSvgEl: (context) => ({
+            line: context.createSvgEl("path"),
+            area: context.createSvgEl("path")
+          }),
+          paint: ({ line, area }, { width, height }) => {
+            // 라인 경로 생성
+            const linePath = createLinePath({ values, width, height });
+            
+            // 라인 스타일
+            line.setAttribute("fill", "none");
+            line.setAttribute("stroke", getColor(index));
+            line.setAttribute("stroke-width", "2");
+            line.setAttribute("d", linePath.getD());
+            
+            // 영역 경로 생성 (라인 경로를 복사하고 하단까지 확장)
+            const areaPath = linePath.clone();
+            areaPath
+              .lineTo({ x: width, y: height })
+              .lineTo({ x: 0, y: height })
+              .close();
+            
+            // 영역 스타일
+            area.setAttribute("fill", getColor(index));
+            area.setAttribute("opacity", "0.3");
+            area.setAttribute("d", areaPath.getD());
+          }
+        }
+      }
+    });
+  }
+}
+```
+
+### 3. 축 및 그리드 요소
+
+#### xAxis, yAxis, grid 등
+Line Chart와 동일한 구성 요소들을 사용합니다.
+
+## 실제 사용 예제
+
+### 1. 그라데이션 영역 차트
+
+```javascript
+import { CustomPaint, Path } from '@meursyphus/flitter';
+
+const gradientAreaChart = AreaChart({
+  data,
+  custom: {
+    area: ({ values, index }) => {
+      const colors = [
+        { stroke: '#3b82f6', fill: 'url(#gradient-0)' },
+        { stroke: '#10b981', fill: 'url(#gradient-1)' },
+        { stroke: '#f59e0b', fill: 'url(#gradient-2)' }
+      ];
+      
+      const { stroke, fill } = colors[index % colors.length];
+      
+      return CustomPaint({
+        painter: {
+          svg: {
+            createDefaultSvgEl: (context) => {
+              const defs = context.createSvgEl("defs");
+              const gradient = context.createSvgEl("linearGradient");
+              gradient.setAttribute("id", `gradient-${index}`);
+              gradient.setAttribute("x1", "0%");
+              gradient.setAttribute("y1", "0%");
+              gradient.setAttribute("x2", "0%");
+              gradient.setAttribute("y2", "100%");
+              
+              const stop1 = context.createSvgEl("stop");
+              stop1.setAttribute("offset", "0%");
+              stop1.setAttribute("stop-color", stroke);
+              stop1.setAttribute("stop-opacity", "0.3");
+              
+              const stop2 = context.createSvgEl("stop");
+              stop2.setAttribute("offset", "100%");
+              stop2.setAttribute("stop-color", stroke);
+              stop2.setAttribute("stop-opacity", "0");
+              
+              gradient.appendChild(stop1);
+              gradient.appendChild(stop2);
+              defs.appendChild(gradient);
+              
+              return {
+                defs,
+                line: context.createSvgEl("path"),
+                area: context.createSvgEl("path")
+              };
+            },
+            paint: ({ line, area }, { width, height }) => {
+              const path = createLinePath({ values, width, height });
+              
+              // 라인
+              line.setAttribute("fill", "none");
+              line.setAttribute("stroke", stroke);
+              line.setAttribute("stroke-width", "2");
+              line.setAttribute("d", path.getD());
+              
+              // 영역
+              const areaPath = path.clone();
+              areaPath
+                .lineTo({ x: width, y: height })
+                .lineTo({ x: 0, y: height })
+                .close();
+              
+              area.setAttribute("fill", fill);
+              area.setAttribute("d", areaPath.getD());
+            }
+          }
+        }
+      });
+    }
+  }
+});
+```
+
+### 2. 스택 영역 차트 (누적)
+
+```javascript
+const stackedAreaChart = AreaChart({
+  data,
+  custom: {
+    series: ({ areas }) => {
+      // 누적값 계산
+      const stackedAreas = areas.map((area, index) => {
+        if (index === 0) return area;
+        
+        // 이전 영역들의 값을 누적
+        const accumulatedValues = calculateAccumulatedValues(data.datasets, index);
+        return createStackedArea(area, accumulatedValues);
+      });
+      
+      return Stack({
+        children: stackedAreas.reverse() // 뒤에서부터 그려야 올바른 겹침
+      });
+    }
+  }
+});
+
+function calculateAccumulatedValues(datasets, upToIndex) {
+  const result = [];
+  for (let i = 0; i < datasets[0].values.length; i++) {
+    let sum = 0;
+    for (let j = 0; j < upToIndex; j++) {
+      sum += datasets[j].values[i];
+    }
+    result.push(sum);
+  }
+  return result;
+}
+```
+
+### 3. 스플라인 곡선 영역
+
+```javascript
+const smoothAreaChart = AreaChart({
+  data,
+  custom: {
+    area: ({ values, index }) => {
+      const colors = ['#3b82f6', '#10b981', '#f59e0b'];
+      const color = colors[index % colors.length];
+      
+      return CustomPaint({
+        painter: {
+          svg: {
+            createDefaultSvgEl: (context) => ({
+              line: context.createSvgEl("path"),
+              area: context.createSvgEl("path")
+            }),
+            paint: ({ line, area }, { width, height }) => {
+              // 스플라인 곡선 경로 생성
+              const path = createSplinePath({ values, width, height });
+              
+              // 라인
+              line.setAttribute("fill", "none");
+              line.setAttribute("stroke", color);
+              line.setAttribute("stroke-width", "2");
+              line.setAttribute("d", path.getD());
+              
+              // 영역
+              const areaPath = path.clone();
+              areaPath
+                .lineTo({ x: width, y: height })
+                .lineTo({ x: 0, y: height })
+                .close();
+              
+              area.setAttribute("fill", color);
+              area.setAttribute("opacity", "0.2");
+              area.setAttribute("d", areaPath.getD());
+            }
+          }
+        }
+      });
+    }
+  }
+});
+
+function createSplinePath({ values, width, height }) {
+  const path = new Path();
+  const points = values.map((value, index) => ({
+    x: (index / (values.length - 1)) * width,
+    y: height - (value / Math.max(...values)) * height
+  }));
+  
+  // 베지어 컨트롤 포인트 계산
+  const controlPoints = calculateBezierControlPoints(points);
+  
+  path.moveTo(points[0]);
+  
+  for (let i = 1; i < points.length; i++) {
+    const cp1 = controlPoints[i - 1].next;
+    const cp2 = controlPoints[i].prev;
+    
+    path.cubicTo(cp1, cp2, points[i]);
+  }
+  
+  return path;
+}
+```
+
+### 4. 범위 영역 차트
+
+```javascript
+const rangeAreaChart = AreaChart({
+  data: {
+    labels: ['1월', '2월', '3월', '4월', '5월'],
+    datasets: [
+      { legend: '최소값', values: [10, 15, 12, 18, 14] },
+      { legend: '최대값', values: [25, 30, 28, 35, 32] }
+    ]
+  },
+  custom: {
+    series: ({ areas }) => {
+      // 두 데이터셋 사이의 범위를 표시
+      const [minArea, maxArea] = areas;
+      const minValues = data.datasets[0].values;
+      const maxValues = data.datasets[1].values;
+      
+      return CustomPaint({
+        painter: {
+          svg: {
+            createDefaultSvgEl: (context) => ({
+              range: context.createSvgEl("path"),
+              minLine: context.createSvgEl("path"),
+              maxLine: context.createSvgEl("path")
+            }),
+            paint: ({ range, minLine, maxLine }, { width, height }) => {
+              // 범위 영역 경로
+              const rangePath = new Path();
+              
+              // 최소값 라인 그리기
+              const minPath = createLinePath({ values: minValues, width, height });
+              
+              // 최대값 라인 그리기 (역순)
+              const maxPoints = maxValues.map((value, index) => ({
+                x: (index / (maxValues.length - 1)) * width,
+                y: height - (value / Math.max(...maxValues)) * height
+              })).reverse();
+              
+              // 범위 영역 생성
+              rangePath.moveTo(minPath.getFirstPoint());
+              minPath.getPoints().forEach(point => rangePath.lineTo(point));
+              maxPoints.forEach(point => rangePath.lineTo(point));
+              rangePath.close();
+              
+              // 스타일 적용
+              range.setAttribute("fill", "rgba(59, 130, 246, 0.2)");
+              range.setAttribute("d", rangePath.getD());
+              
+              minLine.setAttribute("stroke", "#3b82f6");
+              minLine.setAttribute("stroke-width", "1");
+              minLine.setAttribute("stroke-dasharray", "3 3");
+              minLine.setAttribute("fill", "none");
+              minLine.setAttribute("d", minPath.getD());
+              
+              maxLine.setAttribute("stroke", "#3b82f6");
+              maxLine.setAttribute("stroke-width", "1");
+              maxLine.setAttribute("stroke-dasharray", "3 3");
+              maxLine.setAttribute("fill", "none");
+              maxLine.setAttribute("d", createLinePath({ values: maxValues, width, height }).getD());
+            }
+          }
+        }
+      });
+    }
+  }
+});
+```
+
+## 애니메이션 추가하기
+
+```javascript
+import { StatefulWidget, State, AnimationController, Animation, ClipRect, Rect } from '@meursyphus/flitter';
+
+class AnimatedArea extends StatefulWidget {
+  constructor({ values, color }) {
+    super();
+    this.values = values;
+    this.color = color;
+  }
+
+  createState() {
+    return new AnimatedAreaState();
+  }
+}
+
+class AnimatedAreaState extends State {
+  initState() {
+    super.initState();
+    this.controller = new AnimationController({
+      duration: { milliseconds: 1000 }
+    });
+    this.animation = new Animation({
+      controller: this.controller,
+      value: Tween({ begin: 0, end: 1 })
+    });
+    this.controller.forward();
+  }
+
+  build() {
+    return AnimatedBuilder({
+      animation: this.animation,
+      builder: () => {
+        // 가로로 점진적으로 나타나는 효과
+        return ClipRect({
+          clipper: ({ width, height }) => Rect.fromLTWH({
+            left: 0,
+            top: 0,
+            width: width * this.animation.value,
+            height: height
+          }),
+          child: CustomPaint({
+            painter: createAreaPainter(this.widget.values, this.widget.color)
+          })
+        });
+      }
+    });
+  }
+
+  dispose() {
+    this.controller.dispose();
+    super.dispose();
+  }
+}
+```
+
+## 성능 최적화 팁
+
+1. **투명도 최적화**: 여러 영역이 겹칠 때 투명도를 조정하여 가독성 향상
+2. **데이터 집계**: 많은 데이터 포인트는 적절히 집계하여 표시
+3. **SVG vs Canvas**: 정적 차트는 SVG, 동적 차트는 Canvas 사용 고려
+4. **레이어 최소화**: 겹치는 영역이 많을 경우 성능 저하 주의
+
+## 다음 단계
+
+- 더 많은 예제는 [데모 페이지](/charts/area)를 참고하세요
+- 데이터 포인트를 강조하려면 [Scatter Chart](./04.scatter-chart.mdx)를 확인하세요
+- 비율을 표시하려면 [Pie Chart](./05.pie-chart.mdx)를 참고하세요
