@@ -57,6 +57,7 @@ let current: "docs" | "charts" | "i18n" | "none" = pathname.startsWith("/docs")
   }
 
   .header-inner {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -86,6 +87,10 @@ let current: "docs" | "charts" | "i18n" | "none" = pathname.startsWith("/docs")
   }
 
   .nav {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
     display: flex;
     gap: 2rem;
   }
