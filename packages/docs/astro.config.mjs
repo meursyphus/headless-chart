@@ -20,9 +20,6 @@ export default defineConfig({
     mdx(),
     sitemap(),
   ],
-  redirects: {
-    "/docs": "/docs/getting-started/introduction",
-  },
   markdown: {
     shikiConfig: {
       // Choose from Shiki's built-in themes (or add your own)

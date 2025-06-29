@@ -60,34 +60,112 @@ const navigation = filteredDocs.reduce(
 const normalizedPathname = normalizePath(url.pathname);
 ---
 
-<nav
-  class="inline-flex w-80 shrink-0 flex-col items-end justify-start gap-6 px-8 pt-[20px]"
->
+<nav class="sidebar-nav">
   {
     navigation.map((group) => (
-      <div class="flex flex-col items-start justify-start self-stretch">
-        <div class="inline-flex items-start justify-start gap-2.5 self-stretch">
-          <div class="text-xl font-bold text-gray-700">{group.name}</div>
-        </div>
-        {group.items.map((item) => (
-          <div class="mt-1 inline-flex items-start justify-start gap-2 self-stretch px-4">
-            <a
-              href={item.url}
-              class={`${normalizePath(item.url) === normalizedPathname ? "font-semibold text-purple-500" : "text-gray-600"} text-lg hover:text-purple-500`}
-            >
-              {item.title}
-            </a>
-          </div>
-        ))}
+      <div class="nav-group">
+        <h3 class="nav-group-title">{group.name}</h3>
+        <ul class="nav-list">
+          {group.items.map((item) => (
+            <li>
+              <a
+                href={item.url}
+                class:list={[
+                  "nav-link",
+                  normalizePath(item.url) === normalizedPathname && "active"
+                ]}
+              >
+                {item.title}
+              </a>
+            </li>
+          ))}
+        </ul>
       </div>
     ))
   }
 </nav>
 
 <style>
-  nav {
+  .sidebar-nav {
     height: 100%;
     overflow-y: auto;
-    padding-bottom: 16px;
+    padding-bottom: 1rem;
+  }
+
+  .nav-group {
+    margin-bottom: 2rem;
+  }
+
+  .nav-group-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--neu-text);
+    margin-bottom: 0.75rem;
+    padding-left: 0.5rem;
+  }
+
+  .nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .nav-link {
+    display: block;
+    padding: 0.625rem 1rem;
+    font-size: 0.9375rem;
+    color: var(--neu-text-secondary);
+    text-decoration: none;
+    border-radius: 12px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+  }
+
+  .nav-link:hover {
+    color: var(--neu-text);
+    background: var(--neu-bg);
+    box-shadow: var(--neu-shadow-sm);
+    transform: translateX(2px);
+  }
+
+  .nav-link.active {
+    color: var(--neu-accent);
+    font-weight: 600;
+    background: var(--neu-bg);
+    box-shadow: var(--neu-shadow-inset);
+  }
+
+  .nav-link.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 60%;
+    background: var(--neu-accent);
+    border-radius: 0 2px 2px 0;
+  }
+
+  /* Scrollbar styling */
+  .sidebar-nav::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .sidebar-nav::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .sidebar-nav::-webkit-scrollbar-thumb {
+    background-color: var(--neu-shadow-dark);
+    border-radius: 3px;
+    opacity: 0.3;
+  }
+
+  .sidebar-nav::-webkit-scrollbar-thumb:hover {
+    opacity: 0.5;
   }
 </style>

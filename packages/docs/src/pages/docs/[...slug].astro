@@ -49,27 +49,281 @@ const nextEntry =
   description={entry.data.description}
   image={entry.data.image}
 >
-  <div class="relative mx-auto flex flex-col lg:flex-row p-4 lg:p-8 gap-4">
-    <div class="lg:sticky lg:top-0 lg:h-fit order-2 lg:order-1">
-      <div class="glass lg:min-w-[250px]">
-        <SideBar />
-      </div>
-    </div>
-    <div
-      class="glass prose prose-modern w-full max-w-full px-4 lg:px-8 h-fit order-1 lg:order-2"
-    >
-      <Content />
-    </div>
-    <div class="lg:sticky lg:top-0 lg:h-fit order-3">
-      <div class="glass">
-        <Toc headings={headings} />
-      </div>
-    </div>
+  <div class="docs-container">
+    <!-- Sidebar -->
+    <aside class="sidebar-container neu-card">
+      <SideBar />
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content neu-card lg:w-768 w-fullß">
+      <article class="prose prose-modern">
+        <Content />
+      </article>
+    </main>
+    
+    <!-- TOC -->
+    <aside class="toc-container neu-card">
+      <Toc headings={headings} />
+    </aside>
+  </div>
+  
+  <!-- Mobile Overlay -->
+  <div class="mobile-overlay"></div>
+  
+  <!-- Mobile Toggle Buttons -->
+  <div class="mobile-buttons">
+    <button class="mobile-toggle-btn neu-button" data-target="sidebar" aria-label="Toggle Sidebar">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+    <button class="mobile-toggle-btn neu-button" data-target="toc" aria-label="Toggle Table of Contents">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="8" y1="6" x2="21" y2="6"></line>
+        <line x1="8" y1="12" x2="21" y2="12"></line>
+        <line x1="8" y1="18" x2="21" y2="18"></line>
+        <circle cx="4" cy="6" r="1" fill="currentColor"></circle>
+        <circle cx="4" cy="12" r="1" fill="currentColor"></circle>
+        <circle cx="4" cy="18" r="1" fill="currentColor"></circle>
+      </svg>
+    </button>
   </div>
 </Layout>
 
 <style>
-  main {
+  .docs-container {
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr) 220px;
+    gap: 1.5rem;
+    padding: 2rem;
+    max-width: 1600px;
+    margin: 0 auto;
+    min-height: calc(100vh - var(--header));
+  }
+
+  /* Sidebar */
+  .sidebar-container {
+    position: sticky;
+    top: calc(var(--header) + 2rem);
+    height: fit-content;
+    max-height: calc(100vh - var(--header) - 4rem);
+    overflow-y: auto;
+    border-radius: 20px;
+    padding: 1.5rem;
+  }
+
+  /* Main Content */
+  .main-content {
+    border-radius: 20px;
+    padding: 2rem;
+    min-height: 600px;
+  }
+
+  /* TOC */
+  .toc-container {
+    position: sticky;
+    top: calc(var(--header) + 2rem);
+    height: fit-content;
+    max-height: calc(100vh - var(--header) - 4rem);
+    overflow-y: auto;
+    border-radius: 20px;
+    padding: 1.5rem;
+  }
+
+  /* Scrollbar styling */
+  .sidebar-container::-webkit-scrollbar,
+  .toc-container::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .sidebar-container::-webkit-scrollbar-track,
+  .toc-container::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .sidebar-container::-webkit-scrollbar-thumb,
+  .toc-container::-webkit-scrollbar-thumb {
+    background-color: var(--neu-shadow-dark);
+    border-radius: 3px;
+    opacity: 0.3;
+  }
+
+  /* Prose styling */
+  .prose {
+    max-width: none;
+    color: var(--neu-text);
+  }
+
+  .prose :where(h1, h2, h3, h4, h5, h6):not(:where([class~="not-prose"] *)) {
+    color: var(--neu-text);
+    font-weight: 700;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .prose :where(p):not(:where([class~="not-prose"] *)) {
+    color: var(--neu-text-secondary);
+    line-height: 1.7;
+    margin-bottom: 1.25rem;
+  }
+
+  .prose :where(a):not(:where([class~="not-prose"] *)) {
+    color: var(--neu-accent);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  .prose :where(a):not(:where([class~="not-prose"] *)):hover {
+    color: var(--neu-accent-light);
+  }
+
+  .prose :where(code):not(:where([class~="not-prose"] *)):not(pre code) {
+    background: var(--neu-bg-alt);
+    color: var(--neu-text);
+    padding: 0.125rem 0.375rem;
+    border-radius: 0.375rem;
+    font-size: 0.875em;
+    font-weight: 500;
+  }
+
+  .prose :where(pre):not(:where([class~="not-prose"] *)) {
+    background: var(--neu-bg-alt);
+    box-shadow: var(--neu-shadow-inset);
+    border-radius: 16px;
+    padding: 1.5rem;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+  }
+
+  .prose :where(ul, ol):not(:where([class~="not-prose"] *)) {
+    color: var(--neu-text-secondary);
+    padding-left: 1.5rem;
+  }
+
+  .prose :where(li):not(:where([class~="not-prose"] *)) {
+    margin-bottom: 0.5rem;
+  }
+
+  .prose :where(blockquote):not(:where([class~="not-prose"] *)) {
+    border-left: 4px solid var(--neu-accent);
+    padding-left: 1.5rem;
+    margin: 1.5rem 0;
+    color: var(--neu-text-secondary);
+    font-style: italic;
+  }
+
+  /* Mobile styles */
+  @media (max-width: 1024px) {
+    .docs-container {
+      grid-template-columns: 1fr;
+      padding: 1rem;
+      gap: 1rem;
+    }
+
+    .sidebar-container,
+    .toc-container {
+      position: fixed;
+      top: var(--header);
+      bottom: 0;
+      width: 280px;
+      z-index: 40;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 0;
+      max-height: none;
+      height: 100%;
+    }
+    
+    .sidebar-container {
+      left: 0;
+      transform: translateX(-100%);
+      box-shadow: 4px 0 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    .toc-container {
+      right: 0;
+      transform: translateX(100%);
+      box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    .sidebar-container.show {
+      transform: translateX(0);
+    }
+    
+    .toc-container.show {
+      transform: translateX(0);
+    }
+
+    .main-content {
+      padding: 1.5rem;
+    }
+  }
+  
+  /* Mobile overlay */
+  .mobile-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(4px);
+    z-index: 30;
+  }
+  
+  .mobile-overlay.show {
+    display: block;
+  }
+  
+  /* Mobile toggle buttons */
+  .mobile-buttons {
+    display: none;
+  }
+  
+  @media (max-width: 1024px) {
+    .mobile-buttons {
+      display: flex;
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      gap: 1rem;
+      z-index: 50;
+    }
+  }
+  
+  .mobile-toggle-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    padding: 0;
+  }
+
+  .mobile-toggle-btn svg {
+    width: 24px;
+    height: 24px;
+    color: var(--neu-text);
+  }
+
+  /* Desktop specific styles */
+  @media (min-width: 1025px) {
+    .docs-container {
+      animation: fadeIn 0.4s ease-out;
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 </style>
 
@@ -89,21 +343,38 @@ const nextEntry =
   }
 </style>
 
-<style>
-  @media (max-width: 1024px) {
-    :global(.toc-container) {
-      position: fixed;
-      bottom: 1rem;
-      right: 1rem;
-      z-index: 50;
-      max-height: 80vh;
-      overflow-y: auto;
-      transform: translateX(100%);
-      transition: transform 0.3s ease-in-out;
-    }
+<script>
+  // Mobile menu toggle functionality
+  document.addEventListener('DOMContentLoaded', () => {
+    const buttons = document.querySelectorAll('.mobile-toggle-btn');
+    const overlay = document.querySelector('.mobile-overlay');
+    const sidebar = document.querySelector('.sidebar-container');
+    const toc = document.querySelector('.toc-container');
     
-    :global(.toc-container.show) {
-      transform: translateX(0);
-    }
-  }
-</style>
+    buttons.forEach(button => {
+      button.addEventListener('click', () => {
+        const target = button.getAttribute('data-target');
+        const container = target === 'sidebar' ? sidebar : toc;
+        const isOpen = container?.classList.contains('show');
+        
+        // Close all panels first
+        sidebar?.classList.remove('show');
+        toc?.classList.remove('show');
+        overlay?.classList.remove('show');
+        
+        // Open the target panel if it wasn't already open
+        if (!isOpen && container) {
+          container.classList.add('show');
+          overlay?.classList.add('show');
+        }
+      });
+    });
+    
+    // Close panels when clicking overlay
+    overlay?.addEventListener('click', () => {
+      sidebar?.classList.remove('show');
+      toc?.classList.remove('show');
+      overlay.classList.remove('show');
+    });
+  });
+</script>

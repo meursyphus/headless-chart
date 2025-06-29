@@ -43,23 +43,21 @@ const groupedTutorials = sortedCharts.reduce(
 
 ---
 
-<div class="p-3 text-sm">
+<div class="toc-container">
   {
     Object.entries(groupedTutorials).map(([group, tutorials]) => (
-      <div class="mb-6">
-        <h3 class="mb-2 text-[16px] font-medium text-[rgb(75,85,99)]">
+      <div class="toc-group">
+        <h3 class="toc-group-title">
           {group}
         </h3>
-        <ul class="space-y-2.5">
+        <ul class="toc-list">
           {tutorials.map((tutorial) => (
             <li>
               <a
                 href={`/charts/${tutorial.slug}`}
                 class:list={[
-                  "block rounded px-2 py-1.5 text-[14px] transition-colors",
-                  currentSlug === tutorial.slug
-                    ? "bg-gray-800 font-medium text-[rgb(209,213,219)]"
-                    : "text-[rgb(156,163,175)] hover:text-[rgb(209,213,219)]",
+                  "toc-link",
+                  currentSlug === tutorial.slug && "active"
                 ]}
               >
                 {tutorial.data.title}
@@ -71,3 +69,54 @@ const groupedTutorials = sortedCharts.reduce(
     ))
   }
 </div>
+
+<style>
+  .toc-container {
+    padding: 1.5rem;
+    font-size: 0.875rem;
+  }
+
+  .toc-group {
+    margin-bottom: 2rem;
+  }
+
+  .toc-group-title {
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--neu-text);
+  }
+
+  .toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .toc-link {
+    display: block;
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+    color: var(--neu-text-secondary);
+    text-decoration: none;
+    border-radius: 12px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    background: var(--neu-bg);
+  }
+
+  .toc-link:hover {
+    color: var(--neu-text);
+    box-shadow: var(--neu-shadow-sm);
+    transform: translateX(2px);
+  }
+
+  .toc-link.active {
+    color: var(--neu-accent);
+    font-weight: 500;
+    box-shadow: var(--neu-shadow-inset);
+    background: var(--neu-bg);
+  }
+</style>

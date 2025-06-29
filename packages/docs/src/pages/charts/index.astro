@@ -141,29 +141,45 @@ const chartGroups = [
 <Layout title={title}>
   <div class="charts-container">
     <section class="header">
-      <h1>Chart Gallery</h1>
-      <p class="contribute-message">
-        🎨 Got a cool chart design? Show off your creativity!<br/>
-        Join our growing gallery of chart artworks at <a href="https://github.com/meursyphus/headless-chart" class="github-link">
-          <span class="github-icon">⭐</span> meursyphus/headless-chart
-        </a>
-      </p>
+      <div class="header-content neu-card">
+        <h1 class="page-title">
+          <span class="gradient-text">Chart Gallery</span>
+        </h1>
+        <p class="contribute-message">
+          🎨 Got a cool chart design? Show off your creativity!<br/>
+          Join our growing gallery of chart artworks at 
+          <a href="https://github.com/meursyphus/headless-chart" class="github-link neu-button">
+            <span class="github-icon">⭐</span> meursyphus/headless-chart
+          </a>
+        </p>
+      </div>
     </section>
     {
-      chartGroups.map(group => (
-        <section class="chart-group">
-          <h2 class="group-title">{group.type}</h2>
-          {group.description && <p class="group-description">{group.description}</p>}
+      chartGroups.map((group, groupIndex) => (
+        <section class="chart-group" style={`animation-delay: ${groupIndex * 0.1}s`}>
+          <div class="group-header">
+            <h2 class="group-title">{group.type}</h2>
+            {group.description && (
+              <div class="group-description neu-inset">
+                <p>{group.description}</p>
+              </div>
+            )}
+          </div>
           <div class="charts-grid">
             {
-              group.charts.map(chart => (
-                <a href={chart.link} class="chart-card glass">
-                  <div class="chart-image">
-                    <img src={chart.image} alt={chart.title} />
+              group.charts.map((chart, index) => (
+                <a href={chart.link} class="chart-card neu-card" style={`animation-delay: ${(groupIndex * 0.1) + (index * 0.05)}s`}>
+                  <div class="chart-image neu-inset">
+                    <img src={chart.image} alt={chart.title} loading="lazy" />
                   </div>
                   <div class="chart-info">
                     <h3>{chart.title}</h3>
                     <p>{chart.description}</p>
+                  </div>
+                  <div class="chart-hover-indicator">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <path d="M5 12h14m0 0l-7-7m7 7l-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                   </div>
                 </a>
               ))
@@ -178,123 +194,203 @@ const chartGroups = [
 <style>
   .charts-container {
     padding: 2rem var(--px);
-  }
-
-  h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 2rem;
-    color: #333;
-  }
-
-  .chart-group {
-    margin-bottom: 4rem;
-  }
-
-  .group-title {
-    font-size: 2rem;
-    font-weight: 600;
-    margin-bottom: 1.5rem;
-    color: #333;
-  }
-
-  .group-description {
-    font-size: 1.25rem;
-    color: #666;
-    margin-bottom: 1.5rem;
-  }
-
-  .charts-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2rem;
-  }
-
-  .chart-card {
-    border-radius: 8px;
-    overflow: hidden;
-    transition: transform 0.2s;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .chart-image {
-    width: 100%;
-    aspect-ratio: 1.2;
-    position: relative;
-    background: rgba(248, 249, 250, 0.2);
-  }
-
-  .chart-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    padding: 1rem;
-  }
-
-  .chart-info {
-    padding: 1.5rem;
-  }
-
-  .chart-info h3 {
-    margin: 0;
-    font-size: 1.25rem;
-    color: #333;
-    margin-bottom: 0.5rem;
-  }
-
-  .chart-info p {
-    margin: 0;
-    color: #666;
-    font-size: 1rem;
-    line-height: 1.5;
-  }
-
-  .chart-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    max-width: 1400px;
+    margin: 0 auto;
   }
 
   .header {
+    margin-bottom: 4rem;
+  }
+
+  .header-content {
     text-align: center;
-    margin-bottom: 3rem;
+    padding: 3rem;
+    border-radius: 24px;
+  }
+
+  .page-title {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    font-weight: 800;
+    margin-bottom: 1.5rem;
   }
 
   .contribute-message {
-    font-size: 1.1rem;
-    color: #666;
-    margin-top: 1rem;
+    font-size: 1.125rem;
+    color: var(--neu-text-secondary);
+    line-height: 1.8;
   }
 
   .github-link {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    color: #333;
+    margin-top: 1rem;
+    color: var(--neu-text);
     text-decoration: none;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    background: #f0f0f0;
-    transition: all 0.2s ease;
-    margin-top: 0.5rem;
+    font-weight: 500;
   }
 
   .github-link:hover {
-    background: #e0e0e0;
-    transform: translateY(-2px);
+    color: var(--neu-accent);
   }
 
   .github-icon {
     font-size: 1.2rem;
   }
 
+  .chart-group {
+    margin-bottom: 4rem;
+    animation: fadeInUp 0.6s ease-out forwards;
+    opacity: 0;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .group-header {
+    margin-bottom: 2rem;
+  }
+
+  .group-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--neu-text);
+  }
+
+  .group-description {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border-radius: 16px;
+  }
+
+  .group-description p {
+    margin: 0;
+    font-size: 1.125rem;
+    color: var(--neu-text-secondary);
+    font-weight: 500;
+  }
+
+  .charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+  }
+
+  .chart-card {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    animation: fadeInUp 0.6s ease-out forwards;
+    opacity: 0;
+  }
+
+  .chart-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: var(--neu-shadow-lg);
+  }
+
+  .chart-card:hover .chart-hover-indicator {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  .chart-image {
+    width: 100%;
+    aspect-ratio: 1.2;
+    background: var(--neu-bg-alt);
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .chart-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .chart-card:hover .chart-image img {
+    transform: scale(1.05);
+  }
+
+  .chart-info {
+    padding: 1.5rem;
+    flex: 1;
+  }
+
+  .chart-info h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: var(--neu-text);
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+  }
+
+  .chart-info p {
+    margin: 0;
+    color: var(--neu-text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .chart-hover-indicator {
+    position: absolute;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--neu-bg);
+    box-shadow: var(--neu-shadow-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateX(60px);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .chart-hover-indicator svg {
+    color: var(--neu-accent);
+  }
+
   @media (max-width: 768px) {
+    .charts-container {
+      padding: 1rem;
+    }
+
+    .header-content {
+      padding: 2rem;
+    }
+
     .charts-grid {
       grid-template-columns: 1fr;
+      gap: 1.5rem;
     }
 
     .group-title {
       font-size: 1.75rem;
+    }
+
+    .chart-group {
+      margin-bottom: 3rem;
     }
   }
 </style>
