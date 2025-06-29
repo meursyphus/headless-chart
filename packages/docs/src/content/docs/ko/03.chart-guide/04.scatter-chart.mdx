@@ -7,4 +7,660 @@ description: "산점도 차트 생성 및 커스터마이징 가이드"
 
 # Scatter Chart
 
-(내용 작성 예정)
+산점도는 두 변수 간의 관계를 시각화하는데 최적화된 차트입니다. 상관관계, 분포, 군집을 발견하는데 효과적입니다.
+
+## 기본 사용법
+
+### 간단한 예제
+
+```javascript
+import Widget from '@meursyphus/flitter-react';
+import { ScatterChart } from '@meursyphus/headless-chart';
+
+const data = {
+  datasets: [{
+    legend: '샘플 데이터',
+    data: [
+      { x: 10, y: 20, label: 'A' },
+      { x: 15, y: 35, label: 'B' },
+      { x: 25, y: 30, label: 'C' },
+      { x: 30, y: 45, label: 'D' },
+      { x: 35, y: 40, label: 'E' }
+    ]
+  }]
+};
+
+function BasicScatterChart() {
+  return (
+    <Widget 
+      width="600px" 
+      height="400px" 
+      widget={ScatterChart({ data })} 
+    />
+  );
+}
+```
+
+### 다중 데이터셋
+
+여러 그룹의 데이터를 비교할 때:
+
+```javascript
+const data = {
+  datasets: [
+    {
+      legend: '그룹 A',
+      data: [
+        { x: 10, y: 20, label: 'A1' },
+        { x: 15, y: 25, label: 'A2' },
+        { x: 20, y: 30, label: 'A3' }
+      ]
+    },
+    {
+      legend: '그룹 B',
+      data: [
+        { x: 25, y: 35, label: 'B1' },
+        { x: 30, y: 40, label: 'B2' },
+        { x: 35, y: 45, label: 'B3' }
+      ]
+    }
+  ]
+};
+```
+
+## API 참조
+
+### Props 인터페이스
+
+```typescript
+interface ScatterChartProps {
+  // 필수
+  data: ScatterChartData;
+  
+  // 선택
+  custom?: Partial<ScatterChartCustom>;
+  title?: string;
+  getScale?: (data: ScatterChartData) => ScatterChartScale;
+}
+
+// 데이터 타입
+type ScatterChartData = {
+  datasets: {
+    legend: string;
+    data: {
+      x: number;
+      y: number;
+      label: string;
+    }[];
+  }[];
+};
+
+// 스케일 타입
+type ScatterChartScale = {
+  x: { min: number; max: number; step: number };
+  y: { min: number; max: number; step: number };
+};
+```
+
+## 포인트 커스터마이징
+
+### 1. 기본 스타일
+
+```javascript
+import { Container, BoxDecoration, BorderRadius } from '@meursyphus/flitter';
+
+const chart = ScatterChart({
+  data,
+  custom: {
+    scatter: ({ label, legend, index }) => {
+      const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444'];
+      const shapes = ['circle', 'square', 'triangle', 'diamond'];
+      
+      return Container({
+        width: 10,
+        height: 10,
+        decoration: new BoxDecoration({
+          color: colors[index % colors.length],
+          shape: shapes[index % shapes.length] === 'circle' ? 
+            BoxShape.circle : BoxShape.rectangle,
+          borderRadius: shapes[index % shapes.length] === 'square' ? 
+            BorderRadius.circular(2) : null,
+          boxShadow: [{
+            color: 'rgba(0, 0, 0, 0.2)',
+            blurRadius: 2,
+            offset: { x: 0, y: 1 }
+          }]
+        })
+      });
+    }
+  }
+});
+```
+
+### 2. 다양한 모양
+
+```javascript
+const customShapePoint = ({ label, legend, index }) => {
+  const shapes = {
+    circle: () => Container({
+      width: 12,
+      height: 12,
+      decoration: new BoxDecoration({
+        shape: BoxShape.circle,
+        color: '#3b82f6',
+        border: Border.all({ color: '#1e40af', width: 2 })
+      })
+    }),
+    
+    square: () => Container({
+      width: 10,
+      height: 10,
+      decoration: new BoxDecoration({
+        color: '#10b981',
+        borderRadius: BorderRadius.circular(2)
+      })
+    }),
+    
+    triangle: () => CustomPaint({
+      size: { width: 12, height: 12 },
+      painter: {
+        paint: (canvas, size) => {
+          const path = new Path();
+          path.moveTo(size.width / 2, 0);
+          path.lineTo(0, size.height);
+          path.lineTo(size.width, size.height);
+          path.close();
+          
+          const paint = new Paint({
+            color: '#f59e0b',
+            style: PaintingStyle.fill
+          });
+          
+          canvas.drawPath(path, paint);
+        }
+      }
+    }),
+    
+    cross: () => Stack({
+      children: [
+        Center({
+          child: Container({
+            width: 2,
+            height: 12,
+            color: '#ef4444'
+          })
+        }),
+        Center({
+          child: Container({
+            width: 12,
+            height: 2,
+            color: '#ef4444'
+          })
+        })
+      ]
+    })
+  };
+  
+  const shapeNames = Object.keys(shapes);
+  const shape = shapeNames[index % shapeNames.length];
+  
+  return shapes[shape]();
+};
+```
+
+### 3. 크기 변화
+
+```javascript
+const sizedPoints = ({ x, y, label, index }) => {
+  // 세 번째 차원을 크기로 표현
+  const size = Math.sqrt(x * y) / 5; // 크기 계산 로직
+  
+  return Container({
+    width: Math.max(8, Math.min(30, size)),
+    height: Math.max(8, Math.min(30, size)),
+    decoration: new BoxDecoration({
+      shape: BoxShape.circle,
+      color: `rgba(59, 130, 246, ${0.3 + (size / 30) * 0.5})`,
+      border: Border.all({ 
+        color: '#3b82f6', 
+        width: 2 
+      })
+    })
+  });
+};
+```
+
+### 4. 그라데이션 포인트
+
+```javascript
+const gradientPoint = ({ index }) => {
+  const gradients = [
+    ['#667eea', '#764ba2'],
+    ['#f093fb', '#f5576c'],
+    ['#4facfe', '#00f2fe']
+  ];
+  
+  const [start, end] = gradients[index % gradients.length];
+  
+  return Container({
+    width: 14,
+    height: 14,
+    decoration: new BoxDecoration({
+      shape: BoxShape.circle,
+      gradient: {
+        type: 'radial',
+        colors: [start, end],
+        center: { x: 0.3, y: 0.3 },
+        radius: 0.8
+      },
+      boxShadow: [{
+        color: `${start}40`,
+        blurRadius: 8,
+        offset: { x: 0, y: 2 }
+      }]
+    })
+  });
+};
+```
+
+## 인터랙티브 기능
+
+### 1. 호버 효과
+
+```javascript
+import { MouseRegion } from '@meursyphus/flitter';
+import { useState } from 'react';
+
+function InteractiveScatterChart() {
+  const [hoveredPoint, setHoveredPoint] = useState(null);
+  const [selectedPoints, setSelectedPoints] = useState(new Set());
+  
+  const chart = ScatterChart({
+    data,
+    custom: {
+      scatter: ({ label, legend, index }) => {
+        const key = `${legend}-${label}`;
+        const isHovered = hoveredPoint === key;
+        const isSelected = selectedPoints.has(key);
+        
+        return MouseRegion({
+          onEnter: () => setHoveredPoint(key),
+          onExit: () => setHoveredPoint(null),
+          cursor: 'pointer',
+          child: GestureDetector({
+            onTap: () => {
+              const newSelected = new Set(selectedPoints);
+              if (isSelected) {
+                newSelected.delete(key);
+              } else {
+                newSelected.add(key);
+              }
+              setSelectedPoints(newSelected);
+            },
+            child: AnimatedContainer({
+              duration: Duration({ milliseconds: 200 }),
+              width: isHovered ? 16 : 12,
+              height: isHovered ? 16 : 12,
+              decoration: new BoxDecoration({
+                shape: BoxShape.circle,
+                color: isSelected ? '#2563eb' : '#3b82f6',
+                border: isHovered ? 
+                  Border.all({ color: '#1e40af', width: 3 }) : 
+                  Border.all({ color: '#60a5fa', width: 2 })
+              })
+            })
+          })
+        });
+      }
+    }
+  });
+  
+  return (
+    <>
+      <Widget width="100%" height="400px" widget={chart} />
+      {hoveredPoint && (
+        <div>호버된 포인트: {hoveredPoint}</div>
+      )}
+    </>
+  );
+}
+```
+
+### 2. 툴팁 표시
+
+```javascript
+const pointWithTooltip = ({ x, y, label, legend }) => {
+  return Tooltip({
+    message: `${label}\nX: ${x.toFixed(2)}\nY: ${y.toFixed(2)}`,
+    preferBelow: false,
+    child: Container({
+      width: 12,
+      height: 12,
+      decoration: new BoxDecoration({
+        shape: BoxShape.circle,
+        color: '#3b82f6',
+        boxShadow: [{
+          color: 'rgba(59, 130, 246, 0.3)',
+          blurRadius: 4,
+          offset: { x: 0, y: 2 }
+        }]
+      })
+    })
+  });
+};
+```
+
+## 실전 예제
+
+### 1. 상관관계 분석
+
+```javascript
+const correlationChart = ScatterChart({
+  data: {
+    datasets: [{
+      legend: '키와 몸무게',
+      data: generateCorrelationData(100) // 100개 샘플
+    }]
+  },
+  custom: {
+    scatter: ({ x, y }) => {
+      // 회귀선으로부터의 거리에 따른 색상
+      const distance = Math.abs(y - (0.5 * x + 50));
+      const opacity = Math.max(0.2, 1 - distance / 50);
+      
+      return Container({
+        width: 6,
+        height: 6,
+        decoration: new BoxDecoration({
+          shape: BoxShape.circle,
+          color: `rgba(59, 130, 246, ${opacity})`
+        })
+      });
+    },
+    // 회귀선 추가
+    plot: ({ xAxis, yAxis, series, grid }) => {
+      return Stack({
+        children: [
+          grid,
+          // 회귀선
+          CustomPaint({
+            painter: createRegressionLinePainter(data)
+          }),
+          series,
+          xAxis,
+          yAxis
+        ]
+      });
+    }
+  }
+});
+```
+
+### 2. 클러스터링 시각화
+
+```javascript
+const clusterChart = ScatterChart({
+  data: clusterData,
+  custom: {
+    scatter: ({ x, y, label }) => {
+      // K-means 등으로 클러스터 할당
+      const clusterId = getClusterId(x, y);
+      const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
+      
+      return Stack({
+        children: [
+          // 클러스터 영역 표시
+          Container({
+            width: 40,
+            height: 40,
+            decoration: new BoxDecoration({
+              shape: BoxShape.circle,
+              color: `${colors[clusterId]}20`
+            })
+          }),
+          // 데이터 포인트
+          Center({
+            child: Container({
+              width: 8,
+              height: 8,
+              decoration: new BoxDecoration({
+                shape: BoxShape.circle,
+                color: colors[clusterId],
+                border: Border.all({ 
+                  color: '#ffffff', 
+                  width: 2 
+                })
+              })
+            })
+          })
+        ]
+      });
+    }
+  }
+});
+```
+
+### 3. 밀도 플롯
+
+```javascript
+const densityScatter = ScatterChart({
+  data: largeDataset, // 많은 데이터 포인트
+  custom: {
+    series: ({ points, scale }) => {
+      // 격자별 밀도 계산
+      const density = calculateDensityGrid(points, gridSize);
+      
+      return Stack({
+        children: [
+          // 히트맵 배경
+          CustomPaint({
+            painter: createHeatmapPainter(density, scale)
+          }),
+          // 개별 포인트 (밀도가 낮은 영역만)
+          ...points.filter(p => getDensityAt(p.x, p.y) < threshold)
+            .map(point => 
+              Positioned({
+                left: scaleX(point.x),
+                top: scaleY(point.y),
+                child: Container({
+                  width: 4,
+                  height: 4,
+                  decoration: new BoxDecoration({
+                    shape: BoxShape.circle,
+                    color: 'rgba(255, 255, 255, 0.8)'
+                  })
+                })
+              })
+            )
+        ]
+      });
+    }
+  }
+});
+```
+
+### 4. 시계열 산점도
+
+```javascript
+const timeSeriesScatter = ScatterChart({
+  data: {
+    datasets: [{
+      legend: '일별 데이터',
+      data: dailyData.map((item, index) => ({
+        x: index, // 날짜 인덱스
+        y: item.value,
+        label: item.date
+      }))
+    }]
+  },
+  custom: {
+    scatter: ({ x, y, label }) => {
+      const date = new Date(label);
+      const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+      
+      return Container({
+        width: 8,
+        height: 8,
+        decoration: new BoxDecoration({
+          shape: BoxShape.circle,
+          color: isWeekend ? '#ef4444' : '#3b82f6',
+          border: Border.all({ 
+            color: isWeekend ? '#991b1b' : '#1e40af', 
+            width: 1 
+          })
+        })
+      });
+    },
+    // 추세선 추가
+    plot: ({ xAxis, yAxis, series, grid }) => {
+      return Stack({
+        children: [
+          grid,
+          CustomPaint({
+            painter: createTrendLinePainter(dailyData)
+          }),
+          series,
+          xAxis,
+          yAxis
+        ]
+      });
+    }
+  }
+});
+```
+
+## 고급 커스터마이징
+
+### 1. 컨투어 플롯
+
+```javascript
+const contourPlot = ({ points }) => {
+  return Stack({
+    children: [
+      // 컨투어 라인
+      CustomPaint({
+        painter: {
+          paint: (canvas, size) => {
+            const contours = calculateContours(points);
+            
+            contours.forEach((contour, level) => {
+              const paint = new Paint({
+                color: `hsla(${240 - level * 20}, 70%, 50%, 0.5)`,
+                strokeWidth: 1,
+                style: PaintingStyle.stroke
+              });
+              
+              canvas.drawPath(contour.path, paint);
+            });
+          }
+        }
+      }),
+      // 데이터 포인트
+      ...points.map(p => createPoint(p))
+    ]
+  });
+};
+```
+
+### 2. 벡터 필드
+
+```javascript
+const vectorField = ({ x, y, label }) => {
+  // 각 포인트에서의 벡터 계산
+  const vector = calculateVector(x, y);
+  const angle = Math.atan2(vector.y, vector.x);
+  const magnitude = Math.sqrt(vector.x ** 2 + vector.y ** 2);
+  
+  return Transform.rotate({
+    angle,
+    child: Container({
+      width: magnitude * 10,
+      height: 2,
+      decoration: new BoxDecoration({
+        gradient: {
+          type: 'linear',
+          colors: ['transparent', '#3b82f6'],
+          begin: { x: 0, y: 0 },
+          end: { x: 1, y: 0 }
+        }
+      }),
+      child: Align({
+        alignment: Alignment.centerRight,
+        child: CustomPaint({
+          size: { width: 6, height: 6 },
+          painter: createArrowheadPainter('#3b82f6')
+        })
+      })
+    })
+  });
+};
+```
+
+## 성능 최적화
+
+### 대용량 데이터 처리
+
+```javascript
+// 캔버스 기반 렌더링
+const optimizedScatter = ScatterChart({
+  data: bigData, // 10,000+ 포인트
+  custom: {
+    series: ({ points }) => {
+      return CustomPaint({
+        painter: {
+          paint: (canvas, size) => {
+            const paint = new Paint({
+              color: 'rgba(59, 130, 246, 0.5)',
+              strokeWidth: 0
+            });
+            
+            // 배치 렌더링
+            points.forEach(point => {
+              canvas.drawCircle(
+                { x: scaleX(point.x), y: scaleY(point.y) },
+                3,
+                paint
+              );
+            });
+          }
+        }
+      });
+    }
+  }
+});
+```
+
+## 접근성
+
+### 주요 포인트 설명
+
+```javascript
+const accessibleScatter = ({ x, y, label, legend }) => {
+  const description = `${legend} 데이터 포인트: ${label}, X축 ${x.toFixed(1)}, Y축 ${y.toFixed(1)}`;
+  
+  return Semantics({
+    label: description,
+    button: true,
+    child: Container({
+      width: 12,
+      height: 12,
+      decoration: new BoxDecoration({
+        shape: BoxShape.circle,
+        color: '#3b82f6'
+      })
+    })
+  });
+};
+```
+
+## 팁과 모범 사례
+
+1. **과밀 방지**: 포인트가 너무 많으면 투명도 조절이나 샘플링 사용
+2. **크기 인코딩**: 세 번째 차원은 포인트 크기로 표현
+3. **색상 구분**: 카테고리는 색상으로, 연속값은 그라데이션으로
+4. **참조선**: 평균선, 회귀선 등을 추가하여 이해도 향상
+5. **인터랙션**: 줌, 팬, 선택 기능으로 탐색 가능하게
+
+## 다음 단계
+
+Scatter Chart를 익혔다면, [Bubble Chart](./05.bubble-chart.mdx)로 넘어가 3차원 데이터를 더 효과적으로 표현해보세요.

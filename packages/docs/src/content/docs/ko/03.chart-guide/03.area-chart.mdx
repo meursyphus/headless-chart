@@ -7,4 +7,609 @@ description: "영역 차트 생성 및 커스터마이징 가이드"
 
 # Area Chart
 
-(내용 작성 예정)
+영역 차트는 라인 차트의 변형으로, 선 아래 영역을 채워 데이터의 크기와 변화를 더 명확하게 보여줍니다. 누적 데이터나 전체 대비 부분을 표현하는데 효과적입니다.
+
+## 기본 사용법
+
+### 간단한 예제
+
+```javascript
+import Widget from '@meursyphus/flitter-react';
+import { AreaChart } from '@meursyphus/headless-chart';
+
+const data = {
+  labels: ['1월', '2월', '3월', '4월', '5월', '6월'],
+  datasets: [{
+    legend: '매출액',
+    values: [30, 45, 62, 48, 77, 85]
+  }]
+};
+
+function BasicAreaChart() {
+  return (
+    <Widget 
+      width="600px" 
+      height="400px" 
+      widget={AreaChart({ data })} 
+    />
+  );
+}
+```
+
+### 스택 영역 차트
+
+여러 데이터의 누적을 표현할 때:
+
+```javascript
+const data = {
+  labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+  datasets: [
+    {
+      legend: '제품 A',
+      values: [120, 140, 130, 160]
+    },
+    {
+      legend: '제품 B',
+      values: [80, 90, 100, 110]
+    },
+    {
+      legend: '제품 C',
+      values: [40, 50, 60, 70]
+    }
+  ]
+};
+
+const stackedChart = AreaChart({
+  data,
+  stacked: true  // 스택 모드 활성화
+});
+```
+
+## API 참조
+
+### Props 인터페이스
+
+```typescript
+interface AreaChartProps {
+  // 필수
+  data: AreaChartData;
+  
+  // 선택
+  custom?: Partial<AreaChartCustom>;
+  title?: string;
+  getScale?: (data: AreaChartData) => AreaChartScale;
+  stacked?: boolean;
+}
+
+// 커스텀 컴포넌트 타입
+type AreaChartCustom = {
+  area: ({ values, legend, index }) => Widget;
+  series: ({ areas }) => Widget;
+  // ... 기타 공통 컴포넌트
+};
+```
+
+## 영역 스타일링
+
+### 1. 그라데이션 영역
+
+```javascript
+import { CustomPaint, Paint, Path } from '@meursyphus/flitter';
+
+const chart = AreaChart({
+  data,
+  custom: {
+    area: ({ values, index }) => {
+      const gradients = [
+        { top: 'rgba(59, 130, 246, 0.5)', bottom: 'rgba(59, 130, 246, 0.05)' },
+        { top: 'rgba(16, 185, 129, 0.5)', bottom: 'rgba(16, 185, 129, 0.05)' },
+        { top: 'rgba(245, 158, 11, 0.5)', bottom: 'rgba(245, 158, 11, 0.05)' }
+      ];
+      
+      const gradient = gradients[index % gradients.length];
+      
+      return Stack({
+        children: [
+          // 그라데이션 영역
+          CustomPaint({
+            painter: {
+              paint: (canvas, size) => {
+                const path = createAreaPath(values, size);
+                const paint = new Paint({
+                  shader: LinearGradient({
+                    colors: [gradient.top, gradient.bottom],
+                    begin: { x: 0, y: 0 },
+                    end: { x: 0, y: 1 }
+                  })
+                });
+                
+                canvas.drawPath(path, paint);
+              }
+            }
+          }),
+          // 상단 라인
+          CustomPaint({
+            painter: createLinePainter(values, gradient.top.replace('0.5', '1'))
+          })
+        ]
+      });
+    }
+  }
+});
+```
+
+### 2. 패턴 채우기
+
+```javascript
+const patternArea = ({ values, index }) => {
+  const patterns = ['diagonal', 'dots', 'waves'];
+  const pattern = patterns[index % patterns.length];
+  
+  return CustomPaint({
+    painter: {
+      paint: (canvas, size) => {
+        const path = createAreaPath(values, size);
+        
+        // 패턴에 따른 다른 채우기
+        switch (pattern) {
+          case 'diagonal':
+            drawDiagonalPattern(canvas, path);
+            break;
+          case 'dots':
+            drawDotPattern(canvas, path);
+            break;
+          case 'waves':
+            drawWavePattern(canvas, path);
+            break;
+        }
+      }
+    }
+  });
+};
+
+// 대각선 패턴 그리기
+function drawDiagonalPattern(canvas, path) {
+  canvas.save();
+  canvas.clipPath(path);
+  
+  const paint = new Paint({
+    color: 'rgba(59, 130, 246, 0.3)',
+    strokeWidth: 1,
+    style: PaintingStyle.stroke
+  });
+  
+  // 대각선 그리기
+  for (let i = -500; i < 500; i += 10) {
+    canvas.drawLine(
+      { x: i, y: 0 },
+      { x: i + 100, y: 100 },
+      paint
+    );
+  }
+  
+  canvas.restore();
+}
+```
+
+### 3. 투명도 영역
+
+```javascript
+const transparentArea = ({ values, index }) => {
+  const opacities = [0.6, 0.4, 0.2];
+  const opacity = opacities[index % opacities.length];
+  
+  return Stack({
+    children: [
+      // 반투명 영역
+      CustomPaint({
+        painter: {
+          paint: (canvas, size) => {
+            const path = createAreaPath(values, size);
+            const paint = new Paint({
+              color: `rgba(59, 130, 246, ${opacity})`,
+              style: PaintingStyle.fill
+            });
+            
+            canvas.drawPath(path, paint);
+          }
+        }
+      }),
+      // 실선
+      CustomPaint({
+        painter: createLinePainter(values, '#3b82f6', 2)
+      })
+    ]
+  });
+};
+```
+
+## 스택 영역 차트
+
+### 기본 스택 구현
+
+```javascript
+const stackedAreaChart = AreaChart({
+  data,
+  custom: {
+    series: ({ areas }) => {
+      // 스택 영역을 위한 누적 계산
+      return Stack({
+        children: areas.map((area, index) => 
+          Positioned({
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: area
+          })
+        )
+      });
+    }
+  }
+});
+```
+
+### 100% 스택 차트
+
+```javascript
+// 데이터를 백분율로 변환
+const convertToPercentage = (data) => {
+  const totals = data.labels.map((_, i) => 
+    data.datasets.reduce((sum, dataset) => sum + dataset.values[i], 0)
+  );
+  
+  return {
+    ...data,
+    datasets: data.datasets.map(dataset => ({
+      ...dataset,
+      values: dataset.values.map((value, i) => 
+        (value / totals[i]) * 100
+      )
+    }))
+  };
+};
+
+const percentChart = AreaChart({
+  data: convertToPercentage(data),
+  getScale: () => ({ min: 0, max: 100, step: 20 })
+});
+```
+
+## 인터랙티브 기능
+
+### 1. 호버 하이라이트
+
+```javascript
+import { MouseRegion } from '@meursyphus/flitter';
+import { useState } from 'react';
+
+function InteractiveAreaChart() {
+  const [hoveredArea, setHoveredArea] = useState(null);
+  
+  const chart = AreaChart({
+    data,
+    custom: {
+      area: ({ values, legend, index }) => {
+        const isHovered = hoveredArea === legend;
+        const opacity = isHovered ? 0.8 : 0.4;
+        
+        return MouseRegion({
+          onEnter: () => setHoveredArea(legend),
+          onExit: () => setHoveredArea(null),
+          child: Stack({
+            children: [
+              // 영역
+              CustomPaint({
+                painter: createAreaPainter(values, `rgba(59, 130, 246, ${opacity})`)
+              }),
+              // 라인
+              CustomPaint({
+                painter: createLinePainter(
+                  values, 
+                  '#3b82f6', 
+                  isHovered ? 3 : 2
+                )
+              })
+            ]
+          })
+        });
+      }
+    }
+  });
+  
+  return <Widget width="100%" height="400px" widget={chart} />;
+}
+```
+
+### 2. 범위 선택
+
+```javascript
+const rangeSelectArea = ({ values }) => {
+  const [range, setRange] = useState(null);
+  
+  return GestureDetector({
+    onPanStart: (details) => {
+      setRange({ start: details.localPosition.x, end: null });
+    },
+    onPanUpdate: (details) => {
+      setRange(prev => ({ ...prev, end: details.localPosition.x }));
+    },
+    child: Stack({
+      children: [
+        // 기본 영역
+        createBaseArea(values),
+        // 선택 범위 하이라이트
+        if (range && range.end) 
+          Positioned({
+            left: Math.min(range.start, range.end),
+            width: Math.abs(range.end - range.start),
+            top: 0,
+            bottom: 0,
+            child: Container({
+              color: 'rgba(59, 130, 246, 0.2)',
+              decoration: new BoxDecoration({
+                border: Border.symmetric({
+                  vertical: new BorderSide({ 
+                    color: '#3b82f6', 
+                    width: 2 
+                  })
+                })
+              })
+            })
+          })
+      ]
+    })
+  });
+};
+```
+
+## 실전 예제
+
+### 1. 시계열 누적 차트
+
+```javascript
+const timeSeriesArea = AreaChart({
+  data: {
+    labels: generateTimeLabels(24), // 24시간
+    datasets: [
+      { legend: 'CPU', values: cpuData },
+      { legend: 'Memory', values: memoryData },
+      { legend: 'Disk', values: diskData }
+    ]
+  },
+  custom: {
+    area: ({ values, legend, index }) => {
+      const colors = {
+        'CPU': { fill: 'rgba(239, 68, 68, 0.3)', line: '#ef4444' },
+        'Memory': { fill: 'rgba(59, 130, 246, 0.3)', line: '#3b82f6' },
+        'Disk': { fill: 'rgba(16, 185, 129, 0.3)', line: '#10b981' }
+      };
+      
+      const { fill, line } = colors[legend];
+      
+      return Stack({
+        children: [
+          // 영역
+          createGradientArea(values, fill),
+          // 라인
+          createSmoothLine(values, line),
+          // 현재 값 표시
+          Positioned({
+            right: 0,
+            top: calculateY(values[values.length - 1]),
+            child: Container({
+              padding: EdgeInsets.symmetric({ horizontal: 6, vertical: 2 }),
+              decoration: new BoxDecoration({
+                color: line,
+                borderRadius: BorderRadius.circular(10)
+              }),
+              child: Text(`${values[values.length - 1]}%`, {
+                style: new TextStyle({
+                  color: '#ffffff',
+                  fontSize: 10,
+                  fontWeight: 'bold'
+                })
+              })
+            })
+          })
+        ]
+      });
+    }
+  }
+});
+```
+
+### 2. 스트림 그래프
+
+```javascript
+const streamGraph = AreaChart({
+  data,
+  custom: {
+    area: ({ values, index, totalAreas }) => {
+      // 중앙 정렬을 위한 오프셋 계산
+      const offset = calculateStreamOffset(values, index, totalAreas);
+      
+      return CustomPaint({
+        painter: {
+          paint: (canvas, size) => {
+            const path = createStreamPath(values, offset, size);
+            
+            // 부드러운 그라데이션
+            const gradient = LinearGradient({
+              colors: [
+                `hsla(${index * 60}, 70%, 50%, 0.7)`,
+                `hsla(${index * 60}, 70%, 50%, 0.3)`
+              ],
+              begin: { x: 0, y: 0 },
+              end: { x: 0, y: 1 }
+            });
+            
+            const paint = new Paint({
+              shader: gradient,
+              style: PaintingStyle.fill
+            });
+            
+            canvas.drawPath(path, paint);
+          }
+        }
+      });
+    }
+  }
+});
+```
+
+### 3. 비교 영역 차트
+
+```javascript
+const comparisonArea = AreaChart({
+  data: {
+    labels: months,
+    datasets: [
+      { legend: '작년', values: lastYearData },
+      { legend: '올해', values: thisYearData }
+    ]
+  },
+  custom: {
+    area: ({ values, legend, index }) => {
+      const isThisYear = legend === '올해';
+      
+      return Stack({
+        children: [
+          // 영역
+          CustomPaint({
+            painter: createAreaPainter(
+              values,
+              isThisYear ? 
+                'rgba(16, 185, 129, 0.4)' : 
+                'rgba(156, 163, 175, 0.2)'
+            )
+          }),
+          // 라인
+          CustomPaint({
+            painter: createLinePainter(
+              values,
+              isThisYear ? '#10b981' : '#9ca3af',
+              isThisYear ? 2 : 1
+            )
+          }),
+          // 차이 표시
+          if (index === 1) 
+            ...values.map((value, i) => {
+              const diff = value - lastYearData[i];
+              const isPositive = diff > 0;
+              
+              return Positioned({
+                left: calculateX(i),
+                top: calculateY(value),
+                child: Text(
+                  `${isPositive ? '+' : ''}${diff.toFixed(0)}`,
+                  {
+                    style: new TextStyle({
+                      fontSize: 10,
+                      color: isPositive ? '#10b981' : '#ef4444',
+                      fontWeight: 'bold'
+                    })
+                  }
+                )
+              });
+            })
+        ]
+      });
+    }
+  }
+});
+```
+
+## 애니메이션
+
+### 진입 애니메이션
+
+```javascript
+const animatedArea = ({ values, index }) => {
+  return AnimatedBuilder({
+    animation: createDelayedAnimation(index * 200),
+    builder: (context, child, animation) => {
+      const progress = animation.value;
+      
+      return CustomPaint({
+        painter: {
+          paint: (canvas, size) => {
+            // 점진적으로 영역 채우기
+            const animatedValues = values.map(v => v * progress);
+            const path = createAreaPath(animatedValues, size);
+            
+            const paint = new Paint({
+              color: 'rgba(59, 130, 246, 0.3)',
+              style: PaintingStyle.fill
+            });
+            
+            canvas.drawPath(path, paint);
+          }
+        }
+      });
+    }
+  });
+};
+```
+
+## 성능 최적화
+
+### 데이터 단순화
+
+```javascript
+// 더글라스-포이커 알고리즘으로 포인트 줄이기
+const simplifyData = (data, tolerance = 1) => {
+  return {
+    ...data,
+    datasets: data.datasets.map(dataset => ({
+      ...dataset,
+      values: douglasPeucker(dataset.values, tolerance)
+    }))
+  };
+};
+
+const optimizedChart = AreaChart({
+  data: simplifyData(largeData, 2)
+});
+```
+
+## 접근성
+
+### 스크린 리더 지원
+
+```javascript
+const accessibleArea = ({ values, legend }) => {
+  const summary = `${legend} 영역 차트. 최소값: ${Math.min(...values)}, 최대값: ${Math.max(...values)}`;
+  
+  return Semantics({
+    label: summary,
+    child: Stack({
+      children: [
+        createBaseArea(values),
+        // 주요 포인트에 라벨 추가
+        ...findKeyPoints(values).map(({ index, value, type }) => 
+          Positioned({
+            left: calculateX(index),
+            top: calculateY(value),
+            child: Semantics({
+              label: `${type}: ${value}`,
+              child: Container({ width: 1, height: 1 })
+            })
+          })
+        )
+      ]
+    })
+  });
+};
+```
+
+## 팁과 모범 사례
+
+1. **투명도 활용**: 여러 영역이 겹칠 때는 적절한 투명도 사용
+2. **색상 계층**: 중요도에 따라 색상 강도 조절
+3. **부드러운 곡선**: 데이터 특성에 맞는 곡선 보간 선택
+4. **스택 순서**: 가장 안정적인 데이터를 아래에 배치
+5. **범례 필수**: 영역 차트는 범례 없이 이해하기 어려움
+
+## 다음 단계
+
+Area Chart를 마스터했다면, [Scatter Chart](./04.scatter-chart.mdx)로 넘어가 상관관계를 시각화해보세요.

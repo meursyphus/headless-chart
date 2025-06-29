@@ -7,4 +7,719 @@ description: "버블 차트 생성 및 커스터마이징 가이드"
 
 # Bubble Chart
 
-(내용 작성 예정)
+버블 차트는 3차원 데이터를 2차원 평면에 표현하는 차트입니다. X축, Y축에 더해 버블의 크기로 세 번째 차원을 나타냅니다.
+
+## 기본 사용법
+
+### 간단한 예제
+
+```javascript
+import Widget from '@meursyphus/flitter-react';
+import { BubbleChart } from '@meursyphus/headless-chart';
+
+const data = {
+  datasets: [{
+    legend: '제품 성과',
+    data: [
+      { x: 10, y: 20, value: 30, label: '제품 A' },
+      { x: 15, y: 35, value: 45, label: '제품 B' },
+      { x: 25, y: 30, value: 20, label: '제품 C' },
+      { x: 30, y: 45, value: 60, label: '제품 D' }
+    ]
+  }]
+};
+
+function BasicBubbleChart() {
+  return (
+    <Widget 
+      width="600px" 
+      height="400px" 
+      widget={BubbleChart({ data })} 
+    />
+  );
+}
+```
+
+### 다중 데이터셋
+
+```javascript
+const data = {
+  datasets: [
+    {
+      legend: '2023년',
+      data: [
+        { x: 20, y: 30, value: 25, label: 'Q1' },
+        { x: 30, y: 40, value: 35, label: 'Q2' },
+        { x: 40, y: 50, value: 45, label: 'Q3' }
+      ]
+    },
+    {
+      legend: '2024년',
+      data: [
+        { x: 25, y: 35, value: 30, label: 'Q1' },
+        { x: 35, y: 45, value: 40, label: 'Q2' },
+        { x: 45, y: 55, value: 50, label: 'Q3' }
+      ]
+    }
+  ]
+};
+```
+
+## API 참조
+
+### Props 인터페이스
+
+```typescript
+interface BubbleChartProps {
+  // 필수
+  data: BubbleChartData;
+  
+  // 선택
+  custom?: Partial<BubbleChartCustom>;
+  title?: string;
+  getScale?: (data: BubbleChartData) => BubbleChartScale;
+}
+
+// 데이터 타입
+type BubbleChartData = {
+  datasets: {
+    legend: string;
+    data: {
+      x: number;      // X 좌표
+      y: number;      // Y 좌표
+      value: number;  // 버블 크기
+      label: string;  // 레이블
+    }[];
+  }[];
+};
+
+// 스케일 타입
+type BubbleChartScale = {
+  x: { min: number; max: number; step: number };
+  y: { min: number; max: number; step: number };
+  value: { min: number; max: number; step: number };
+};
+```
+
+## 버블 스타일링
+
+### 1. 기본 버블 커스터마이징
+
+```javascript
+import { Container, BoxDecoration } from '@meursyphus/flitter';
+
+const chart = BubbleChart({
+  data,
+  custom: {
+    bubble: ({ value, label, legend, index }) => {
+      const colors = [
+        'rgba(59, 130, 246, 0.6)',
+        'rgba(16, 185, 129, 0.6)',
+        'rgba(245, 158, 11, 0.6)',
+        'rgba(239, 68, 68, 0.6)'
+      ];
+      
+      // 값에 따른 크기 계산
+      const size = Math.sqrt(value) * 5;
+      
+      return Container({
+        width: size,
+        height: size,
+        decoration: new BoxDecoration({
+          shape: BoxShape.circle,
+          color: colors[index % colors.length],
+          border: Border.all({ 
+            color: colors[index % colors.length].replace('0.6', '1'), 
+            width: 2 
+          }),
+          boxShadow: [{
+            color: 'rgba(0, 0, 0, 0.2)',
+            blurRadius: 4,
+            offset: { x: 0, y: 2 }
+          }]
+        })
+      });
+    }
+  }
+});
+```
+
+### 2. 그라데이션 버블
+
+```javascript
+const gradientBubble = ({ value, index }) => {
+  const gradients = [
+    { inner: '#60a5fa', outer: '#3b82f6' },
+    { inner: '#86efac', outer: '#10b981' },
+    { inner: '#fbbf24', outer: '#f59e0b' }
+  ];
+  
+  const { inner, outer } = gradients[index % gradients.length];
+  const size = Math.sqrt(value) * 4;
+  
+  return Container({
+    width: size,
+    height: size,
+    decoration: new BoxDecoration({
+      shape: BoxShape.circle,
+      gradient: {
+        type: 'radial',
+        colors: [inner, outer],
+        stops: [0, 1],
+        center: { x: 0.3, y: 0.3 },
+        radius: 1
+      },
+      boxShadow: [{
+        color: `${outer}40`,
+        blurRadius: size / 4,
+        offset: { x: 0, y: size / 8 }
+      }]
+    })
+  });
+};
+```
+
+### 3. 패턴 버블
+
+```javascript
+const patternBubble = ({ value, index }) => {
+  const size = Math.sqrt(value) * 5;
+  
+  return Stack({
+    children: [
+      // 배경 원
+      Container({
+        width: size,
+        height: size,
+        decoration: new BoxDecoration({
+          shape: BoxShape.circle,
+          color: 'rgba(59, 130, 246, 0.2)'
+        })
+      }),
+      // 패턴
+      ClipOval({
+        child: CustomPaint({
+          size: { width: size, height: size },
+          painter: {
+            paint: (canvas, size) => {
+              const paint = new Paint({
+                color: '#3b82f6',
+                strokeWidth: 1,
+                style: PaintingStyle.stroke
+              });
+              
+              // 동심원 패턴
+              for (let i = 0; i < size.width / 2; i += 5) {
+                canvas.drawCircle(
+                  { x: size.width / 2, y: size.height / 2 },
+                  i,
+                  paint
+                );
+              }
+            }
+          }
+        })
+      })
+    ]
+  });
+};
+```
+
+### 4. 데이터 라벨 포함
+
+```javascript
+const labeledBubble = ({ value, label, index }) => {
+  const size = Math.sqrt(value) * 5;
+  const colors = ['#3b82f6', '#10b981', '#f59e0b'];
+  const color = colors[index % colors.length];
+  
+  return Stack({
+    alignment: Alignment.center,
+    children: [
+      // 버블
+      Container({
+        width: size,
+        height: size,
+        decoration: new BoxDecoration({
+          shape: BoxShape.circle,
+          color: `${color}40`,
+          border: Border.all({ color, width: 2 })
+        })
+      }),
+      // 라벨
+      if (size > 30) // 충분히 큰 버블에만 라벨 표시
+        Text(value.toString(), {
+          style: new TextStyle({
+            fontSize: Math.min(16, size / 3),
+            fontWeight: 'bold',
+            color
+          })
+        })
+    ]
+  });
+};
+```
+
+## 인터랙티브 기능
+
+### 1. 호버 효과
+
+```javascript
+import { MouseRegion } from '@meursyphus/flitter';
+import { useState } from 'react';
+
+function InteractiveBubbleChart() {
+  const [hoveredBubble, setHoveredBubble] = useState(null);
+  
+  const chart = BubbleChart({
+    data,
+    custom: {
+      bubble: ({ value, label, legend, index }) => {
+        const key = `${legend}-${label}`;
+        const isHovered = hoveredBubble === key;
+        const baseSize = Math.sqrt(value) * 5;
+        const size = isHovered ? baseSize * 1.1 : baseSize;
+        
+        return MouseRegion({
+          onEnter: () => setHoveredBubble(key),
+          onExit: () => setHoveredBubble(null),
+          cursor: 'pointer',
+          child: AnimatedContainer({
+            duration: Duration({ milliseconds: 200 }),
+            width: size,
+            height: size,
+            decoration: new BoxDecoration({
+              shape: BoxShape.circle,
+              color: isHovered ? 
+                'rgba(37, 99, 235, 0.8)' : 
+                'rgba(59, 130, 246, 0.6)',
+              border: Border.all({ 
+                color: '#3b82f6', 
+                width: isHovered ? 3 : 2 
+              }),
+              boxShadow: [{
+                color: isHovered ? 
+                  'rgba(59, 130, 246, 0.4)' : 
+                  'rgba(0, 0, 0, 0.2)',
+                blurRadius: isHovered ? 12 : 4,
+                offset: { x: 0, y: isHovered ? 4 : 2 }
+              }]
+            })
+          })
+        });
+      }
+    }
+  });
+  
+  return <Widget width="100%" height="400px" widget={chart} />;
+}
+```
+
+### 2. 선택 기능
+
+```javascript
+function SelectableBubbleChart() {
+  const [selectedBubbles, setSelectedBubbles] = useState(new Set());
+  
+  const chart = BubbleChart({
+    data,
+    custom: {
+      bubble: ({ value, label, legend }) => {
+        const key = `${legend}-${label}`;
+        const isSelected = selectedBubbles.has(key);
+        const size = Math.sqrt(value) * 5;
+        
+        return GestureDetector({
+          onTap: () => {
+            const newSelected = new Set(selectedBubbles);
+            if (isSelected) {
+              newSelected.delete(key);
+            } else {
+              newSelected.add(key);
+            }
+            setSelectedBubbles(newSelected);
+          },
+          child: Container({
+            width: size,
+            height: size,
+            decoration: new BoxDecoration({
+              shape: BoxShape.circle,
+              color: isSelected ? 
+                'rgba(37, 99, 235, 0.8)' : 
+                'rgba(59, 130, 246, 0.4)',
+              border: Border.all({ 
+                color: isSelected ? '#1e40af' : '#3b82f6', 
+                width: isSelected ? 4 : 2 
+              })
+            }),
+            child: isSelected ? 
+              Center({
+                child: Icon(Icons.check, {
+                  color: '#ffffff',
+                  size: Math.min(24, size / 2)
+                })
+              }) : null
+          })
+        });
+      }
+    }
+  });
+  
+  return <Widget width="100%" height="400px" widget={chart} />;
+}
+```
+
+## 실전 예제
+
+### 1. 시장 점유율 분석
+
+```javascript
+const marketShareChart = BubbleChart({
+  data: {
+    datasets: [{
+      legend: '기업 성과',
+      data: [
+        { 
+          x: 35,        // 시장 점유율 (%)
+          y: 8.5,       // 성장률 (%)
+          value: 450,   // 매출 (억원)
+          label: '기업 A'
+        },
+        { x: 25, y: 12, value: 320, label: '기업 B' },
+        { x: 15, y: 6, value: 180, label: '기업 C' },
+        { x: 10, y: 15, value: 120, label: '기업 D' },
+        { x: 8, y: -2, value: 80, label: '기업 E' }
+      ]
+    }]
+  },
+  custom: {
+    bubble: ({ x, y, value, label }) => {
+      const size = Math.sqrt(value) * 2;
+      const growth = y;
+      
+      // 성장률에 따른 색상
+      const color = growth > 10 ? '#10b981' : 
+                   growth > 0 ? '#3b82f6' : 
+                   '#ef4444';
+      
+      return Tooltip({
+        message: `${label}\n점유율: ${x}%\n성장률: ${y}%\n매출: ${value}억원`,
+        child: Container({
+          width: size,
+          height: size,
+          decoration: new BoxDecoration({
+            shape: BoxShape.circle,
+            color: `${color}60`,
+            border: Border.all({ color, width: 3 })
+          }),
+          child: Center({
+            child: Text(label.split(' ')[1], {
+              style: new TextStyle({
+                fontSize: Math.min(16, size / 3),
+                fontWeight: 'bold',
+                color
+              })
+            })
+          })
+        })
+      });
+    }
+  }
+});
+```
+
+### 2. 리스크-수익 분석
+
+```javascript
+const riskReturnChart = BubbleChart({
+  data: portfolioData,
+  custom: {
+    bubble: ({ x: risk, y: returns, value: size, label }) => {
+      const bubbleSize = Math.sqrt(size) * 3;
+      
+      // 샤프 비율에 따른 색상
+      const sharpeRatio = returns / risk;
+      const hue = Math.max(0, Math.min(120, sharpeRatio * 40));
+      
+      return Stack({
+        children: [
+          // 버블
+          Container({
+            width: bubbleSize,
+            height: bubbleSize,
+            decoration: new BoxDecoration({
+              shape: BoxShape.circle,
+              gradient: {
+                type: 'radial',
+                colors: [
+                  `hsla(${hue}, 70%, 60%, 0.8)`,
+                  `hsla(${hue}, 70%, 40%, 0.8)`
+                ],
+                center: { x: 0.3, y: 0.3 }
+              }
+            })
+          }),
+          // 포트폴리오 이름
+          Positioned({
+            bottom: -20,
+            left: -20,
+            right: -20,
+            child: Center({
+              child: Text(label, {
+                style: new TextStyle({
+                  fontSize: 10,
+                  color: '#374151'
+                })
+              })
+            })
+          })
+        ]
+      });
+    },
+    // 효율적 프론티어 곡선 추가
+    plot: ({ xAxis, yAxis, series, grid }) => {
+      return Stack({
+        children: [
+          grid,
+          CustomPaint({
+            painter: createEfficientFrontierPainter(portfolioData)
+          }),
+          series,
+          xAxis,
+          yAxis
+        ]
+      });
+    }
+  }
+});
+```
+
+### 3. 제품 포지셔닝 맵
+
+```javascript
+const positioningMap = BubbleChart({
+  data: {
+    datasets: [
+      {
+        legend: '프리미엄',
+        data: premiumProducts
+      },
+      {
+        legend: '중급',
+        data: midrangeProducts
+      },
+      {
+        legend: '보급형',
+        data: budgetProducts
+      }
+    ]
+  },
+  custom: {
+    bubble: ({ x: quality, y: price, value: sales, label, legend }) => {
+      const size = Math.sqrt(sales) * 2;
+      const colors = {
+        '프리미엄': '#8b5cf6',
+        '중급': '#3b82f6',
+        '보급형': '#10b981'
+      };
+      
+      return Container({
+        width: size,
+        height: size,
+        decoration: new BoxDecoration({
+          shape: BoxShape.circle,
+          color: `${colors[legend]}40`,
+          border: Border.all({ 
+            color: colors[legend], 
+            width: 2 
+          })
+        }),
+        child: Center({
+          child: Column({
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(label, {
+                style: new TextStyle({
+                  fontSize: 10,
+                  fontWeight: 'bold',
+                  color: colors[legend]
+                })
+              }),
+              if (size > 40)
+                Text(`${sales}개`, {
+                  style: new TextStyle({
+                    fontSize: 8,
+                    color: '#6b7280'
+                  })
+                })
+            ]
+          })
+        })
+      });
+    }
+  }
+});
+```
+
+### 4. 시계열 버블 차트
+
+```javascript
+function TimeSeriesBubbleChart() {
+  const [currentMonth, setCurrentMonth] = useState(0);
+  
+  const monthlyData = generateMonthlyData(); // 12개월 데이터
+  
+  const chart = BubbleChart({
+    data: {
+      datasets: [{
+        legend: '월별 성과',
+        data: monthlyData[currentMonth]
+      }]
+    },
+    custom: {
+      bubble: ({ value, label, index }) => {
+        const size = Math.sqrt(value) * 4;
+        
+        return AnimatedContainer({
+          duration: Duration({ milliseconds: 500 }),
+          curve: Curves.easeOutCubic,
+          width: size,
+          height: size,
+          decoration: new BoxDecoration({
+            shape: BoxShape.circle,
+            gradient: {
+              type: 'radial',
+              colors: ['#60a5fa', '#3b82f6'],
+              center: { x: 0.3, y: 0.3 }
+            }
+          })
+        });
+      }
+    }
+  });
+  
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentMonth(prev => (prev + 1) % 12);
+    }, 2000);
+    
+    return () => clearInterval(timer);
+  }, []);
+  
+  return (
+    <div>
+      <Widget width="100%" height="400px" widget={chart} />
+      <div>현재 월: {currentMonth + 1}월</div>
+    </div>
+  );
+}
+```
+
+## 고급 기능
+
+### 1. 버블 충돌 방지
+
+```javascript
+const collisionFreeBubbles = ({ points, scale }) => {
+  // Force-directed 레이아웃으로 겹침 방지
+  const adjustedPoints = forceSimulation(points);
+  
+  return Stack({
+    children: adjustedPoints.map(point => 
+      Positioned({
+        left: scaleX(point.x),
+        top: scaleY(point.y),
+        child: createBubble(point)
+      })
+    )
+  });
+};
+```
+
+### 2. 연결선 추가
+
+```javascript
+const connectedBubbles = BubbleChart({
+  data,
+  custom: {
+    series: ({ points }) => {
+      const connections = findConnections(points);
+      
+      return Stack({
+        children: [
+          // 연결선
+          ...connections.map(([p1, p2]) => 
+            CustomPaint({
+              painter: createConnectionPainter(p1, p2)
+            })
+          ),
+          // 버블
+          ...points.map(p => createBubble(p))
+        ]
+      });
+    }
+  }
+});
+```
+
+## 성능 최적화
+
+### 많은 버블 처리
+
+```javascript
+// 버블이 많을 때 LOD(Level of Detail) 적용
+const optimizedBubble = ({ value, label, index }) => {
+  const size = Math.sqrt(value) * 5;
+  
+  // 작은 버블은 단순하게 렌더링
+  if (size < 20) {
+    return Container({
+      width: size,
+      height: size,
+      decoration: new BoxDecoration({
+        shape: BoxShape.circle,
+        color: '#3b82f6'
+      })
+    });
+  }
+  
+  // 큰 버블만 디테일 추가
+  return createDetailedBubble({ value, label, size });
+};
+```
+
+## 접근성
+
+### 스크린 리더 지원
+
+```javascript
+const accessibleBubble = ({ x, y, value, label, legend }) => {
+  const size = Math.sqrt(value) * 5;
+  const description = `${legend} ${label}: X축 ${x}, Y축 ${y}, 크기 ${value}`;
+  
+  return Semantics({
+    label: description,
+    button: true,
+    child: Container({
+      width: size,
+      height: size,
+      decoration: new BoxDecoration({
+        shape: BoxShape.circle,
+        color: 'rgba(59, 130, 246, 0.6)'
+      })
+    })
+  });
+};
+```
+
+## 팁과 모범 사례
+
+1. **크기 스케일링**: 면적이 아닌 반지름으로 값을 표현하면 오해 소지
+2. **투명도 활용**: 버블이 겹칠 때 투명도로 겹침 표시
+3. **최대/최소 크기**: 너무 크거나 작은 버블 방지
+4. **범례 중요성**: 버블 크기가 무엇을 나타내는지 명확히 표시
+5. **색상 의미**: 카테고리나 추가 차원 정보 전달
+
+## 다음 단계
+
+Bubble Chart를 마스터했다면, [Heatmap Chart](./06.heatmap-chart.mdx)로 넘어가 밀도 데이터를 시각화해보세요.
