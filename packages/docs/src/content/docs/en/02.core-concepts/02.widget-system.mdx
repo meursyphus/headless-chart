@@ -1,0 +1,345 @@
+---
+nav_group: "Core Concepts"
+nav_order: 2
+title: "Widget System"
+description: "Understanding StatelessWidget and build patterns"
+---
+
+# Widget System
+
+All components in Headless Chart are based on Flitter's widget system. Understanding this allows you to freely customize every part of your charts.
+
+## Understanding StatelessWidget
+
+### Basic Concept
+
+StatelessWidget is a widget that holds no state. Once created, it doesn't change, and declares UI through the `build` method.
+
+```javascript
+import { StatelessWidget } from '@meursyphus/flitter';
+
+class MyWidget extends StatelessWidget {
+  build(context) {
+    return Container({
+      width: 100,
+      height: 100,
+      color: '#3b82f6'
+    });
+  }
+}
+```
+
+### Usage in Headless Chart
+
+All chart components are StatelessWidgets:
+
+```javascript
+// Actual structure of Bar Chart
+class BarChart extends StatelessWidget {
+  build(context) {
+    return new Layout();
+  }
+}
+
+class Layout extends StatelessWidget {
+  build(context) {
+    const config = BarChartConfigProvider.of(context);
+    return config.custom.layout({
+      title: new Title(),
+      plot: new Plot(),
+      legends: new Legend()
+    });
+  }
+}
+```
+
+## Build Context Pattern
+
+### What is Context?
+
+Context contains the current widget's position information in the widget tree and data passed down from parent widgets.
+
+```javascript
+class MyChart extends StatelessWidget {
+  build(context) {
+    // Get chart configuration from context
+    const config = BarChartConfigProvider.of(context);
+    const { data, custom } = config;
+    
+    return Container({
+      child: custom.bar({
+        value: data.datasets[0].data[0],
+        label: data.labels[0]
+      })
+    });
+  }
+}
+```
+
+### Provider Pattern
+
+Provider is a pattern for passing data through the widget tree:
+
+```javascript
+// Provider supplies data
+BarChartConfigProvider({
+  value: {
+    data: chartData,
+    custom: customComponents,
+    direction: 'vertical'
+  },
+  child: new BarChart()
+})
+
+// Access data in child widgets
+class BarComponent extends StatelessWidget {
+  build(context) {
+    const config = BarChartConfigProvider.of(context);
+    // Use config
+  }
+}
+```
+
+## Creating Custom Widgets
+
+### 1. Simple Custom Widget
+
+```javascript
+class CustomBar extends StatelessWidget {
+  constructor({ value, color }) {
+    super();
+    this.value = value;
+    this.color = color;
+  }
+
+  build(context) {
+    return Container({
+      width: 40,
+      height: this.value * 2,
+      decoration: new BoxDecoration({
+        color: this.color,
+        borderRadius: BorderRadius.circular(4)
+      })
+    });
+  }
+}
+```
+
+### 2. Context-Aware Widget
+
+```javascript
+class SmartBar extends StatelessWidget {
+  constructor({ datasetIndex, valueIndex }) {
+    super();
+    this.datasetIndex = datasetIndex;
+    this.valueIndex = valueIndex;
+  }
+
+  build(context) {
+    const config = BarChartConfigProvider.of(context);
+    const dataset = config.data.datasets[this.datasetIndex];
+    const value = dataset.data[this.valueIndex];
+    
+    return Container({
+      width: Infinity,
+      height: Infinity,
+      decoration: new BoxDecoration({
+        color: this.getColor(value),
+        borderRadius: BorderRadius.only({
+          topLeft: 4,
+          topRight: 4
+        })
+      })
+    });
+  }
+
+  getColor(value) {
+    if (value > 100) return '#10b981';
+    if (value > 50) return '#3b82f6';
+    return '#ef4444';
+  }
+}
+```
+
+## Functional vs Class Widgets
+
+### Functional Style
+
+Headless Chart provides functional APIs for ease of use:
+
+```javascript
+// Functional API (recommended)
+const chart = BarChart({
+  data: myData,
+  custom: {
+    bar: ({ value, label }) => Container({
+      width: 40,
+      height: value * 2,
+      color: '#3b82f6'
+    })
+  }
+});
+```
+
+### Class Style
+
+Internally implemented as classes:
+
+```javascript
+// Class style (for advanced users)
+class MyBarChart extends StatelessWidget {
+  constructor({ data, custom }) {
+    super();
+    this.data = data;
+    this.custom = custom;
+  }
+
+  build(context) {
+    return BarChartConfigProvider({
+      value: { data: this.data, custom: this.custom },
+      child: new Chart()
+    });
+  }
+}
+```
+
+## Widget Composition Patterns
+
+### 1. Composition
+
+Build complex UIs by composing small widgets:
+
+```javascript
+class ChartWithTitle extends StatelessWidget {
+  build(context) {
+    return Column({
+      children: [
+        // Title
+        Container({
+          padding: EdgeInsets.all(16),
+          child: Text('Monthly Sales Report', {
+            style: new TextStyle({
+              fontSize: 20,
+              fontWeight: 'bold'
+            })
+          })
+        }),
+        // Chart
+        Expanded({
+          child: new BarChart()
+        })
+      ]
+    });
+  }
+}
+```
+
+### 2. Conditional Rendering
+
+```javascript
+class ConditionalChart extends StatelessWidget {
+  constructor({ showLegend = true }) {
+    super();
+    this.showLegend = showLegend;
+  }
+
+  build(context) {
+    const children = [new Plot()];
+    
+    if (this.showLegend) {
+      children.push(new Legend());
+    }
+    
+    return Column({ children });
+  }
+}
+```
+
+## Performance Optimization
+
+### 1. Memoization
+
+Reuse widgets for identical inputs:
+
+```javascript
+class MemoizedBar extends StatelessWidget {
+  static cache = new Map();
+
+  static create({ value, color }) {
+    const key = `${value}-${color}`;
+    
+    if (!this.cache.has(key)) {
+      this.cache.set(key, new MemoizedBar({ value, color }));
+    }
+    
+    return this.cache.get(key);
+  }
+
+  build(context) {
+    return Container({
+      width: 40,
+      height: this.value * 2,
+      color: this.color
+    });
+  }
+}
+```
+
+### 2. Rebuild Only When Necessary
+
+```javascript
+class OptimizedChart extends StatelessWidget {
+  shouldRebuild(oldWidget) {
+    // Rebuild only when data changes
+    return this.data !== oldWidget.data;
+  }
+
+  build(context) {
+    // Chart rendering
+  }
+}
+```
+
+## Real Example: Creating Custom Axis
+
+```javascript
+class CustomAxis extends StatelessWidget {
+  build(context) {
+    const config = BarChartConfigProvider.of(context);
+    const { labels } = config.data;
+    
+    return Row({
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: labels.map((label, index) => 
+        Container({
+          padding: EdgeInsets.all(8),
+          decoration: new BoxDecoration({
+            color: index % 2 === 0 ? '#f3f4f6' : 'transparent',
+            borderRadius: BorderRadius.circular(4)
+          }),
+          child: Text(label, {
+            style: new TextStyle({
+              fontSize: 12,
+              color: '#6b7280'
+            })
+          })
+        })
+      )
+    });
+  }
+}
+
+// Usage
+BarChart({
+  data: myData,
+  custom: {
+    xAxis: () => new CustomAxis()
+  }
+});
+```
+
+## Next Steps
+
+Now that you understand the widget system, learn about the overall chart structure in [Component Architecture](./03.component-architecture.mdx).
+
+See real chart implementation examples in the [Bar Chart Guide](../03.chart-guide/01.bar-chart.mdx).

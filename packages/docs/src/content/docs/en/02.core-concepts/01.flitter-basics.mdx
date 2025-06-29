@@ -1,0 +1,263 @@
+---
+nav_group: "Core Concepts"
+nav_order: 1
+title: "Flitter Basics"
+description: "Understanding the Flitter framework that powers Headless Chart"
+---
+
+# Flitter Basics
+
+Headless Chart is built on top of the Flitter framework. Understanding Flitter will allow you to customize charts with complete freedom.
+
+## What is Flitter?
+
+Flitter is a JavaScript rendering engine that implements Flutter's widget system for the web. It brings Flutter's powerful UI composition approach to web development.
+
+### Key Features
+
+- **Declarative UI**: Declare "what" to draw, not "how" to draw it
+- **Widget Tree**: Compose complex UIs by combining small widgets
+- **Cross-renderer**: Supports both SVG and Canvas
+- **Automatic Layout**: Implements Flutter's layout algorithms directly
+
+## Core Concepts
+
+### 1. Widget
+
+Every UI element is a widget. Widgets declaratively describe a part of the UI.
+
+```javascript
+// Simple container widget
+Container({
+  width: 200,
+  height: 100,
+  color: '#3b82f6'
+})
+
+// Text widget
+Text('Hello World', {
+  style: new TextStyle({
+    fontSize: 16,
+    color: '#1f2937'
+  })
+})
+```
+
+### 2. Widget Tree
+
+Widgets are composed in a tree structure. Parent widgets contain child widgets.
+
+```javascript
+Container({
+  child: Column({
+    children: [
+      Text('Title'),
+      Text('Content'),
+      Container({ height: 50, color: '#f3f4f6' })
+    ]
+  })
+})
+```
+
+### 3. Layout System
+
+Flitter uses the same layout constraint system as Flutter.
+
+- **Constraints go down**
+- **Sizes go up**
+- **Parent sets position**
+
+## Important Syntax Rules
+
+### 1. Import Rules
+
+```javascript
+// ✅ Correct way
+import Widget from '@meursyphus/flitter-react';  // Default export
+import { Container, Text, Row } from '@meursyphus/flitter';  // Named exports
+
+// ❌ Wrong way
+import { Widget } from '@meursyphus/flitter-react';  // Error!
+```
+
+### 2. Widgets vs Type Classes
+
+```javascript
+// Widgets: Use without 'new' keyword
+Container({ width: 100 })
+Text('Hello')
+Row({ children: [] })
+
+// Type classes: 'new' keyword required
+new TextStyle({ fontSize: 16 })
+new BoxDecoration({ color: '#FF0000' })
+new EdgeInsets.all(10)
+```
+
+### 3. Color Representation
+
+```javascript
+// ✅ Correct color representation
+color: '#FF0000'              // HEX string
+color: 'rgba(255, 0, 0, 0.5)' // RGBA string
+color: 'red'                  // Color name
+
+// ❌ Wrong color representation
+color: 0xFFFF0000  // Flutter-style numbers not supported
+```
+
+## Basic Widget Introduction
+
+### Container
+
+The most basic layout widget.
+
+```javascript
+Container({
+  width: 200,
+  height: 100,
+  padding: EdgeInsets.all(16),
+  margin: EdgeInsets.symmetric({ horizontal: 8 }),
+  decoration: new BoxDecoration({
+    color: '#ffffff',
+    borderRadius: BorderRadius.circular(8),
+    border: Border.all({ color: '#e5e7eb', width: 1 })
+  }),
+  child: Text('Text inside container')
+})
+```
+
+### Row & Column
+
+Arrange children horizontally/vertically.
+
+```javascript
+// Horizontal layout
+Row({
+  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  crossAxisAlignment: CrossAxisAlignment.center,
+  children: [
+    Text('Left'),
+    Text('Center'),
+    Text('Right')
+  ]
+})
+
+// Vertical layout
+Column({
+  mainAxisAlignment: MainAxisAlignment.start,
+  crossAxisAlignment: CrossAxisAlignment.stretch,
+  children: [
+    Text('Top'),
+    SizedBox({ height: 20 }),  // Spacing
+    Text('Bottom')
+  ]
+})
+```
+
+### Stack & Positioned
+
+Overlay widgets on top of each other.
+
+```javascript
+Stack({
+  children: [
+    Container({ width: 200, height: 200, color: '#3b82f6' }),
+    Positioned({
+      top: 10,
+      right: 10,
+      child: Text('Top Right')
+    }),
+    Positioned({
+      bottom: 10,
+      left: 10,
+      child: Text('Bottom Left')
+    })
+  ]
+})
+```
+
+## Real Chart Example
+
+Let's apply Flitter concepts to create a chart.
+
+```javascript
+// Simple bar chart layout
+Container({
+  padding: EdgeInsets.all(20),
+  child: Row({
+    crossAxisAlignment: CrossAxisAlignment.end,
+    children: [
+      // First bar
+      Container({
+        width: 50,
+        height: 100,
+        color: '#3b82f6',
+        margin: EdgeInsets.symmetric({ horizontal: 5 })
+      }),
+      // Second bar
+      Container({
+        width: 50,
+        height: 150,
+        color: '#10b981',
+        margin: EdgeInsets.symmetric({ horizontal: 5 })
+      }),
+      // Third bar
+      Container({
+        width: 50,
+        height: 80,
+        color: '#f59e0b',
+        margin: EdgeInsets.symmetric({ horizontal: 5 })
+      })
+    ]
+  })
+})
+```
+
+## Styling
+
+### TextStyle
+
+Defines the appearance of text.
+
+```javascript
+Text('Styled text', {
+  style: new TextStyle({
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#1f2937',
+    fontFamily: 'Inter',
+    letterSpacing: -0.5
+  })
+})
+```
+
+### BoxDecoration
+
+Defines container decoration.
+
+```javascript
+Container({
+  decoration: new BoxDecoration({
+    color: '#ffffff',
+    borderRadius: BorderRadius.circular(12),
+    boxShadow: [{
+      color: 'rgba(0, 0, 0, 0.1)',
+      blurRadius: 10,
+      offset: { x: 0, y: 4 }
+    }],
+    gradient: {
+      type: 'linear',
+      colors: ['#3b82f6', '#8b5cf6'],
+      begin: { x: 0, y: 0 },
+      end: { x: 1, y: 1 }
+    }
+  })
+})
+```
+
+## Next Steps
+
+Now that you understand Flitter basics, dive deeper into the [Widget System](./02.widget-system.mdx).
+
+See how this Flitter knowledge applies to chart creation in the [Chart Guide](../03.chart-guide/01.bar-chart.mdx).

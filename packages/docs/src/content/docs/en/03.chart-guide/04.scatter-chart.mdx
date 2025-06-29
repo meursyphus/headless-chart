@@ -1,0 +1,504 @@
+---
+nav_group: "Chart Guide"
+nav_order: 4
+title: "Scatter Chart"
+description: "Guide to creating and customizing scatter charts"
+---
+
+# Scatter Chart
+
+Scatter charts are optimized for visualizing relationships between two variables. By displaying data points on an X-Y coordinate plane, they effectively show correlations, distributions, and patterns.
+
+## Interface
+
+### ScatterChart Props
+
+```typescript
+interface ScatterChartProps {
+  // Required properties
+  data: ScatterChartData;
+  
+  // Optional properties
+  custom?: Partial<ScatterChartCustom>;
+  title?: string;
+  getScale?: (data: ScatterChartData) => ScatterChartScale;
+}
+```
+
+### Data Structure
+
+```typescript
+type ScatterChartData = {
+  datasets: {
+    legend: string;     // Dataset name
+    data: {
+      x: number;       // X-axis value
+      y: number;       // Y-axis value
+      label: string;   // Data point label
+    }[];
+  }[];
+};
+
+type ScatterChartScale = {
+  x: {
+    min: number;
+    max: number;
+    step: number;
+  };
+  y: {
+    min: number;
+    max: number;
+    step: number;
+  };
+};
+```
+
+## Basic Usage
+
+```javascript
+import Widget from '@meursyphus/flitter-react';
+import { ScatterChart } from '@meursyphus/headless-chart';
+
+const data = {
+  datasets: [{
+    legend: '2024',
+    data: [
+      { x: 10, y: 20, label: 'New York' },
+      { x: 15, y: 35, label: 'Los Angeles' },
+      { x: 25, y: 30, label: 'Chicago' },
+      { x: 30, y: 45, label: 'Houston' },
+      { x: 40, y: 55, label: 'Phoenix' }
+    ]
+  }]
+};
+
+function BasicScatterChart() {
+  return (
+    <Widget 
+      width="600px" 
+      height="400px" 
+      widget={ScatterChart({ data })} 
+    />
+  );
+}
+```
+
+## Chart Components
+
+Scatter Chart consists of the following hierarchical structure:
+
+```
+ScatterChart
+└── Layout (overall layout)
+    ├── Title (chart title)
+    ├── Legend (legend)
+    └── Plot (plot area)
+        ├── XAxis (X-axis)
+        ├── YAxis (Y-axis)
+        ├── Grid (grid)
+        └── Series (data series)
+            └── Scatter (individual data point)
+```
+
+## Customizable Elements
+
+You can customize 18 components through the `custom` prop:
+
+### 1. Layout Elements
+
+#### layout, title, legend
+Can be customized in the same way as other charts.
+
+### 2. Data Visualization Elements
+
+#### series
+Container for all data points.
+
+```javascript
+custom: {
+  series: ({ points, scale }) => {
+    return Stack({
+      children: points.map(point => 
+        Positioned({
+          left: calculateX(point.x, scale.x),
+          top: calculateY(point.y, scale.y),
+          child: createScatterPoint(point)
+        })
+      )
+    });
+  }
+}
+```
+
+#### scatter
+Individual data point element. This is the most commonly customized element.
+
+```javascript
+custom: {
+  scatter: ({ label, legend, index }) => {
+    const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444'];
+    const color = colors[index % colors.length];
+    
+    return Container({
+      width: 10,
+      height: 10,
+      decoration: new BoxDecoration({
+        color: color,
+        shape: 'circle',
+        border: Border.all({ color: '#ffffff', width: 2 })
+      })
+    });
+  }
+}
+```
+
+### 3. Axis and Grid Elements
+
+#### xAxis, yAxis
+Scatter Chart uses numerical axes for both X and Y.
+
+```javascript
+custom: {
+  xAxisLabel: ({ name }) => {
+    return Text(formatNumber(name), {
+      style: new TextStyle({
+        fontSize: 11,
+        color: '#6b7280'
+      })
+    });
+  },
+  
+  yAxisLabel: ({ name }) => {
+    return Text(formatNumber(name), {
+      style: new TextStyle({
+        fontSize: 11,
+        color: '#6b7280'
+      })
+    });
+  }
+}
+```
+
+## Real-World Usage Examples
+
+### 1. Data Points with Different Shapes
+
+```javascript
+import { CustomPaint, Path, Rect } from '@meursyphus/flitter';
+
+const shapeScatterChart = ScatterChart({
+  data,
+  custom: {
+    scatter: ({ index }) => {
+      const shapes = ['circle', 'square', 'triangle', 'star'];
+      const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444'];
+      
+      const shape = shapes[index % shapes.length];
+      const color = colors[index % colors.length];
+      
+      return CustomPaint({
+        size: { width: 12, height: 12 },
+        painter: {
+          svg: {
+            createDefaultSvgEl: (context) => ({
+              shape: context.createSvgEl("path")
+            }),
+            paint: ({ shape: shapeEl }, { width, height }) => {
+              const path = createShapePath(shape, width);
+              shapeEl.setAttribute("fill", color);
+              shapeEl.setAttribute("stroke", '#ffffff');
+              shapeEl.setAttribute("stroke-width", "2");
+              shapeEl.setAttribute("d", path.getD());
+            }
+          }
+        }
+      });
+    }
+  }
+});
+
+function createShapePath(shape, size) {
+  const path = new Path();
+  const halfSize = size / 2;
+  
+  switch (shape) {
+    case 'circle':
+      path.addOval(Rect.fromCircle({ 
+        center: { x: halfSize, y: halfSize }, 
+        radius: halfSize 
+      }));
+      break;
+      
+    case 'square':
+      path.addRect(Rect.fromLTWH({ 
+        left: 0, top: 0, 
+        width: size, height: size 
+      }));
+      break;
+      
+    case 'triangle':
+      path.moveTo({ x: halfSize, y: 0 });
+      path.lineTo({ x: size, y: size });
+      path.lineTo({ x: 0, y: size });
+      path.close();
+      break;
+      
+    case 'star':
+      const outerRadius = halfSize;
+      const innerRadius = halfSize * 0.4;
+      for (let i = 0; i < 10; i++) {
+        const radius = i % 2 === 0 ? outerRadius : innerRadius;
+        const angle = (i * Math.PI) / 5;
+        const x = halfSize + radius * Math.sin(angle);
+        const y = halfSize - radius * Math.cos(angle);
+        if (i === 0) {
+          path.moveTo({ x, y });
+        } else {
+          path.lineTo({ x, y });
+        }
+      }
+      path.close();
+      break;
+  }
+  
+  return path;
+}
+```
+
+### 2. Bubble Chart Style (with Size)
+
+```javascript
+const bubbleChart = ScatterChart({
+  data: {
+    datasets: [{
+      legend: 'City Data',
+      data: [
+        { x: 10, y: 20, label: 'New York', size: 100 },
+        { x: 15, y: 35, label: 'Los Angeles', size: 60 },
+        { x: 25, y: 30, label: 'Chicago', size: 40 },
+        { x: 30, y: 45, label: 'Houston', size: 55 },
+        { x: 40, y: 55, label: 'Phoenix', size: 35 }
+      ]
+    }]
+  },
+  custom: {
+    scatter: ({ label, index }, context) => {
+      const data = context.data.datasets[0].data.find(d => d.label === label);
+      const size = Math.sqrt(data.size) * 2; // Size scaling
+      
+      return Container({
+        width: size,
+        height: size,
+        decoration: new BoxDecoration({
+          color: 'rgba(59, 130, 246, 0.6)',
+          shape: 'circle',
+          border: Border.all({ 
+            color: '#3b82f6', 
+            width: 2 
+          })
+        })
+      });
+    }
+  }
+});
+```
+
+### 3. Data Point Labels
+
+```javascript
+import { Stack, Center, Text, TextStyle } from '@meursyphus/flitter';
+
+const labeledScatterChart = ScatterChart({
+  data,
+  custom: {
+    scatter: ({ label, index }) => {
+      const colors = ['#3b82f6', '#10b981', '#f59e0b'];
+      const color = colors[index % colors.length];
+      
+      return Stack({
+        clipBehavior: 'none',
+        children: [
+          // Data point
+          Container({
+            width: 10,
+            height: 10,
+            decoration: new BoxDecoration({
+              color: color,
+              shape: 'circle'
+            })
+          }),
+          // Label
+          Positioned({
+            top: -20,
+            left: -20,
+            right: -20,
+            child: Center({
+              child: Container({
+                padding: EdgeInsets.symmetric({ horizontal: 6, vertical: 2 }),
+                decoration: new BoxDecoration({
+                  color: '#1f2937',
+                  borderRadius: BorderRadius.circular(4)
+                }),
+                child: Text(label, {
+                  style: new TextStyle({
+                    fontSize: 10,
+                    color: '#ffffff'
+                  })
+                })
+              })
+            })
+          })
+        ]
+      });
+    }
+  }
+});
+```
+
+### 4. Scatter Plot with Regression Line
+
+```javascript
+const regressionScatterChart = ScatterChart({
+  data,
+  custom: {
+    series: ({ points, scale }) => {
+      // Calculate regression line
+      const regression = calculateLinearRegression(points);
+      
+      return Stack({
+        children: [
+          // Regression line
+          CustomPaint({
+            painter: {
+              svg: {
+                createDefaultSvgEl: (context) => ({
+                  line: context.createSvgEl("line")
+                }),
+                paint: ({ line }, { width, height }) => {
+                  const x1 = 0;
+                  const y1 = calculateRegressionY(scale.x.min, regression);
+                  const x2 = width;
+                  const y2 = calculateRegressionY(scale.x.max, regression);
+                  
+                  line.setAttribute("x1", x1.toString());
+                  line.setAttribute("y1", ((1 - (y1 - scale.y.min) / (scale.y.max - scale.y.min)) * height).toString());
+                  line.setAttribute("x2", x2.toString());
+                  line.setAttribute("y2", ((1 - (y2 - scale.y.min) / (scale.y.max - scale.y.min)) * height).toString());
+                  line.setAttribute("stroke", "#ef4444");
+                  line.setAttribute("stroke-width", "2");
+                  line.setAttribute("stroke-dasharray", "5 5");
+                }
+              }
+            }
+          }),
+          // Data points
+          ...points.map(point => 
+            Positioned({
+              left: calculateX(point.x, scale.x),
+              top: calculateY(point.y, scale.y),
+              child: createScatterPoint(point)
+            })
+          )
+        ]
+      });
+    }
+  }
+});
+
+function calculateLinearRegression(points) {
+  const n = points.length;
+  const sumX = points.reduce((sum, p) => sum + p.x, 0);
+  const sumY = points.reduce((sum, p) => sum + p.y, 0);
+  const sumXY = points.reduce((sum, p) => sum + p.x * p.y, 0);
+  const sumX2 = points.reduce((sum, p) => sum + p.x * p.x, 0);
+  
+  const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+  const intercept = (sumY - slope * sumX) / n;
+  
+  return { slope, intercept };
+}
+```
+
+## Adding Animation
+
+```javascript
+import { StatefulWidget, State, AnimationController, Animation, Transform } from '@meursyphus/flitter';
+
+class AnimatedScatter extends StatefulWidget {
+  constructor({ label, color, shape }) {
+    super();
+    this.label = label;
+    this.color = color;
+    this.shape = shape;
+  }
+
+  createState() {
+    return new AnimatedScatterState();
+  }
+}
+
+class AnimatedScatterState extends State {
+  initState() {
+    super.initState();
+    this.controller = new AnimationController({
+      duration: { milliseconds: 500 }
+    });
+    this.scaleAnimation = new Animation({
+      controller: this.controller,
+      value: Tween({ 
+        begin: 0, 
+        end: 1 
+      }).chain(
+        CurveTween({ curve: Curves.elasticOut })
+      )
+    });
+    
+    // Delayed animation start
+    setTimeout(() => {
+      this.controller.forward();
+    }, Math.random() * 300);
+  }
+
+  build() {
+    return AnimatedBuilder({
+      animation: this.scaleAnimation,
+      builder: () => {
+        return Transform.scale({
+          scale: this.scaleAnimation.value,
+          child: Container({
+            width: 12,
+            height: 12,
+            decoration: new BoxDecoration({
+              color: this.widget.color,
+              shape: 'circle',
+              boxShadow: [{
+                color: 'rgba(0, 0, 0, 0.2)',
+                blurRadius: 4,
+                offset: { x: 0, y: 2 }
+              }]
+            })
+          })
+        });
+      }
+    });
+  }
+
+  dispose() {
+    this.controller.dispose();
+    super.dispose();
+  }
+}
+```
+
+## Performance Optimization Tips
+
+1. **Data Clustering**: Cluster many data points for display
+2. **Virtualization**: Render only points in the visible area
+3. **Simplification**: Use simple circles or squares instead of complex shapes
+4. **Canvas Rendering**: Canvas is more efficient than SVG for many points
+
+## Next Steps
+
+- For more examples, check out the [demo page](/charts/scatter)
+- For proportional data, see [Pie Chart](./05.pie-chart.mdx)
+- For multi-dimensional data, see [Heatmap](./06.heatmap-chart.mdx)
