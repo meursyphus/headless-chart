@@ -7,24 +7,53 @@ description: "히트맵 차트 생성 및 커스터마이징 가이드"
 
 # Heatmap Chart
 
-히트맵은 2차원 데이터의 값을 색상으로 표현하는 차트입니다. 패턴 발견, 상관관계 분석, 시계열 패턴 등을 시각화하는데 효과적입니다.
+히트맵 차트는 2차원 데이터를 색상의 강도로 표현하는 차트입니다. 행렬 형태의 데이터에서 패턴, 상관관계, 시간대별 변화 등을 시각적으로 파악하는데 최적화되어 있습니다.
+
+## 인터페이스
+
+### HeatmapChart Props
+
+```typescript
+interface HeatmapChartProps {
+  // 필수 속성
+  data: HeatmapData;
+  
+  // 선택 속성
+  custom?: Partial<HeatmapCustom>;
+  title?: string;
+  getScale?: (data: HeatmapData) => HeatmapScale;
+}
+```
+
+### 데이터 구조
+
+```typescript
+type HeatmapData = {
+  xLabels: string[];     // X축 라벨 배열
+  yLabels: string[];     // Y축 라벨 배열
+  values: number[][];    // 2차원 값 배열 [yIndex][xIndex]
+};
+
+type HeatmapScale = {
+  min: number;           // 최소값
+  max: number;           // 최대값
+};
+```
 
 ## 기본 사용법
-
-### 간단한 예제
 
 ```javascript
 import Widget from '@meursyphus/flitter-react';
 import { HeatmapChart } from '@meursyphus/headless-chart';
 
 const data = {
-  xLabels: ['월', '화', '수', '목', '금'],
-  yLabels: ['오전', '점심', '오후', '저녁'],
+  xLabels: ['1월', '2월', '3월', '4월', '5월', '6월'],
+  yLabels: ['서울', '부산', '대구', '인천'],
   values: [
-    [10, 20, 30, 25, 15],  // 오전
-    [15, 25, 35, 30, 20],  // 점심
-    [20, 30, 40, 35, 25],  // 오후
-    [12, 22, 32, 27, 17]   // 저녁
+    [5, 8, 12, 15, 20, 22],    // 서울
+    [8, 10, 14, 18, 23, 25],   // 부산
+    [6, 9, 13, 17, 21, 24],    // 대구
+    [4, 7, 11, 14, 19, 21]     // 인천
   ]
 };
 
@@ -39,74 +68,306 @@ function BasicHeatmapChart() {
 }
 ```
 
-### 대규모 데이터
+## 차트 구성 요소
+
+Heatmap Chart는 다음과 같은 계층 구조로 구성됩니다:
+
+```
+HeatmapChart
+└── Layout (전체 레이아웃)
+    ├── Title (차트 제목)
+    └── Plot (플롯 영역)
+        ├── XAxis (X축)
+        ├── YAxis (Y축)
+        └── Heatmap (히트맵 영역)
+            └── Segment (개별 셀)
+```
+
+## 커스터마이징 가능한 요소
+
+`custom` prop을 통해 13개의 구성 요소를 커스터마이징할 수 있습니다:
+
+### 1. 레이아웃 요소
+
+#### layout
+차트의 전체 레이아웃을 정의합니다.
 
 ```javascript
-const largeData = {
-  xLabels: Array.from({ length: 24 }, (_, i) => `${i}시`),
-  yLabels: Array.from({ length: 7 }, (_, i) => ['일', '월', '화', '수', '목', '금', '토'][i]),
-  values: Array.from({ length: 7 }, () => 
-    Array.from({ length: 24 }, () => Math.random() * 100)
-  )
-};
-```
-
-## API 참조
-
-### Props 인터페이스
-
-```typescript
-interface HeatmapChartProps {
-  // 필수
-  data: HeatmapData;
-  
-  // 선택
-  custom?: Partial<HeatmapCustom>;
-  title?: string;
-  getScale?: (data: HeatmapData) => HeatmapScale;
+custom: {
+  layout: ({ title, plot }) => {
+    return Container({
+      padding: EdgeInsets.all(20),
+      child: Column({
+        children: [
+          title,
+          SizedBox({ height: 20 }),
+          Expanded({ child: plot })
+        ]
+      })
+    });
+  }
 }
-
-// 데이터 타입
-type HeatmapData = {
-  xLabels: string[];
-  yLabels: string[];
-  values: number[][]; // 2D 배열 [yIndex][xIndex]
-};
-
-// 스케일 타입
-type HeatmapScale = {
-  min: number;
-  max: number;
-};
 ```
 
-## 셀 스타일링
+#### title
+차트 제목을 커스터마이징합니다.
 
-### 1. 색상 스키마
+```javascript
+custom: {
+  title: ({ name }) => {
+    return Text(name, {
+      style: new TextStyle({
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#1f2937'
+      })
+    });
+  }
+}
+```
+
+#### plot
+히트맵과 축을 포함하는 플롯 영역입니다.
+
+```javascript
+custom: {
+  plot: ({ xAxis, yAxis, heatmap }) => {
+    return Container({
+      child: Column({
+        children: [
+          Expanded({
+            child: Row({
+              children: [
+                yAxis,
+                SizedBox({ width: 10 }),
+                Expanded({ child: heatmap })
+              ]
+            })
+          }),
+          SizedBox({ height: 10 }),
+          xAxis
+        ]
+      })
+    });
+  }
+}
+```
+
+### 2. 데이터 시각화 요소
+
+#### heatmap
+모든 세그먼트를 담는 히트맵 컨테이너입니다.
+
+```javascript
+custom: {
+  heatmap: ({ segments }) => {
+    return Container({
+      decoration: new BoxDecoration({
+        border: Border.all({ color: '#e5e7eb', width: 1 })
+      }),
+      child: Column({
+        children: segments.map(row => 
+          Expanded({
+            child: Row({
+              children: row.map(segment => 
+                Expanded({ child: segment })
+              )
+            })
+          })
+        )
+      })
+    });
+  }
+}
+```
+
+#### segment
+개별 히트맵 셀입니다. 가장 많이 커스터마이징되는 요소입니다.
+
+```javascript
+custom: {
+  segment: ({ value, xIndex, yIndex }, { scale }) => {
+    // 값을 0-1 범위로 정규화
+    const normalizedValue = (value - scale.min) / (scale.max - scale.min);
+    
+    return Container({
+      margin: EdgeInsets.all(1),
+      decoration: new BoxDecoration({
+        color: `rgba(59, 130, 246, ${normalizedValue})`,
+        borderRadius: BorderRadius.circular(4)
+      })
+    });
+  }
+}
+```
+
+### 3. 축 요소
+
+#### xAxis, yAxis
+X축과 Y축의 전체 구조를 정의합니다.
+
+```javascript
+custom: {
+  xAxis: ({ line, labels, tick }) => {
+    return Column({
+      children: [
+        line,
+        SizedBox({ height: 5 }),
+        Row({
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: labels
+        })
+      ]
+    });
+  },
+  
+  yAxis: ({ line, labels, tick }) => {
+    return Row({
+      children: [
+        Column({
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: labels
+        }),
+        SizedBox({ width: 5 }),
+        line
+      ]
+    });
+  }
+}
+```
+
+#### xAxisLabel, yAxisLabel
+축 라벨을 커스터마이징합니다.
+
+```javascript
+custom: {
+  xAxisLabel: ({ name, index }) => {
+    return Container({
+      padding: EdgeInsets.symmetric({ horizontal: 4, vertical: 2 }),
+      child: Text(name, {
+        style: new TextStyle({
+          fontSize: 12,
+          color: '#6b7280'
+        })
+      })
+    });
+  },
+  
+  yAxisLabel: ({ name, index }) => {
+    return Container({
+      padding: EdgeInsets.symmetric({ horizontal: 4, vertical: 2 }),
+      child: Text(name, {
+        style: new TextStyle({
+          fontSize: 12,
+          color: '#6b7280'
+        })
+      })
+    });
+  }
+}
+```
+
+#### xAxisLine, yAxisLine, xAxisTick, yAxisTick
+축 라인과 틱 마크를 정의합니다.
+
+```javascript
+custom: {
+  xAxisLine: () => Container({ height: 1, color: '#e5e7eb' }),
+  yAxisLine: () => Container({ width: 1, color: '#e5e7eb' }),
+  xAxisTick: () => Container({ width: 1, height: 5, color: '#9ca3af' }),
+  yAxisTick: () => Container({ width: 5, height: 1, color: '#9ca3af' })
+}
+```
+
+## 실제 사용 예제
+
+### 1. 색상 스키마 커스터마이징
 
 ```javascript
 import { Container, BoxDecoration } from '@meursyphus/flitter';
 
-const chart = HeatmapChart({
+const colorSchemeHeatmap = HeatmapChart({
   data,
   custom: {
-    segment: ({ value, xIndex, yIndex }) => {
-      // 값에 따른 색상 계산
+    segment: ({ value, xIndex, yIndex }, { scale }) => {
       const normalizedValue = (value - scale.min) / (scale.max - scale.min);
       
-      // 커스텀 색상 스키마
-      const getColor = (v) => {
-        if (v < 0.25) return '#e0f2fe'; // 매우 낮음
-        if (v < 0.5) return '#7dd3fc';  // 낮음
-        if (v < 0.75) return '#0284c7'; // 보통
-        return '#075985';               // 높음
+      // 온도 색상 스키마 (파란색 → 빨간색)
+      const getTemperatureColor = (value) => {
+        const r = Math.round(255 * value);
+        const b = Math.round(255 * (1 - value));
+        const g = Math.round(128 * (1 - Math.abs(value - 0.5) * 2));
+        return `rgb(${r}, ${g}, ${b})`;
       };
       
       return Container({
         decoration: new BoxDecoration({
-          color: getColor(normalizedValue),
+          color: getTemperatureColor(normalizedValue),
+          borderRadius: BorderRadius.circular(2)
+        })
+      });
+    }
+  }
+});
+```
+
+### 2. 값이 표시되는 히트맵
+
+```javascript
+import { Center, Text, TextStyle } from '@meursyphus/flitter';
+
+const valueLabeledHeatmap = HeatmapChart({
+  data,
+  custom: {
+    segment: ({ value, xIndex, yIndex }, { scale }) => {
+      const normalizedValue = (value - scale.min) / (scale.max - scale.min);
+      const backgroundColor = `rgba(99, 102, 241, ${normalizedValue})`;
+      const textColor = normalizedValue > 0.6 ? '#ffffff' : '#1f2937';
+      
+      return Container({
+        decoration: new BoxDecoration({
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(4)
+        }),
+        child: Center({
+          child: Text(value.toFixed(1), {
+            style: new TextStyle({
+              fontSize: 11,
+              fontWeight: 'bold',
+              color: textColor
+            })
+          })
+        })
+      });
+    }
+  }
+});
+```
+
+### 3. 단계별 색상 히트맵
+
+```javascript
+const steppedColorHeatmap = HeatmapChart({
+  data,
+  custom: {
+    segment: ({ value }, { scale }) => {
+      const normalizedValue = (value - scale.min) / (scale.max - scale.min);
+      
+      // 5단계 색상 구분
+      const getStepColor = (v) => {
+        if (v < 0.2) return '#dbeafe';  // 매우 낮음
+        if (v < 0.4) return '#93c5fd';  // 낮음
+        if (v < 0.6) return '#3b82f6';  // 중간
+        if (v < 0.8) return '#1d4ed8';  // 높음
+        return '#1e3a8a';               // 매우 높음
+      };
+      
+      return Container({
+        margin: EdgeInsets.all(0.5),
+        decoration: new BoxDecoration({
+          color: getStepColor(normalizedValue),
           border: Border.all({ 
-            color: 'rgba(255, 255, 255, 0.2)', 
+            color: 'rgba(255, 255, 255, 0.3)', 
             width: 1 
           })
         })
@@ -116,463 +377,29 @@ const chart = HeatmapChart({
 });
 ```
 
-### 2. 그라데이션 색상
+### 4. 원형 히트맵 셀
 
 ```javascript
-const gradientHeatmap = ({ value, xIndex, yIndex }) => {
-  const normalizedValue = (value - scale.min) / (scale.max - scale.min);
-  
-  // HSL 색상 스페이스 활용
-  const hue = 240 - normalizedValue * 240; // 파란색(240)에서 빨간색(0)으로
-  const saturation = 50 + normalizedValue * 50;
-  const lightness = 90 - normalizedValue * 40;
-  
-  return Container({
-    decoration: new BoxDecoration({
-      color: `hsl(${hue}, ${saturation}%, ${lightness}%)`,
-      borderRadius: BorderRadius.circular(4)
-    })
-  });
-};
-```
-
-### 3. 값 표시 셀
-
-```javascript
-const labeledSegment = ({ value, xIndex, yIndex }) => {
-  const normalizedValue = (value - scale.min) / (scale.max - scale.min);
-  const backgroundColor = `rgba(59, 130, 246, ${normalizedValue})`;
-  const textColor = normalizedValue > 0.6 ? '#ffffff' : '#1f2937';
-  
-  return Container({
-    decoration: new BoxDecoration({
-      color: backgroundColor,
-      borderRadius: BorderRadius.circular(2)
-    }),
-    child: Center({
-      child: Text(value.toFixed(0), {
-        style: new TextStyle({
-          fontSize: 12,
-          fontWeight: normalizedValue > 0.7 ? 'bold' : 'normal',
-          color: textColor
-        })
-      })
-    })
-  });
-};
-```
-
-### 4. 패턴 오버레이
-
-```javascript
-const patternSegment = ({ value, xIndex, yIndex }) => {
-  const normalizedValue = (value - scale.min) / (scale.max - scale.min);
-  const baseColor = `rgba(99, 102, 241, ${normalizedValue})`;
-  
-  return Stack({
-    children: [
-      // 베이스 색상
-      Container({
-        decoration: new BoxDecoration({
-          color: baseColor
-        })
-      }),
-      // 높은 값에 패턴 추가
-      if (normalizedValue > 0.8)
-        CustomPaint({
-          painter: {
-            paint: (canvas, size) => {
-              const paint = new Paint({
-                color: 'rgba(255, 255, 255, 0.3)',
-                strokeWidth: 1,
-                style: PaintingStyle.stroke
-              });
-              
-              // 대각선 패턴
-              for (let i = 0; i < size.width + size.height; i += 5) {
-                canvas.drawLine(
-                  { x: i, y: 0 },
-                  { x: 0, y: i },
-                  paint
-                );
-              }
-            }
-          }
-        })
-    ]
-  });
-};
-```
-
-## 인터랙티브 기능
-
-### 1. 호버 효과
-
-```javascript
-import { MouseRegion } from '@meursyphus/flitter';
-import { useState } from 'react';
-
-function InteractiveHeatmap() {
-  const [hoveredCell, setHoveredCell] = useState(null);
-  
-  const chart = HeatmapChart({
-    data,
-    custom: {
-      segment: ({ value, xIndex, yIndex }) => {
-        const isHovered = hoveredCell?.x === xIndex && hoveredCell?.y === yIndex;
-        const normalizedValue = (value - scale.min) / (scale.max - scale.min);
-        
-        return MouseRegion({
-          onEnter: () => setHoveredCell({ x: xIndex, y: yIndex, value }),
-          onExit: () => setHoveredCell(null),
-          cursor: 'pointer',
-          child: AnimatedContainer({
-            duration: Duration({ milliseconds: 200 }),
-            decoration: new BoxDecoration({
-              color: `rgba(59, 130, 246, ${normalizedValue})`,
-              borderRadius: BorderRadius.circular(isHovered ? 8 : 2),
-              boxShadow: isHovered ? [{
-                color: 'rgba(0, 0, 0, 0.2)',
-                blurRadius: 8,
-                offset: { x: 0, y: 4 }
-              }] : null
-            }),
-            transform: isHovered ? 
-              Matrix4.scale(1.1, 1.1, 1) : 
-              Matrix4.identity()
-          })
-        });
-      }
-    }
-  });
-  
-  return (
-    <>
-      <Widget width="100%" height="400px" widget={chart} />
-      {hoveredCell && (
-        <div>
-          셀 정보: [{data.xLabels[hoveredCell.x]}, {data.yLabels[hoveredCell.y]}] = {hoveredCell.value}
-        </div>
-      )}
-    </>
-  );
-}
-```
-
-### 2. 클릭 선택
-
-```javascript
-function SelectableHeatmap() {
-  const [selectedCells, setSelectedCells] = useState(new Set());
-  
-  const chart = HeatmapChart({
-    data,
-    custom: {
-      segment: ({ value, xIndex, yIndex }) => {
-        const key = `${xIndex}-${yIndex}`;
-        const isSelected = selectedCells.has(key);
-        const normalizedValue = (value - scale.min) / (scale.max - scale.min);
-        
-        return GestureDetector({
-          onTap: () => {
-            const newSelected = new Set(selectedCells);
-            if (isSelected) {
-              newSelected.delete(key);
-            } else {
-              newSelected.add(key);
-            }
-            setSelectedCells(newSelected);
-          },
-          child: Container({
-            decoration: new BoxDecoration({
-              color: isSelected ? 
-                '#1e40af' : 
-                `rgba(59, 130, 246, ${normalizedValue})`,
-              border: Border.all({ 
-                color: isSelected ? '#fbbf24' : 'transparent', 
-                width: 3 
-              }),
-              borderRadius: BorderRadius.circular(4)
-            })
-          })
-        });
-      }
-    }
-  });
-  
-  return <Widget width="100%" height="400px" widget={chart} />;
-}
-```
-
-## 실전 예제
-
-### 1. 상관관계 매트릭스
-
-```javascript
-const correlationMatrix = HeatmapChart({
-  data: {
-    xLabels: ['변수1', '변수2', '변수3', '변수4', '변수5'],
-    yLabels: ['변수1', '변수2', '변수3', '변수4', '변수5'],
-    values: [
-      [1.00, 0.85, 0.30, -0.20, 0.15],
-      [0.85, 1.00, 0.45, -0.10, 0.25],
-      [0.30, 0.45, 1.00, 0.60, 0.40],
-      [-0.20, -0.10, 0.60, 1.00, 0.70],
-      [0.15, 0.25, 0.40, 0.70, 1.00]
-    ]
-  },
+const circularHeatmap = HeatmapChart({
+  data,
   custom: {
-    segment: ({ value, xIndex, yIndex }) => {
-      // 대각선은 항상 1
-      const isDiagonal = xIndex === yIndex;
+    segment: ({ value }, { scale }) => {
+      const normalizedValue = (value - scale.min) / (scale.max - scale.min);
+      const size = 10 + normalizedValue * 30; // 10-40 크기 범위
       
-      // 상관계수에 따른 색상
-      const getColor = (corr) => {
-        if (corr > 0) {
-          return `rgba(59, 130, 246, ${Math.abs(corr)})`; // 양의 상관관계 - 파란색
-        } else {
-          return `rgba(239, 68, 68, ${Math.abs(corr)})`; // 음의 상관관계 - 빨간색
-        }
-      };
-      
-      return Container({
-        decoration: new BoxDecoration({
-          color: isDiagonal ? '#e5e7eb' : getColor(value),
-          borderRadius: BorderRadius.circular(4)
-        }),
-        child: Center({
-          child: Text(value.toFixed(2), {
-            style: new TextStyle({
-              fontSize: 11,
-              fontWeight: Math.abs(value) > 0.7 ? 'bold' : 'normal',
-              color: Math.abs(value) > 0.5 ? '#ffffff' : '#374151'
-            })
-          })
-        })
-      });
-    }
-  }
-});
-```
-
-### 2. 시간대별 활동 히트맵
-
-```javascript
-const activityHeatmap = HeatmapChart({
-  data: {
-    xLabels: Array.from({ length: 24 }, (_, i) => `${i}시`),
-    yLabels: ['일', '월', '화', '수', '목', '금', '토'],
-    values: weeklyActivityData
-  },
-  custom: {
-    segment: ({ value, xIndex, yIndex }) => {
-      const max = Math.max(...data.values.flat());
-      const intensity = value / max;
-      
-      // 시간대별 활동량에 따른 색상
-      const getActivityColor = (intensity) => {
-        if (intensity < 0.1) return '#f3f4f6'; // 매우 낮음
-        if (intensity < 0.3) return '#d1fae5'; // 낮음
-        if (intensity < 0.5) return '#6ee7b7'; // 보통
-        if (intensity < 0.7) return '#10b981'; // 높음
-        return '#059669'; // 매우 높음
-      };
-      
-      return Tooltip({
-        message: `${data.yLabels[yIndex]} ${data.xLabels[xIndex]}: ${value}회`,
+      return Center({
         child: Container({
+          width: size,
+          height: size,
           decoration: new BoxDecoration({
-            color: getActivityColor(intensity),
-            borderRadius: BorderRadius.circular(2)
-          }),
-          child: intensity > 0.7 ? 
-            Center({
-              child: Text('🔥', { style: new TextStyle({ fontSize: 16 }) })
-            }) : null
-        })
-      });
-    },
-    title: ({ name }) => {
-      return Column({
-        children: [
-          Text(name, {
-            style: new TextStyle({
-              fontSize: 18,
-              fontWeight: 'bold',
-              color: '#1f2937'
-            })
-          }),
-          SizedBox({ height: 4 }),
-          Text('주간 활동 패턴 분석', {
-            style: new TextStyle({
-              fontSize: 14,
-              color: '#6b7280'
-            })
+            shape: 'circle',
+            color: `rgba(239, 68, 68, ${normalizedValue})`,
+            boxShadow: [{
+              color: 'rgba(0, 0, 0, 0.1)',
+              blurRadius: 4,
+              offset: { x: 0, y: 2 }
+            }]
           })
-        ]
-      });
-    }
-  }
-});
-```
-
-### 3. 깃허브 스타일 기여도 차트
-
-```javascript
-const contributionChart = HeatmapChart({
-  data: generateYearContributionData(),
-  custom: {
-    segment: ({ value, xIndex, yIndex }) => {
-      // 깃허브 스타일 색상
-      const getContributionColor = (count) => {
-        if (count === 0) return '#ebedf0';
-        if (count < 5) return '#9be9a8';
-        if (count < 10) return '#40c463';
-        if (count < 20) return '#30a14e';
-        return '#216e39';
-      };
-      
-      const date = getDateFromIndex(xIndex, yIndex);
-      const isToday = isDateToday(date);
-      
-      return Container({
-        width: 11,
-        height: 11,
-        margin: EdgeInsets.all(2),
-        decoration: new BoxDecoration({
-          color: getContributionColor(value),
-          borderRadius: BorderRadius.circular(2),
-          border: isToday ? 
-            Border.all({ color: '#1f2937', width: 2 }) : null
-        })
-      });
-    },
-    layout: ({ title, plot }) => {
-      return Column({
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          title,
-          SizedBox({ height: 8 }),
-          Row({
-            children: [
-              // 월 라벨
-              Container({
-                width: 30,
-                child: Column({
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: ['월', '수', '금'].map(day => 
-                    Text(day, {
-                      style: new TextStyle({ fontSize: 10, color: '#6b7280' })
-                    })
-                  )
-                })
-              }),
-              // 히트맵
-              Expanded({ child: plot })
-            ]
-          }),
-          // 범례
-          Row({
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text('Less', { 
-                style: new TextStyle({ fontSize: 10, color: '#6b7280' }) 
-              }),
-              ...['#ebedf0', '#9be9a8', '#40c463', '#30a14e', '#216e39'].map(color =>
-                Container({
-                  width: 11,
-                  height: 11,
-                  margin: EdgeInsets.symmetric({ horizontal: 2 }),
-                  decoration: new BoxDecoration({
-                    color,
-                    borderRadius: BorderRadius.circular(2)
-                  })
-                })
-              ),
-              Text('More', { 
-                style: new TextStyle({ fontSize: 10, color: '#6b7280' }) 
-              })
-            ]
-          })
-        ]
-      });
-    }
-  }
-});
-```
-
-### 4. 성과 대시보드
-
-```javascript
-const performanceDashboard = HeatmapChart({
-  data: {
-    xLabels: quarters,
-    yLabels: departments,
-    values: performanceScores
-  },
-  custom: {
-    segment: ({ value, xIndex, yIndex }) => {
-      const score = value;
-      const target = 80; // 목표 점수
-      const achievement = score / target;
-      
-      // 성과에 따른 색상과 아이콘
-      const getPerformanceStyle = () => {
-        if (achievement >= 1.2) return { 
-          color: '#065f46', 
-          bgColor: '#10b981', 
-          icon: '🌟' 
-        };
-        if (achievement >= 1) return { 
-          color: '#1e40af', 
-          bgColor: '#3b82f6', 
-          icon: '✓' 
-        };
-        if (achievement >= 0.8) return { 
-          color: '#7c2d12', 
-          bgColor: '#fbbf24', 
-          icon: '!' 
-        };
-        return { 
-          color: '#991b1b', 
-          bgColor: '#ef4444', 
-          icon: '✗' 
-        };
-      };
-      
-      const style = getPerformanceStyle();
-      
-      return Container({
-        padding: EdgeInsets.all(8),
-        decoration: new BoxDecoration({
-          gradient: {
-            type: 'radial',
-            colors: [`${style.bgColor}40`, style.bgColor],
-            center: { x: 0.5, y: 0.5 },
-            radius: 1.5
-          },
-          borderRadius: BorderRadius.circular(8),
-          boxShadow: [{
-            color: `${style.bgColor}30`,
-            blurRadius: 4,
-            offset: { x: 0, y: 2 }
-          }]
-        }),
-        child: Column({
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(style.icon, { 
-              style: new TextStyle({ fontSize: 20 }) 
-            }),
-            SizedBox({ height: 4 }),
-            Text(`${score}%`, {
-              style: new TextStyle({
-                fontSize: 14,
-                fontWeight: 'bold',
-                color: style.color
-              })
-            })
-          ]
         })
       });
     }
@@ -580,167 +407,92 @@ const performanceDashboard = HeatmapChart({
 });
 ```
 
-## 고급 기능
-
-### 1. 애니메이션 전환
+## 애니메이션 추가하기
 
 ```javascript
-function AnimatedHeatmap() {
-  const [dataIndex, setDataIndex] = useState(0);
-  const datasets = [dataset1, dataset2, dataset3];
-  
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setDataIndex(prev => (prev + 1) % datasets.length);
-    }, 3000);
+import { StatefulWidget, State, AnimationController, Animation } from '@meursyphus/flitter';
+
+class AnimatedSegment extends StatefulWidget {
+  constructor({ value, scale }) {
+    super();
+    this.value = value;
+    this.scale = scale;
+  }
+
+  createState() {
+    return new AnimatedSegmentState();
+  }
+}
+
+class AnimatedSegmentState extends State {
+  initState() {
+    super.initState();
+    this.controller = new AnimationController({
+      duration: { milliseconds: 800 }
+    });
     
-    return () => clearInterval(timer);
-  }, []);
-  
-  const chart = HeatmapChart({
-    data: datasets[dataIndex],
-    custom: {
-      segment: ({ value, xIndex, yIndex }) => {
-        const normalizedValue = (value - scale.min) / (scale.max - scale.min);
+    const normalizedValue = (this.widget.value - this.widget.scale.min) / 
+                          (this.widget.scale.max - this.widget.scale.min);
+    
+    this.colorAnimation = new Animation({
+      controller: this.controller,
+      value: Tween({ 
+        begin: 0, 
+        end: normalizedValue 
+      }).chain(
+        CurveTween({ curve: Curves.easeInOut })
+      )
+    });
+    
+    // 랜덤 지연으로 순차적 애니메이션 효과
+    setTimeout(() => {
+      this.controller.forward();
+    }, Math.random() * 500);
+  }
+
+  build() {
+    return AnimatedBuilder({
+      animation: this.colorAnimation,
+      builder: () => {
+        const opacity = this.colorAnimation.value;
         
-        return AnimatedContainer({
-          duration: Duration({ milliseconds: 1000 }),
-          curve: Curves.easeInOut,
+        return Container({
+          margin: EdgeInsets.all(1),
           decoration: new BoxDecoration({
-            color: `rgba(99, 102, 241, ${normalizedValue})`,
+            color: `rgba(16, 185, 129, ${opacity})`,
             borderRadius: BorderRadius.circular(4)
           })
         });
       }
-    }
-  });
-  
-  return <Widget width="100%" height="400px" widget={chart} />;
+    });
+  }
+
+  dispose() {
+    this.controller.dispose();
+    super.dispose();
+  }
 }
-```
 
-### 2. 컨투어 라인 오버레이
-
-```javascript
-const contourHeatmap = HeatmapChart({
+// 사용 예제
+const animatedHeatmap = HeatmapChart({
   data,
   custom: {
-    heatmap: ({ segments }) => {
-      return Stack({
-        children: [
-          // 기본 히트맵 세그먼트
-          ...segments.flat(),
-          // 컨투어 라인 오버레이
-          CustomPaint({
-            painter: {
-              paint: (canvas, size) => {
-                const contours = calculateContourLines(data.values);
-                
-                contours.forEach((contour, level) => {
-                  const paint = new Paint({
-                    color: 'rgba(255, 255, 255, 0.5)',
-                    strokeWidth: 1.5,
-                    style: PaintingStyle.stroke
-                  });
-                  
-                  canvas.drawPath(contour.path, paint);
-                  
-                  // 컨투어 레벨 라벨
-                  if (level % 2 === 0) {
-                    contour.labelPositions.forEach(pos => {
-                      drawText(canvas, level.toString(), pos, {
-                        color: '#ffffff',
-                        fontSize: 10
-                      });
-                    });
-                  }
-                });
-              }
-            }
-          })
-        ]
-      });
+    segment: ({ value, xIndex, yIndex }, { scale }) => {
+      return new AnimatedSegment({ value, scale });
     }
   }
 });
 ```
 
-## 성능 최적화
+## 성능 최적화 팁
 
-### 대용량 데이터 처리
-
-```javascript
-// 가상화된 히트맵
-const virtualizedHeatmap = ({ visibleRange }) => {
-  return HeatmapChart({
-    data: {
-      xLabels: data.xLabels.slice(visibleRange.xStart, visibleRange.xEnd),
-      yLabels: data.yLabels.slice(visibleRange.yStart, visibleRange.yEnd),
-      values: data.values
-        .slice(visibleRange.yStart, visibleRange.yEnd)
-        .map(row => row.slice(visibleRange.xStart, visibleRange.xEnd))
-    },
-    custom: {
-      segment: ({ value }) => {
-        // 간단한 렌더링으로 성능 향상
-        const intensity = (value - scale.min) / (scale.max - scale.min);
-        return Container({
-          decoration: new BoxDecoration({
-            color: `rgba(59, 130, 246, ${intensity})`
-          })
-        });
-      }
-    }
-  });
-};
-```
-
-## 접근성
-
-### 색맹 친화적 팔레트
-
-```javascript
-const accessibleSegment = ({ value, xIndex, yIndex }) => {
-  const normalizedValue = (value - scale.min) / (scale.max - scale.min);
-  
-  // Viridis 색상 팔레트 (색맹 친화적)
-  const viridis = [
-    '#440154', '#482777', '#3f4a8a', '#31678e',
-    '#26838f', '#1f9d8a', '#6cce5a', '#b6de2b', '#fee825'
-  ];
-  
-  const colorIndex = Math.floor(normalizedValue * (viridis.length - 1));
-  const label = `${data.xLabels[xIndex]}, ${data.yLabels[yIndex]}: ${value}`;
-  
-  return Semantics({
-    label,
-    value: value.toString(),
-    child: Container({
-      decoration: new BoxDecoration({
-        color: viridis[colorIndex],
-        borderRadius: BorderRadius.circular(2)
-      }),
-      child: Center({
-        child: Text(value.toFixed(0), {
-          style: new TextStyle({
-            fontSize: 10,
-            color: normalizedValue > 0.5 ? '#ffffff' : '#1f2937'
-          })
-        })
-      })
-    })
-  });
-};
-```
-
-## 팁과 모범 사례
-
-1. **색상 스케일**: 데이터 특성에 맞는 색상 스키마 선택 (순차적, 발산형, 정성적)
-2. **정규화**: 극단값이 전체 시각화를 지배하지 않도록 적절한 정규화
-3. **레이블**: 많은 셀이 있을 때는 호버나 클릭으로 상세 정보 표시
-4. **셀 크기**: 데이터 양에 따라 적절한 셀 크기 조정
-5. **범례**: 색상이 나타내는 값의 범위를 명확히 표시
+1. **대규모 데이터셋**: 많은 셀이 있을 때는 복잡한 장식보다 단순한 색상만 사용
+2. **가상화**: 보이는 영역의 셀만 렌더링하는 가상화 기법 적용
+3. **메모이제이션**: 색상 계산 등 반복적인 연산은 캐싱
+4. **단순한 렌더링**: SVG보다는 단순한 Container 사용
 
 ## 다음 단계
 
-Heatmap Chart를 마스터했다면, 고급 커스터마이징 기법이나 다른 차트와의 조합을 시도해보세요.
+- 더 많은 예제는 [데모 페이지](/charts/heatmap)를 참고하세요
+- 상관관계를 표시하려면 여러 히트맵을 조합해보세요
+- 시계열 데이터는 애니메이션과 함께 사용하면 효과적입니다

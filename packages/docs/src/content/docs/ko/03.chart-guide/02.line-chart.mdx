@@ -7,11 +7,43 @@ description: "라인 차트 생성 및 커스터마이징 가이드"
 
 # Line Chart
 
-라인 차트는 시간에 따른 데이터의 변화를 표현하는데 최적화된 차트입니다. 추세, 패턴, 연속성을 시각적으로 보여줍니다.
+라인 차트는 시간에 따른 데이터의 변화를 표현하는데 최적화된 차트입니다. 추세, 패턴, 연속성을 시각적으로 보여주며, Headless Chart의 Line Chart는 완전한 커스터마이징이 가능합니다.
+
+## 인터페이스
+
+### LineChart Props
+
+```typescript
+interface LineChartProps {
+  // 필수 속성
+  data: LineChartData;
+  
+  // 선택 속성
+  custom?: Partial<LineChartCustom>;
+  title?: string;
+  getScale?: (data: LineChartData) => LineChartScale;
+}
+```
+
+### 데이터 구조
+
+```typescript
+type LineChartData = {
+  labels: string[];     // X축 레이블 (시간/카테고리)
+  datasets: {
+    legend: string;     // 데이터셋 이름
+    values: number[];   // Y축 값
+  }[];
+};
+
+type LineChartScale = {
+  min: number;
+  max: number;
+  step: number;
+};
+```
 
 ## 기본 사용법
-
-### 간단한 예제
 
 ```javascript
 import Widget from '@meursyphus/flitter-react';
@@ -36,82 +68,172 @@ function BasicLineChart() {
 }
 ```
 
-### 다중 라인
+## 차트 구성 요소
 
-여러 데이터를 비교할 때:
+Line Chart는 다음과 같은 계층 구조로 구성됩니다:
 
-```javascript
-const data = {
-  labels: ['월', '화', '수', '목', '금', '토', '일'],
-  datasets: [
-    {
-      legend: '웹사이트',
-      values: [3000, 3200, 2800, 3500, 4000, 4200, 3800]
-    },
-    {
-      legend: '모바일 앱',
-      values: [1500, 1700, 1600, 2000, 2300, 2500, 2200]
-    },
-    {
-      legend: 'API',
-      values: [500, 600, 550, 700, 800, 850, 750]
-    }
-  ]
-};
+```
+LineChart
+└── Layout (전체 레이아웃)
+    ├── Title (차트 제목)
+    ├── Legend (범례)
+    └── Plot (플롯 영역)
+        ├── XAxis (X축)
+        ├── YAxis (Y축)
+        ├── Grid (그리드)
+        └── Series (데이터 시리즈)
+            └── Line (개별 라인)
 ```
 
-## API 참조
+## 커스터마이징 가능한 요소
 
-### Props 인터페이스
+`custom` prop을 통해 18개의 구성 요소를 커스터마이징할 수 있습니다:
 
-```typescript
-interface LineChartProps {
-  // 필수
-  data: LineChartData;
-  
-  // 선택
-  custom?: Partial<LineChartCustom>;
-  title?: string;
-  getScale?: (data: LineChartData) => LineChartScale;
+### 1. 레이아웃 요소
+
+#### layout
+전체 차트 레이아웃을 담당합니다. 제목, 범례, 플롯 영역의 배치를 제어합니다.
+
+```javascript
+custom: {
+  layout: ({ title, legends, plot }) => {
+    return Container({
+      padding: EdgeInsets.all(20),
+      child: Column({
+        children: [
+          Row({
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [title, Row({ children: legends })]
+          }),
+          SizedBox({ height: 16 }),
+          Expanded({ child: plot })
+        ]
+      })
+    });
+  }
 }
-
-// 커스텀 컴포넌트 타입
-type LineChartCustom = {
-  line: ({ values, legend, index }) => Widget;
-  series: ({ lines }) => Widget;
-  // ... 기타 공통 컴포넌트
-};
 ```
 
-## 라인 스타일링
+#### title
+차트 제목을 표시합니다.
 
-### 1. 기본 라인 커스터마이징
+#### legend
+개별 범례 항목을 렌더링합니다.
+
+### 2. 플롯 영역 요소
+
+#### plot
+축, 그리드, 시리즈를 포함하는 메인 플롯 영역입니다.
+
+### 3. 데이터 시각화 요소
+
+#### series
+모든 라인을 담는 컨테이너입니다.
 
 ```javascript
-import { Path, Paint, StrokeCap, StrokeJoin } from '@meursyphus/flitter';
+custom: {
+  series: ({ lines }) => {
+    return Stack({
+      children: lines
+    });
+  }
+}
+```
 
-const chart = LineChart({
+#### line
+개별 라인 요소입니다. 가장 많이 커스터마이징되는 요소입니다.
+
+```javascript
+custom: {
+  line: ({ values, legend, index }) => {
+    return CustomPaint({
+      painter: {
+        svg: {
+          createDefaultSvgEl: (context) => ({
+            line: context.createSvgEl("path")
+          }),
+          paint: ({ line }, { width, height }) => {
+            const path = createLinePath({ values, width, height });
+            line.setAttribute("fill", "none");
+            line.setAttribute("stroke", getColor(index));
+            line.setAttribute("stroke-width", "2");
+            line.setAttribute("d", path.getD());
+          }
+        },
+        canvas: {
+          paint: (context, { width, height }) => {
+            const path = createLinePath({ values, width, height });
+            context.canvas.strokeStyle = getColor(index);
+            context.canvas.lineWidth = 2;
+            context.canvas.stroke(path.toCanvasPath());
+          }
+        }
+      }
+    });
+  }
+}
+```
+
+#### dataLabel
+라인 위의 데이터 포인트에 표시되는 레이블입니다.
+
+### 4. 축 요소
+
+#### xAxis / yAxis
+축 전체를 담당하는 컨테이너입니다.
+
+#### xAxisLine / yAxisLine
+축의 기준선입니다.
+
+#### xAxisLabel / yAxisLabel
+축 레이블을 표시합니다.
+
+#### xAxisTick / yAxisTick
+축의 눈금 표시입니다.
+
+### 5. 그리드 요소
+
+#### grid
+그리드 전체 컨테이너입니다.
+
+#### gridXLine / gridYLine
+수직/수평 그리드 라인입니다.
+
+## 실제 사용 예제
+
+### 1. 스타일이 다른 라인들
+
+```javascript
+import { CustomPaint, Path } from '@meursyphus/flitter';
+
+const styledLineChart = LineChart({
   data,
   custom: {
-    line: ({ values, legend, index }) => {
-      const colors = ['#3b82f6', '#10b981', '#f59e0b'];
-      const strokeWidths = [2, 3, 2];
+    line: ({ values, index }) => {
+      const styles = [
+        { color: '#3b82f6', width: 2, dash: null },
+        { color: '#10b981', width: 3, dash: [10, 5] },
+        { color: '#f59e0b', width: 2, dash: [2, 2] }
+      ];
       
-      // 라인 경로 생성 (실제로는 더 복잡한 계산 필요)
-      const path = createLinePath(values);
+      const style = styles[index % styles.length];
       
       return CustomPaint({
         painter: {
-          paint: (canvas, size) => {
-            const paint = new Paint({
-              color: colors[index % colors.length],
-              strokeWidth: strokeWidths[index % strokeWidths.length],
-              style: PaintingStyle.stroke,
-              strokeCap: StrokeCap.round,
-              strokeJoin: StrokeJoin.round
-            });
-            
-            canvas.drawPath(path, paint);
+          svg: {
+            createDefaultSvgEl: (context) => ({
+              line: context.createSvgEl("path")
+            }),
+            paint: ({ line }, { width, height }) => {
+              const path = createLinePath({ values, width, height });
+              line.setAttribute("fill", "none");
+              line.setAttribute("stroke", style.color);
+              line.setAttribute("stroke-width", style.width.toString());
+              if (style.dash) {
+                line.setAttribute("stroke-dasharray", style.dash.join(' '));
+              }
+              line.setAttribute("d", path.getD());
+            }
           }
         }
       });
@@ -120,361 +242,45 @@ const chart = LineChart({
 });
 ```
 
-### 2. 점선 스타일
+### 2. 데이터 포인트가 있는 라인
 
 ```javascript
-const dashedLine = ({ values, index }) => {
-  const colors = ['#3b82f6', '#ef4444', '#10b981'];
-  
-  return CustomPaint({
-    painter: {
-      paint: (canvas, size) => {
-        const paint = new Paint({
-          color: colors[index % colors.length],
-          strokeWidth: 2,
-          style: PaintingStyle.stroke,
-          // 점선 패턴: 10px 선, 5px 공백
-          dashPattern: [10, 5]
-        });
-        
-        // 라인 그리기
-        drawLine(canvas, values, paint);
-      }
-    }
-  });
-};
-```
+import { Stack, Positioned, Container, BoxDecoration } from '@meursyphus/flitter';
 
-### 3. 곡선 라인
-
-```javascript
-const smoothLine = ({ values }) => {
-  return CustomPaint({
-    painter: {
-      paint: (canvas, size) => {
-        const paint = new Paint({
-          color: '#3b82f6',
-          strokeWidth: 2,
-          style: PaintingStyle.stroke
-        });
-        
-        // 베지어 곡선으로 부드러운 라인 생성
-        const path = createSmoothPath(values);
-        canvas.drawPath(path, paint);
-      }
-    }
-  });
-};
-
-// 베지어 곡선 경로 생성 함수
-function createSmoothPath(values) {
-  const path = new Path();
-  const points = calculatePoints(values);
-  
-  path.moveTo(points[0].x, points[0].y);
-  
-  for (let i = 1; i < points.length; i++) {
-    const cp1 = controlPoint(points[i - 1], points[i]);
-    const cp2 = controlPoint(points[i], points[i - 1]);
-    
-    path.cubicTo(
-      cp1.x, cp1.y,
-      cp2.x, cp2.y,
-      points[i].x, points[i].y
-    );
-  }
-  
-  return path;
-}
-```
-
-### 4. 데이터 포인트 추가
-
-```javascript
-const lineWithPoints = ({ values, index }) => {
-  const colors = ['#3b82f6', '#10b981', '#f59e0b'];
-  const color = colors[index % colors.length];
-  
-  return Stack({
-    children: [
-      // 라인
-      CustomPaint({
-        painter: createLinePainter(values, color)
-      }),
-      // 데이터 포인트
-      ...values.map((value, i) => 
-        Positioned({
-          left: calculateX(i),
-          top: calculateY(value),
-          child: Container({
-            width: 8,
-            height: 8,
-            decoration: new BoxDecoration({
-              shape: BoxShape.circle,
-              color: '#ffffff',
-              border: Border.all({ color, width: 2 })
-            })
-          })
-        })
-      )
-    ]
-  });
-};
-```
-
-## 영역 채우기
-
-### 그라데이션 영역
-
-```javascript
-const areaLine = ({ values, index }) => {
-  const colors = [
-    { line: '#3b82f6', fill: 'rgba(59, 130, 246, 0.1)' },
-    { line: '#10b981', fill: 'rgba(16, 185, 129, 0.1)' }
-  ];
-  
-  const { line: lineColor, fill: fillColor } = colors[index % colors.length];
-  
-  return Stack({
-    children: [
-      // 영역 채우기
-      CustomPaint({
-        painter: {
-          paint: (canvas, size) => {
-            const fillPaint = new Paint({
-              color: fillColor,
-              style: PaintingStyle.fill
-            });
-            
-            const areaPath = createAreaPath(values);
-            canvas.drawPath(areaPath, fillPaint);
-          }
-        }
-      }),
-      // 라인
-      CustomPaint({
-        painter: createLinePainter(values, lineColor)
-      })
-    ]
-  });
-};
-```
-
-## 인터랙티브 기능
-
-### 1. 호버 효과
-
-```javascript
-import { MouseRegion } from '@meursyphus/flitter';
-import { useState } from 'react';
-
-function InteractiveLineChart() {
-  const [hoveredPoint, setHoveredPoint] = useState(null);
-  
-  const chart = LineChart({
-    data,
-    custom: {
-      line: ({ values, legend, index }) => {
-        return Stack({
-          children: [
-            // 기본 라인
-            createBaseLine(values, index),
-            // 인터랙티브 포인트
-            ...values.map((value, i) => {
-              const key = `${legend}-${i}`;
-              const isHovered = hoveredPoint === key;
-              
-              return Positioned({
-                left: calculateX(i),
-                top: calculateY(value),
-                child: MouseRegion({
-                  onEnter: () => setHoveredPoint(key),
-                  onExit: () => setHoveredPoint(null),
-                  cursor: 'pointer',
-                  child: Container({
-                    width: isHovered ? 12 : 8,
-                    height: isHovered ? 12 : 8,
-                    decoration: new BoxDecoration({
-                      shape: BoxShape.circle,
-                      color: '#ffffff',
-                      border: Border.all({ 
-                        color: getColor(index), 
-                        width: 2 
-                      }),
-                      boxShadow: isHovered ? [{
-                        color: 'rgba(0, 0, 0, 0.2)',
-                        blurRadius: 4,
-                        offset: { x: 0, y: 2 }
-                      }] : []
-                    })
-                  })
-                })
-              });
-            })
-          ]
-        });
-      }
-    }
-  });
-  
-  return (
-    <>
-      <Widget width="100%" height="400px" widget={chart} />
-      {hoveredPoint && (
-        <div>선택된 포인트: {hoveredPoint}</div>
-      )}
-    </>
-  );
-}
-```
-
-### 2. 툴팁
-
-```javascript
-const lineWithTooltip = ({ values, legend }) => {
-  return Stack({
-    children: [
-      createBaseLine(values),
-      ...values.map((value, i) => 
-        Positioned({
-          left: calculateX(i),
-          top: calculateY(value),
-          child: Tooltip({
-            message: `${legend}: ${value}`,
-            child: Container({
-              width: 8,
-              height: 8,
-              decoration: new BoxDecoration({
-                shape: BoxShape.circle,
-                color: '#3b82f6'
-              })
-            })
-          })
-        })
-      )
-    ]
-  });
-};
-```
-
-## 실전 예제
-
-### 1. 실시간 차트
-
-```javascript
-function RealtimeLineChart() {
-  const [data, setData] = useState({
-    labels: [],
-    datasets: [{ legend: 'CPU 사용률', values: [] }]
-  });
-  
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setData(prev => {
-        const now = new Date();
-        const newLabels = [...prev.labels, now.toLocaleTimeString()];
-        const newValues = [...prev.datasets[0].values, Math.random() * 100];
-        
-        // 최근 20개 데이터만 유지
-        if (newLabels.length > 20) {
-          newLabels.shift();
-          newValues.shift();
-        }
-        
-        return {
-          labels: newLabels,
-          datasets: [{ legend: 'CPU 사용률', values: newValues }]
-        };
-      });
-    }, 1000);
-    
-    return () => clearInterval(interval);
-  }, []);
-  
-  const chart = LineChart({
-    data,
-    custom: {
-      line: ({ values }) => AnimatedLine({ 
-        values,
-        duration: 1000 
-      })
-    }
-  });
-  
-  return <Widget width="100%" height="300px" widget={chart} />;
-}
-```
-
-### 2. 다중 Y축
-
-```javascript
-const multiAxisChart = LineChart({
-  data: {
-    labels: ['1월', '2월', '3월', '4월', '5월'],
-    datasets: [
-      { legend: '매출 (백만원)', values: [100, 120, 140, 130, 160] },
-      { legend: '방문자 (천명)', values: [50, 55, 60, 58, 65] }
-    ]
-  },
+const lineWithPoints = LineChart({
+  data,
   custom: {
-    yAxis: ({ labels, line, tick }, { type }) => {
-      const isSecondary = type === 'secondary';
-      
-      return Container({
-        child: Row({
-          mainAxisAlignment: isSecondary ? 
-            MainAxisAlignment.end : 
-            MainAxisAlignment.start,
-          children: [
-            Column({ children: labels }),
-            SizedBox({ width: 4 }),
-            line
-          ]
-        })
-      });
-    }
-  }
-});
-```
-
-### 3. 주식 차트 스타일
-
-```javascript
-const stockChart = LineChart({
-  data: stockData,
-  custom: {
-    line: ({ values, legend }) => {
-      const isPositive = values[values.length - 1] > values[0];
-      const color = isPositive ? '#10b981' : '#ef4444';
+    line: ({ values, index }) => {
+      const colors = ['#3b82f6', '#10b981', '#f59e0b'];
+      const color = colors[index % colors.length];
       
       return Stack({
+        clipBehavior: 'none',
         children: [
-          // 영역 채우기
+          // 라인
           CustomPaint({
-            painter: createGradientAreaPainter(values, color)
+            painter: createLinePainter(values, color)
           }),
-          // 메인 라인
-          CustomPaint({
-            painter: createLinePainter(values, color, 2)
-          }),
-          // 현재 가격 표시
-          Positioned({
-            right: 0,
-            top: calculateY(values[values.length - 1]),
-            child: Container({
-              padding: EdgeInsets.symmetric({ horizontal: 8, vertical: 4 }),
-              decoration: new BoxDecoration({
-                color,
-                borderRadius: BorderRadius.circular(4)
-              }),
-              child: Text(formatPrice(values[values.length - 1]), {
-                style: new TextStyle({
+          // 데이터 포인트
+          ...values.map((value, i) => {
+            const position = calculatePosition(i, value, values.length);
+            
+            return Positioned({
+              left: position.x - 4,
+              top: position.y - 4,
+              child: Container({
+                width: 8,
+                height: 8,
+                decoration: new BoxDecoration({
+                  shape: 'circle',
                   color: '#ffffff',
-                  fontSize: 12,
-                  fontWeight: 'bold'
+                  border: Border.all({ 
+                    color: color, 
+                    width: 2 
+                  })
                 })
               })
-            })
+            });
           })
         ]
       });
@@ -483,70 +289,183 @@ const stockChart = LineChart({
 });
 ```
 
-## 성능 최적화
-
-### 대용량 데이터 처리
+### 3. 영역이 채워진 라인
 
 ```javascript
-// 데이터 포인트 샘플링
-const sampleData = (data, maxPoints = 100) => {
-  if (data.labels.length <= maxPoints) return data;
-  
-  const step = Math.ceil(data.labels.length / maxPoints);
-  
-  return {
-    labels: data.labels.filter((_, i) => i % step === 0),
-    datasets: data.datasets.map(dataset => ({
-      ...dataset,
-      values: dataset.values.filter((_, i) => i % step === 0)
-    }))
-  };
-};
-
-// 사용
-const chart = LineChart({
-  data: sampleData(largeData, 50)
+const areaLineChart = LineChart({
+  data,
+  custom: {
+    line: ({ values, index }) => {
+      const colors = [
+        { line: '#3b82f6', area: 'rgba(59, 130, 246, 0.1)' },
+        { line: '#10b981', area: 'rgba(16, 185, 129, 0.1)' }
+      ];
+      
+      const { line: lineColor, area: areaColor } = colors[index % colors.length];
+      
+      return Stack({
+        children: [
+          // 영역 채우기
+          CustomPaint({
+            painter: {
+              svg: {
+                createDefaultSvgEl: (context) => ({
+                  area: context.createSvgEl("path")
+                }),
+                paint: ({ area }, { width, height }) => {
+                  const path = createAreaPath({ values, width, height });
+                  area.setAttribute("fill", areaColor);
+                  area.setAttribute("d", path.getD());
+                }
+              }
+            }
+          }),
+          // 라인
+          CustomPaint({
+            painter: createLinePainter(values, lineColor)
+          })
+        ]
+      });
+    }
+  }
 });
 ```
 
-## 접근성
-
-### 키보드 네비게이션
+### 4. 곡선 라인 (스무스)
 
 ```javascript
-const accessibleLine = ({ values, legend }) => {
-  return Stack({
-    children: [
-      createBaseLine(values),
-      ...values.map((value, i) => 
-        Positioned({
-          left: calculateX(i),
-          top: calculateY(value),
-          child: Semantics({
-            label: `${legend} ${i + 1}번째 데이터: ${value}`,
-            button: true,
-            child: FocusableActionDetector({
-              onFocusChange: (focused) => {
-                // 포커스 시 하이라이트
-              },
-              child: createDataPoint(value, i)
-            })
-          })
-        })
-      )
-    ]
-  });
-};
+const smoothLineChart = LineChart({
+  data,
+  custom: {
+    line: ({ values, index }) => {
+      const colors = ['#3b82f6', '#10b981', '#f59e0b'];
+      
+      return CustomPaint({
+        painter: {
+          svg: {
+            createDefaultSvgEl: (context) => ({
+              line: context.createSvgEl("path")
+            }),
+            paint: ({ line }, { width, height }) => {
+              // 베지어 곡선으로 부드러운 라인 생성
+              const path = createSmoothPath({ values, width, height });
+              line.setAttribute("fill", "none");
+              line.setAttribute("stroke", colors[index % colors.length]);
+              line.setAttribute("stroke-width", "2");
+              line.setAttribute("d", path.getD());
+            }
+          }
+        }
+      });
+    }
+  }
+});
+
+function createSmoothPath({ values, width, height }) {
+  const path = new Path();
+  const points = values.map((value, index) => ({
+    x: (index / (values.length - 1)) * width,
+    y: height - (value / Math.max(...values)) * height
+  }));
+  
+  path.moveTo(points[0]);
+  
+  // Catmull-Rom spline
+  for (let i = 1; i < points.length; i++) {
+    const p0 = points[Math.max(0, i - 2)];
+    const p1 = points[i - 1];
+    const p2 = points[i];
+    const p3 = points[Math.min(points.length - 1, i + 1)];
+    
+    const cp1x = p1.x + (p2.x - p0.x) / 6;
+    const cp1y = p1.y + (p2.y - p0.y) / 6;
+    const cp2x = p2.x - (p3.x - p1.x) / 6;
+    const cp2y = p2.y - (p3.y - p1.y) / 6;
+    
+    path.cubicTo({ x: cp1x, y: cp1y }, { x: cp2x, y: cp2y }, p2);
+  }
+  
+  return path;
+}
 ```
 
-## 팁과 모범 사례
+## 애니메이션 추가하기
 
-1. **데이터 밀도**: 너무 많은 데이터 포인트는 가독성을 해칠 수 있음
-2. **색상 대비**: 라인들이 명확히 구분되도록 색상 선택
-3. **범례 위치**: 차트를 가리지 않는 위치에 배치
-4. **애니메이션**: 과도한 애니메이션은 피하고 의미 있는 곳에만 사용
-5. **반응형**: 화면 크기에 따라 데이터 포인트 수 조절
+```javascript
+import { StatefulWidget, State, AnimationController, Animation } from '@meursyphus/flitter';
+
+class AnimatedLine extends StatefulWidget {
+  constructor({ values, color }) {
+    super();
+    this.values = values;
+    this.color = color;
+  }
+
+  createState() {
+    return new AnimatedLineState();
+  }
+}
+
+class AnimatedLineState extends State {
+  initState() {
+    super.initState();
+    this.controller = new AnimationController({
+      duration: { milliseconds: 1500 }
+    });
+    this.animation = new Animation({
+      controller: this.controller,
+      value: Tween({ begin: 0, end: 1 })
+    });
+    this.controller.forward();
+  }
+
+  build() {
+    return AnimatedBuilder({
+      animation: this.animation,
+      builder: () => {
+        const progress = this.animation.value;
+        const visibleValues = this.widget.values.slice(
+          0, 
+          Math.floor(this.widget.values.length * progress)
+        );
+        
+        return CustomPaint({
+          painter: createLinePainter(visibleValues, this.widget.color)
+        });
+      }
+    });
+  }
+
+  dispose() {
+    this.controller.dispose();
+    super.dispose();
+  }
+}
+
+// 사용
+const animatedChart = LineChart({
+  data,
+  custom: {
+    line: ({ values, index }) => {
+      const colors = ['#3b82f6', '#10b981', '#f59e0b'];
+      return new AnimatedLine({
+        values,
+        color: colors[index % colors.length]
+      });
+    }
+  }
+});
+```
+
+## 성능 최적화 팁
+
+1. **데이터 포인트 제한**: 많은 데이터는 샘플링하여 표시
+2. **Path 최적화**: 복잡한 경로는 단순화
+3. **애니메이션 제한**: 필요한 경우에만 사용
+4. **메모리 관리**: 실시간 차트는 오래된 데이터 제거
 
 ## 다음 단계
 
-Line Chart를 익혔다면, [Area Chart](./03.area-chart.mdx)로 넘어가 영역을 강조하는 차트를 만들어보세요.
+- 더 많은 예제는 [데모 페이지](/charts/line)를 참고하세요
+- 영역을 강조하려면 [Area Chart](./03.area-chart.mdx)를 확인하세요
+- 데이터 포인트를 강조하려면 [Scatter Chart](./04.scatter-chart.mdx)를 참고하세요
