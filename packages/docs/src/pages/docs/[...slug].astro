@@ -50,21 +50,50 @@ const nextEntry =
   image={entry.data.image}
 >
   <div class="relative mx-auto flex flex-col lg:flex-row p-4 lg:p-8 gap-4">
-    <div class="lg:sticky lg:top-0 lg:h-fit order-2 lg:order-1">
-      <div class="glass lg:min-w-[250px]">
+    <!-- Sidebar -->
+    <div class="sidebar-container lg:sticky lg:top-20 lg:h-[calc(100vh-5rem-32px)]">
+      <div class="glass lg:min-w-[250px] h-full overflow-y-auto">
         <SideBar />
       </div>
     </div>
+    
+    <!-- Main Content -->
     <div
-      class="glass prose prose-modern w-full max-w-full px-4 lg:px-8 h-fit order-1 lg:order-2"
+      class="glass prose prose-modern w-full max-w-full px-4 lg:px-8"
     >
       <Content />
     </div>
-    <div class="lg:sticky lg:top-0 lg:h-fit order-3">
-      <div class="glass">
+    
+    <!-- TOC -->
+    <div class="toc-container lg:sticky lg:top-20 lg:h-[calc(100vh-5rem-32px)]">
+      <div class="glass h-full overflow-y-auto">
         <Toc headings={headings} />
       </div>
     </div>
+  </div>
+  
+  <!-- Mobile Overlay -->
+  <div class="mobile-overlay"></div>
+  
+  <!-- Mobile Toggle Buttons -->
+  <div class="mobile-buttons">
+    <button class="mobile-toggle-btn" data-target="sidebar" aria-label="Toggle Sidebar">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+    <button class="mobile-toggle-btn" data-target="toc" aria-label="Toggle Table of Contents">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="8" y1="6" x2="21" y2="6"></line>
+        <line x1="8" y1="12" x2="21" y2="12"></line>
+        <line x1="8" y1="18" x2="21" y2="18"></line>
+        <circle cx="4" cy="6" r="1" fill="currentColor"></circle>
+        <circle cx="4" cy="12" r="1" fill="currentColor"></circle>
+        <circle cx="4" cy="18" r="1" fill="currentColor"></circle>
+      </svg>
+    </button>
   </div>
 </Layout>
 
@@ -90,20 +119,122 @@ const nextEntry =
 </style>
 
 <style>
+  /* Mobile styles */
   @media (max-width: 1024px) {
-    :global(.toc-container) {
+    .sidebar-container,
+    .toc-container {
       position: fixed;
-      bottom: 1rem;
-      right: 1rem;
-      z-index: 50;
-      max-height: 80vh;
-      overflow-y: auto;
-      transform: translateX(100%);
+      top: 64px;
+      bottom: 0;
+      width: 280px;
+      z-index: 40;
       transition: transform 0.3s ease-in-out;
     }
     
-    :global(.toc-container.show) {
+    .sidebar-container {
+      left: 0;
+      transform: translateX(-100%);
+    }
+    
+    .toc-container {
+      right: 0;
+      transform: translateX(100%);
+    }
+    
+    .sidebar-container.show {
+      transform: translateX(0);
+    }
+    
+    .toc-container.show {
       transform: translateX(0);
     }
   }
+  
+  /* Mobile overlay */
+  .mobile-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 30;
+  }
+  
+  .mobile-overlay.show {
+    display: block;
+  }
+  
+  /* Mobile toggle buttons */
+  .mobile-buttons {
+    display: none;
+  }
+  
+  @media (max-width: 1024px) {
+    .mobile-buttons {
+      display: flex;
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      gap: 0.5rem;
+      z-index: 50;
+    }
+  }
+  
+  .mobile-toggle-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(229, 231, 235, 0.3);
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .mobile-toggle-btn:hover {
+    background-color: rgba(255, 255, 255, 1);
+    transform: scale(1.05);
+  }
+  
+  .mobile-toggle-btn:active {
+    transform: scale(0.95);
+  }
 </style>
+
+<script>
+  // Mobile menu toggle functionality
+  document.addEventListener('DOMContentLoaded', () => {
+    const buttons = document.querySelectorAll('.mobile-toggle-btn');
+    const overlay = document.querySelector('.mobile-overlay');
+    const sidebar = document.querySelector('.sidebar-container');
+    const toc = document.querySelector('.toc-container');
+    
+    buttons.forEach(button => {
+      button.addEventListener('click', () => {
+        const target = button.getAttribute('data-target');
+        const container = target === 'sidebar' ? sidebar : toc;
+        const isOpen = container?.classList.contains('show');
+        
+        // Close all panels first
+        sidebar?.classList.remove('show');
+        toc?.classList.remove('show');
+        overlay?.classList.remove('show');
+        
+        // Open the target panel if it wasn't already open
+        if (!isOpen && container) {
+          container.classList.add('show');
+          overlay?.classList.add('show');
+        }
+      });
+    });
+    
+    // Close panels when clicking overlay
+    overlay?.addEventListener('click', () => {
+      sidebar?.classList.remove('show');
+      toc?.classList.remove('show');
+      overlay.classList.remove('show');
+    });
+  });
+</script>
