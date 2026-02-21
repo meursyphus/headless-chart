@@ -83,13 +83,147 @@ const chartGroups = [
   },
   {
     type: "Pie Charts",
-    description: "Coming Soon",
-    charts: []
+    charts: [
+      {
+        title: "Pie Chart",
+        description: "Classic pie chart with customizable slices and labels",
+        link: "/docs/en/chart-guide/pie-chart",
+        image: ""
+      },
+      {
+        title: "Donut Chart",
+        description: "Pie chart with inner radius for donut style visualization",
+        link: "/docs/en/chart-guide/pie-chart",
+        image: ""
+      }
+    ]
+  },
+  {
+    type: "Radar Charts",
+    charts: [
+      {
+        title: "Radar Chart",
+        description: "Spider/radar chart for multi-axis data comparison",
+        link: "/docs/en/chart-guide/radar-chart",
+        image: ""
+      }
+    ]
+  },
+  {
+    type: "Stacked Charts",
+    charts: [
+      {
+        title: "Stacked Bar Chart",
+        description: "Bar chart with stacked segments for cumulative comparison",
+        link: "/docs/en/chart-guide/stacked-bar-chart",
+        image: ""
+      },
+      {
+        title: "Stacked Area Chart",
+        description: "Area chart with stacked layers for cumulative trends",
+        link: "/docs/en/chart-guide/stacked-area-chart",
+        image: ""
+      }
+    ]
+  },
+  {
+    type: "Treemap Charts",
+    charts: [
+      {
+        title: "Treemap Chart",
+        description: "Hierarchical data visualization using nested rectangles",
+        link: "/docs/en/chart-guide/treemap-chart",
+        image: ""
+      }
+    ]
+  },
+  {
+    type: "Gauge Charts",
+    charts: [
+      {
+        title: "Gauge Chart",
+        description: "Gauge/meter visualization with arc and needle indicator",
+        link: "/docs/en/chart-guide/gauge-chart",
+        image: ""
+      }
+    ]
+  },
+  {
+    type: "Funnel Charts",
+    charts: [
+      {
+        title: "Funnel Chart",
+        description: "Funnel visualization for conversion and pipeline data",
+        link: "/docs/en/chart-guide/funnel-chart",
+        image: ""
+      }
+    ]
+  },
+  {
+    type: "Candlestick Charts",
+    charts: [
+      {
+        title: "Candlestick Chart",
+        description: "Financial OHLC candlestick chart for stock/trading data",
+        link: "/docs/en/chart-guide/candlestick-chart",
+        image: ""
+      }
+    ]
+  },
+  {
+    type: "Sankey Charts",
+    charts: [
+      {
+        title: "Sankey Chart",
+        description: "Flow diagram showing weighted relationships between nodes",
+        link: "/docs/en/chart-guide/sankey-chart",
+        image: ""
+      }
+    ]
+  },
+  {
+    type: "Sunburst Charts",
+    charts: [
+      {
+        title: "Sunburst Chart",
+        description: "Hierarchical pie chart with concentric rings",
+        link: "/docs/en/chart-guide/sunburst-chart",
+        image: ""
+      }
+    ]
+  },
+  {
+    type: "Waterfall Charts",
+    charts: [
+      {
+        title: "Waterfall Chart",
+        description: "Shows cumulative effect of sequential positive/negative values",
+        link: "/docs/en/chart-guide/waterfall-chart",
+        image: ""
+      }
+    ]
+  },
+  {
+    type: "Box Plot Charts",
+    charts: [
+      {
+        title: "Box Plot Chart",
+        description: "Statistical chart showing median, quartiles, whiskers and outliers",
+        link: "/docs/en/chart-guide/box-plot-chart",
+        image: ""
+      }
+    ]
   },
   {
     type: "Scatter Charts",
-    description: "Coming Soon",
-    charts: []
+    charts: [
+      {
+        title: "Toast Style Scatter Chart",
+        description: "A headless-chart example inspired by Toast Chart using the same color scheme",
+        link: "/charts/scatter/toast",
+        image: "/scatter-chart/toast.png"
+      }
+    ]
   },
   {
     type: "Bubble Charts",
@@ -170,7 +304,14 @@ const chartGroups = [
               group.charts.map((chart, index) => (
                 <a href={chart.link} class="chart-card neu-card" style={`animation-delay: ${(groupIndex * 0.1) + (index * 0.05)}s`}>
                   <div class="chart-image neu-inset">
-                    <img src={chart.image} alt={chart.title} loading="lazy" />
+                    {chart.image ? (
+                      <img src={chart.image} alt={chart.title} loading="lazy" />
+                    ) : (
+                      <div class="chart-placeholder">
+                        <span class="placeholder-icon">📊</span>
+                        <span class="placeholder-text">{chart.title}</span>
+                      </div>
+                    )}
                   </div>
                   <div class="chart-info">
                     <h3>{chart.title}</h3>
@@ -374,6 +515,27 @@ const chartGroups = [
 
   .chart-hover-indicator svg {
     color: var(--neu-accent);
+  }
+
+  .chart-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    width: 100%;
+    height: 100%;
+  }
+
+  .placeholder-icon {
+    font-size: 3rem;
+  }
+
+  .placeholder-text {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--neu-text-secondary);
+    text-align: center;
   }
 
   @media (max-width: 768px) {
