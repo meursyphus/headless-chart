@@ -1,0 +1,144 @@
+---
+nav_group: "Stacked Bar"
+nav_order: 1
+title: "Default"
+description: "A stacked bar chart showing quarterly revenue by product category"
+image: ""
+files:
+  App.js: |
+    import Widget from "@meursyphus/flitter-react";
+    import { StackedBarChart } from "@meursyphus/headless-chart";
+    import {
+      Text,
+      Container,
+      EdgeInsets,
+      TextStyle,
+      Column,
+      Row,
+      SizedBox,
+      MainAxisAlignment,
+      MainAxisSize,
+      BoxDecoration,
+      Padding,
+      Center,
+    } from "@meursyphus/flitter";
+
+    const colors = ["#4e79a7", "#f28e2b", "#e15759", "#76b7b2"];
+
+    const data = {
+      labels: ["Q1", "Q2", "Q3", "Q4"],
+      datasets: [
+        { legend: "Electronics", values: [120, 150, 180, 200] },
+        { legend: "Clothing", values: [80, 95, 110, 130] },
+        { legend: "Food", values: [60, 70, 65, 85] },
+        { legend: "Books", values: [30, 40, 35, 45] },
+      ],
+    };
+
+    const chart = StackedBarChart({
+      data,
+      custom: {
+        layout: ({ title, legends, plot }) =>
+          Container({
+            padding: EdgeInsets.only({ left: 50, bottom: 50, right: 20, top: 30 }),
+            child: Column({
+              children: [
+                Center({
+                  child: Text("Quarterly Revenue by Category ($K)", {
+                    style: new TextStyle({
+                      fontSize: 16,
+                      fontWeight: "bold",
+                      color: "#333333",
+                      fontFamily: "Noto Sans JP",
+                    }),
+                  }),
+                }),
+                SizedBox({ height: 8 }),
+                Row({
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: legends,
+                }),
+                SizedBox({ height: 12 }),
+                plot,
+              ],
+            }),
+          }),
+        bar: ({ value, label, legend, index }) => {
+          const color = colors[index % colors.length];
+          return Container({
+            width: Infinity,
+            height: Infinity,
+            color: color,
+          });
+        },
+        legend: ({ name, index }) =>
+          Padding({
+            padding: EdgeInsets.symmetric({ horizontal: 6 }),
+            child: Row({
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container({
+                  width: 12,
+                  height: 12,
+                  decoration: new BoxDecoration({
+                    color: colors[index % colors.length],
+                    borderRadius: 2,
+                  }),
+                }),
+                SizedBox({ width: 5 }),
+                Text(name, {
+                  style: new TextStyle({
+                    fontSize: 12,
+                    color: "#666666",
+                    fontFamily: "Noto Sans JP",
+                  }),
+                }),
+              ],
+            }),
+          }),
+        xAxisLabel: ({ name }) =>
+          Padding({
+            padding: EdgeInsets.only({ top: 4 }),
+            child: Text(name, {
+              style: new TextStyle({
+                fontSize: 12,
+                color: "#666666",
+                fontFamily: "Noto Sans JP",
+              }),
+            }),
+          }),
+        yAxisLabel: ({ name }) =>
+          Padding({
+            padding: EdgeInsets.only({ right: 4 }),
+            child: Text(name, {
+              style: new TextStyle({
+                fontSize: 11,
+                color: "#666666",
+                fontFamily: "Noto Sans JP",
+              }),
+            }),
+          }),
+        xAxisTick: () => Container({ height: 6, width: 1, color: "#DDDDDD" }),
+        yAxisTick: () => Container({ height: 1, width: 6, color: "#DDDDDD" }),
+        xAxisLine: () => Container({ color: "#BBBBBB", height: 1, width: Infinity }),
+        yAxisLine: () => Container({ color: "#BBBBBB", width: 1, height: Infinity }),
+        gridXLine: () => Container({ height: 1, color: "#EEEEEE" }),
+        gridYLine: () => Container({ width: 1, color: "#EEEEEE" }),
+      },
+    });
+
+    export default function App() {
+      return (
+        <Widget
+          width="auto"
+          height="450px"
+          widget={chart}
+          renderer="svg"
+        />
+      );
+    }
+---
+
+# Stacked Bar Chart Example
+
+A stacked bar chart displaying quarterly revenue breakdown by product category, with color-coded segments for Electronics, Clothing, Food, and Books.

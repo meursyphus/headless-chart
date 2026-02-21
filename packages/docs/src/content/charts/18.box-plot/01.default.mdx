@@ -1,0 +1,142 @@
+---
+nav_group: "Box Plot"
+nav_order: 1
+title: "Default"
+description: "A box plot chart comparing exam score distributions across subjects"
+image: ""
+files:
+  App.js: |
+    import Widget from "@meursyphus/flitter-react";
+    import { BoxPlotChart } from "@meursyphus/headless-chart";
+    import {
+      Text,
+      Container,
+      EdgeInsets,
+      TextStyle,
+      Column,
+      Row,
+      SizedBox,
+      MainAxisAlignment,
+      MainAxisSize,
+      BoxDecoration,
+      Padding,
+      Center,
+    } from "@meursyphus/flitter";
+
+    const colors = ["#4e79a7", "#f28e2b", "#e15759"];
+
+    const data = {
+      labels: ["Math", "Science", "English", "History", "Art"],
+      datasets: [
+        {
+          legend: "Class A",
+          data: [
+            { min: 45, q1: 62, median: 75, q3: 85, max: 98, outliers: [32] },
+            { min: 50, q1: 65, median: 78, q3: 88, max: 95 },
+            { min: 40, q1: 58, median: 70, q3: 82, max: 96, outliers: [28] },
+            { min: 55, q1: 68, median: 76, q3: 84, max: 92 },
+            { min: 60, q1: 72, median: 80, q3: 90, max: 99 },
+          ],
+        },
+      ],
+    };
+
+    const chart = BoxPlotChart({
+      data,
+      custom: {
+        layout: ({ title, legends, plot }) =>
+          Container({
+            padding: EdgeInsets.only({ left: 50, bottom: 50, right: 20, top: 30 }),
+            child: Column({
+              children: [
+                Center({
+                  child: Text("Exam Score Distributions by Subject", {
+                    style: new TextStyle({
+                      fontSize: 16,
+                      fontWeight: "bold",
+                      color: "#333333",
+                      fontFamily: "Noto Sans JP",
+                    }),
+                  }),
+                }),
+                SizedBox({ height: 8 }),
+                Row({
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: legends,
+                }),
+                SizedBox({ height: 12 }),
+                plot,
+              ],
+            }),
+          }),
+        legend: ({ name, index }) =>
+          Padding({
+            padding: EdgeInsets.symmetric({ horizontal: 6 }),
+            child: Row({
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container({
+                  width: 12,
+                  height: 12,
+                  decoration: new BoxDecoration({
+                    color: colors[index % colors.length],
+                    borderRadius: 2,
+                  }),
+                }),
+                SizedBox({ width: 5 }),
+                Text(name, {
+                  style: new TextStyle({
+                    fontSize: 12,
+                    color: "#666666",
+                    fontFamily: "Noto Sans JP",
+                  }),
+                }),
+              ],
+            }),
+          }),
+        xAxisLabel: ({ name }) =>
+          Padding({
+            padding: EdgeInsets.only({ top: 4 }),
+            child: Text(name, {
+              style: new TextStyle({
+                fontSize: 12,
+                color: "#666666",
+                fontFamily: "Noto Sans JP",
+              }),
+            }),
+          }),
+        yAxisLabel: ({ name }) =>
+          Padding({
+            padding: EdgeInsets.only({ right: 4 }),
+            child: Text(name, {
+              style: new TextStyle({
+                fontSize: 11,
+                color: "#666666",
+                fontFamily: "Noto Sans JP",
+              }),
+            }),
+          }),
+        xAxisTick: () => Container({ height: 6, width: 1, color: "#DDDDDD" }),
+        yAxisTick: () => Container({ height: 1, width: 6, color: "#DDDDDD" }),
+        xAxisLine: () => Container({ color: "#BBBBBB", height: 1, width: Infinity }),
+        yAxisLine: () => Container({ color: "#BBBBBB", width: 1, height: Infinity }),
+        gridXLine: () => Container({ height: 1, color: "#F0F0F0" }),
+        gridYLine: () => Container({ width: 1, color: "#F0F0F0" }),
+      },
+    });
+
+    export default function App() {
+      return (
+        <Widget
+          width="auto"
+          height="450px"
+          widget={chart}
+          renderer="svg"
+        />
+      );
+    }
+---
+
+# Box Plot Chart Example
+
+A box plot chart comparing exam score distributions across five subjects, showing median, quartiles, whiskers, and outliers for each category.

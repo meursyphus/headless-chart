@@ -1,0 +1,135 @@
+---
+nav_group: "Sunburst"
+nav_order: 1
+title: "Default"
+description: "A sunburst chart showing company organizational structure"
+image: ""
+files:
+  App.js: |
+    import Widget from "@meursyphus/flitter-react";
+    import { SunburstChart } from "@meursyphus/headless-chart";
+    import {
+      Text,
+      Container,
+      EdgeInsets,
+      TextStyle,
+      Column,
+      Row,
+      SizedBox,
+      MainAxisAlignment,
+      MainAxisSize,
+      BoxDecoration,
+      Padding,
+      Center,
+    } from "@meursyphus/flitter";
+
+    const data = {
+      root: {
+        label: "Company",
+        children: [
+          {
+            label: "Engineering",
+            children: [
+              { label: "Frontend", value: 25 },
+              { label: "Backend", value: 30 },
+              { label: "DevOps", value: 12 },
+              { label: "QA", value: 10 },
+            ],
+          },
+          {
+            label: "Product",
+            children: [
+              { label: "Design", value: 15 },
+              { label: "PM", value: 8 },
+              { label: "Research", value: 6 },
+            ],
+          },
+          {
+            label: "Sales",
+            children: [
+              { label: "Enterprise", value: 20 },
+              { label: "SMB", value: 12 },
+              { label: "Partners", value: 8 },
+            ],
+          },
+          {
+            label: "Operations",
+            children: [
+              { label: "HR", value: 8 },
+              { label: "Finance", value: 6 },
+              { label: "Legal", value: 4 },
+            ],
+          },
+        ],
+      },
+      title: "Company Headcount",
+    };
+
+    const chart = SunburstChart({
+      data,
+      custom: {
+        layout: ({ title, sunburst, legend }) =>
+          Container({
+            padding: EdgeInsets.all(24),
+            child: Column({
+              children: [
+                Center({
+                  child: Text("Company Headcount by Department", {
+                    style: new TextStyle({
+                      fontSize: 16,
+                      fontWeight: "bold",
+                      color: "#333333",
+                      fontFamily: "Noto Sans JP",
+                    }),
+                  }),
+                }),
+                SizedBox({ height: 12 }),
+                sunburst,
+                SizedBox({ height: 12 }),
+                legend,
+              ],
+            }),
+          }),
+        legendItem: ({ label, color }) =>
+          Padding({
+            padding: EdgeInsets.symmetric({ horizontal: 6, vertical: 2 }),
+            child: Row({
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container({
+                  width: 12,
+                  height: 12,
+                  decoration: new BoxDecoration({
+                    color: color,
+                    borderRadius: 6,
+                  }),
+                }),
+                SizedBox({ width: 4 }),
+                Text(label, {
+                  style: new TextStyle({
+                    fontSize: 11,
+                    color: "#666666",
+                    fontFamily: "Noto Sans JP",
+                  }),
+                }),
+              ],
+            }),
+          }),
+      },
+    });
+
+    export default function App() {
+      return (
+        <Widget
+          width="auto"
+          height="500px"
+          widget={chart}
+          renderer="svg"
+        />
+      );
+    }
+---
+
+# Sunburst Chart Example
+
+A sunburst chart displaying a company's organizational structure and headcount distribution. The inner ring shows departments, and the outer ring shows individual teams.

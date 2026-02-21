@@ -1,0 +1,99 @@
+---
+nav_group: "Gauge"
+nav_order: 1
+title: "Default"
+description: "A gauge chart displaying a server CPU usage metric with color zones"
+image: ""
+files:
+  App.js: |
+    import Widget from "@meursyphus/flitter-react";
+    import { GaugeChart } from "@meursyphus/headless-chart";
+    import {
+      Text,
+      Container,
+      EdgeInsets,
+      TextStyle,
+      Column,
+      SizedBox,
+      Center,
+    } from "@meursyphus/flitter";
+
+    const data = {
+      value: 72,
+      min: 0,
+      max: 100,
+      title: "CPU Usage",
+      zones: [
+        { min: 0, max: 40, color: "#59a14f" },
+        { min: 40, max: 70, color: "#edc948" },
+        { min: 70, max: 85, color: "#f28e2b" },
+        { min: 85, max: 100, color: "#e15759" },
+      ],
+    };
+
+    const chart = GaugeChart({
+      data,
+      custom: {
+        layout: ({ title, gauge, valueLabel }) =>
+          Container({
+            padding: EdgeInsets.all(24),
+            child: Column({
+              children: [
+                Center({
+                  child: Text("Server CPU Usage", {
+                    style: new TextStyle({
+                      fontSize: 18,
+                      fontWeight: "bold",
+                      color: "#333333",
+                      fontFamily: "Noto Sans JP",
+                    }),
+                  }),
+                }),
+                SizedBox({ height: 16 }),
+                gauge,
+                SizedBox({ height: 8 }),
+                valueLabel,
+              ],
+            }),
+          }),
+        valueLabel: ({ value, min, max }) =>
+          Center({
+            child: Column({
+              children: [
+                Text(`${value}%`, {
+                  style: new TextStyle({
+                    fontSize: 36,
+                    fontWeight: "bold",
+                    color: value > 85 ? "#e15759" : value > 70 ? "#f28e2b" : value > 40 ? "#edc948" : "#59a14f",
+                    fontFamily: "Noto Sans JP",
+                  }),
+                }),
+                SizedBox({ height: 4 }),
+                Text(`Range: ${min} - ${max}`, {
+                  style: new TextStyle({
+                    fontSize: 12,
+                    color: "#999999",
+                    fontFamily: "Noto Sans JP",
+                  }),
+                }),
+              ],
+            }),
+          }),
+      },
+    });
+
+    export default function App() {
+      return (
+        <Widget
+          width="auto"
+          height="400px"
+          widget={chart}
+          renderer="svg"
+        />
+      );
+    }
+---
+
+# Gauge Chart Example
+
+A gauge chart displaying server CPU usage with four color-coded zones: green (normal), yellow (moderate), orange (high), and red (critical).
