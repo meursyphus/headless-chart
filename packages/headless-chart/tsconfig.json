@@ -18,6 +18,7 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
+    "jsx": "react-jsx",
     "baseUrl": "./",
     "paths": {
       "@shared/*": ["./src/shared/*"],
