@@ -1,0 +1,47 @@
+[   13632ms] ReferenceError: React is not defined
+    at Object.render [as originalStoryFn] (http://localhost:6006/src/stories/AreaChart.stories.tsx:18:39)
+    at jsxDecorator (http://localhost:6006/@fs/Users/moon/work/headless-chart/node_modules/@storybook/react/dist/_browser-chunks/chunk-CMP5DLKH.js?v=8f9b4c07:93:25)
+    at hookified (http://localhost:6006/node_modules/.cache/storybook/10.2.10/6408ffe4c5aec7c5c4af9381c4bc8493e95bd4bba97a1143ede6345e134785c7/sb-vite/deps/storybook_internal_preview_runtime.js?v=bbac00b4:15742:18)
+    at http://localhost:6006/node_modules/.cache/storybook/10.2.10/6408ffe4c5aec7c5c4af9381c4bc8493e95bd4bba97a1143ede6345e134785c7/sb-vite/deps/storybook_internal_preview_runtime.js?v=bbac00b4:34426:23
+    at http://localhost:6006/node_modules/.cache/storybook/10.2.10/6408ffe4c5aec7c5c4af9381c4bc8493e95bd4bba97a1143ede6345e134785c7/sb-vite/deps/storybook_internal_preview_runtime.js?v=bbac00b4:34449:8
+    at http://localhost:6006/@fs/Users/moon/work/headless-chart/node_modules/@storybook/react/dist/_browser-chunks/chunk-L3JF7GGZ.js?v=8f9b4c07:139:14
+    at hookified (http://localhost:6006/node_modules/.cache/storybook/10.2.10/6408ffe4c5aec7c5c4af9381c4bc8493e95bd4bba97a1143ede6345e134785c7/sb-vite/deps/storybook_internal_preview_runtime.js?v=bbac00b4:15742:18)
+    at http://localhost:6006/node_modules/.cache/storybook/10.2.10/6408ffe4c5aec7c5c4af9381c4bc8493e95bd4bba97a1143ede6345e134785c7/sb-vite/deps/storybook_internal_preview_runtime.js?v=bbac00b4:34426:23
+    at http://localhost:6006/node_modules/.cache/storybook/10.2.10/6408ffe4c5aec7c5c4af9381c4bc8493e95bd4bba97a1143ede6345e134785c7/sb-vite/deps/storybook_internal_preview_runtime.js?v=bbac00b4:34449:8
+    at decorators (http://localhost:6006/@fs/Users/moon/work/headless-chart/node_modules/@storybook/react/dist/_browser-chunks/chunk-L3JF7GGZ.js?v=8f9b4c07:152:12)
+[   13632ms] ReferenceError: React is not defined
+    at Object.render [as originalStoryFn] (http://localhost:6006/src/stories/AreaChart.stories.tsx:18:39)
+    at jsxDecorator (http://localhost:6006/@fs/Users/moon/work/headless-chart/node_modules/@storybook/react/dist/_browser-chunks/chunk-CMP5DLKH.js?v=8f9b4c07:93:25)
+    at hookified (http://localhost:6006/node_modules/.cache/storybook/10.2.10/6408ffe4c5aec7c5c4af9381c4bc8493e95bd4bba97a1143ede6345e134785c7/sb-vite/deps/storybook_internal_preview_runtime.js?v=bbac00b4:15742:18)
+    at http://localhost:6006/node_modules/.cache/storybook/10.2.10/6408ffe4c5aec7c5c4af9381c4bc8493e95bd4bba97a1143ede6345e134785c7/sb-vite/deps/storybook_internal_preview_runtime.js?v=bbac00b4:34426:23
+    at http://localhost:6006/node_modules/.cache/storybook/10.2.10/6408ffe4c5aec7c5c4af9381c4bc8493e95bd4bba97a1143ede6345e134785c7/sb-vite/deps/storybook_internal_preview_runtime.js?v=bbac00b4:34449:8
+    at http://localhost:6006/@fs/Users/moon/work/headless-chart/node_modules/@storybook/react/dist/_browser-chunks/chunk-L3JF7GGZ.js?v=8f9b4c07:139:14
+    at hookified (http://localhost:6006/node_modules/.cache/storybook/10.2.10/6408ffe4c5aec7c5c4af9381c4bc8493e95bd4bba97a1143ede6345e134785c7/sb-vite/deps/storybook_internal_preview_runtime.js?v=bbac00b4:15742:18)
+    at http://localhost:6006/node_modules/.cache/storybook/10.2.10/6408ffe4c5aec7c5c4af9381c4bc8493e95bd4bba97a1143ede6345e134785c7/sb-vite/deps/storybook_internal_preview_runtime.js?v=bbac00b4:34426:23
+    at http://localhost:6006/node_modules/.cache/storybook/10.2.10/6408ffe4c5aec7c5c4af9381c4bc8493e95bd4bba97a1143ede6345e134785c7/sb-vite/deps/storybook_internal_preview_runtime.js?v=bbac00b4:34449:8
+    at decorators (http://localhost:6006/@fs/Users/moon/work/headless-chart/node_modules/@storybook/react/dist/_browser-chunks/chunk-L3JF7GGZ.js?v=8f9b4c07:152:12)
+[   13503ms] [ERROR] The above error occurred in the <unboundStoryFn> component:
+
+    at unboundStoryFn (http://localhost:6006/node_modules/.cache/storybook/10.2.10/6408ffe4c5aec7c5c4af9381c4bc8493e95bd4bba97a1143ede6345e134785c7/sb-vite/deps/storybook_internal_preview_runtime.js?v=bbac00b4:34512:319)
+    at ErrorBoundary (http://localhost:6006/@fs/Users/moon/work/headless-chart/node_modules/@storybook/react/dist/_browser-chunks/chunk-L3JF7GGZ.js?v=8f9b4c07:84:5)
+
+React will try to recreate this component tree from scratch using the error boundary you provided, ErrorBoundary. @ http://localhost:6006/node_modules/.cache/storybook/10.2.10/6408ffe4c5aec7c5c4af9381c4bc8493e95bd4bba97a1143ede6345e134785c7/sb-vite/deps/chunk-IOWBBA4G.js?v=8f9b4c07:14031
+[   13504ms] [ERROR] Error rendering story 'cartesian-areachart--default': @ http://localhost:6006/node_modules/.cache/storybook/10.2.10/6408ffe4c5aec7c5c4af9381c4bc8493e95bd4bba97a1143ede6345e134785c7/sb-vite/deps/storybook_internal_preview_runtime.js?v=bbac00b4:13667
+[   13504ms] [ERROR] ReferenceError: React is not defined
+    at Object.render [as originalStoryFn] (http://localhost:6006/src/stories/AreaChart.stories.tsx:18:39)
+    at jsxDecorator (http://localhost:6006/@fs/Users/moon/work/headless-chart/node_modules/@storybook/react/dist/_browser-chunks/chunk-CMP5DLKH.js?v=8f9b4c07:93:25)
+    at hookified (http://localhost:6006/node_modules/.cache/storybook/10.2.10/6408ffe4c5aec7c5c4af9381c4bc8493e95bd4bba97a1143ede6345e134785c7/sb-vite/deps/storybook_internal_preview_runtime.js?v=bbac00b4:15742:18)
+    at http://localhost:6006/node_modules/.cache/storybook/10.2.10/6408ffe4c5aec7c5c4af9381c4bc8493e95bd4bba97a1143ede6345e134785c7/sb-vite/deps/storybook_internal_preview_runtime.js?v=bbac00b4:34426:23
+    at http://localhost:6006/node_modules/.cache/storybook/10.2.10/6408ffe4c5aec7c5c4af9381c4bc8493e95bd4bba97a1143ede6345e134785c7/sb-vite/deps/storybook_internal_preview_runtime.js?v=bbac00b4:34449:8
+    at http://localhost:6006/@fs/Users/moon/work/headless-chart/node_modules/@storybook/react/dist/_browser-chunks/chunk-L3JF7GGZ.js?v=8f9b4c07:139:14
+    at hookified (http://localhost:6006/node_modules/.cache/storybook/10.2.10/6408ffe4c5aec7c5c4af9381c4bc8493e95bd4bba97a1143ede6345e134785c7/sb-vite/deps/storybook_internal_preview_runtime.js?v=bbac00b4:15742:18)
+    at http://localhost:6006/node_modules/.cache/storybook/10.2.10/6408ffe4c5aec7c5c4af9381c4bc8493e95bd4bba97a1143ede6345e134785c7/sb-vite/deps/storybook_internal_preview_runtime.js?v=bbac00b4:34426:23
+    at http://localhost:6006/node_modules/.cache/storybook/10.2.10/6408ffe4c5aec7c5c4af9381c4bc8493e95bd4bba97a1143ede6345e134785c7/sb-vite/deps/storybook_internal_preview_runtime.js?v=bbac00b4:34449:8
+    at decorators (http://localhost:6006/@fs/Users/moon/work/headless-chart/node_modules/@storybook/react/dist/_browser-chunks/chunk-L3JF7GGZ.js?v=8f9b4c07:152:12) @ http://localhost:6006/node_modules/.cache/storybook/10.2.10/6408ffe4c5aec7c5c4af9381c4bc8493e95bd4bba97a1143ede6345e134785c7/sb-vite/deps/storybook_internal_preview_runtime.js?v=bbac00b4:13667
+[   36845ms] [ERROR] WebSocket connection to 'ws://localhost:6006/storybook-server-channel?token=25ccb20d-3269-4234-99ac-6ea72b36aaf9' failed:  @ http://localhost:6006/node_modules/.cache/storybook/10.2.10/6408ffe4c5aec7c5c4af9381c4bc8493e95bd4bba97a1143ede6345e134785c7/sb-vite/deps/storybook_internal_preview_runtime.js?v=bbac00b4:15087
+[   36845ms] [ERROR] WebSocket connection to 'ws://localhost:6006/' failed:  @ http://localhost:6006/@vite/client:534
+[   36846ms] [ERROR] WebSocket connection to 'ws://localhost:6006/storybook-server-channel?token=25ccb20d-3269-4234-99ac-6ea72b36aaf9' failed:  @ http://localhost:6006/sb-manager/globals-runtime.js:33411
+[   36846ms] [ERROR] TypeError: Failed to fetch dynamically imported module: http://localhost:6006/src/stories/AreaChart.stories.tsx @ http://localhost:6006/node_modules/.cache/storybook/10.2.10/6408ffe4c5aec7c5c4af9381c4bc8493e95bd4bba97a1143ede6345e134785c7/sb-vite/deps/storybook_internal_preview_runtime.js?v=bbac00b4:13667
+[   37863ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:6006/:0
+[   38866ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:6006/:0
+[   39868ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:6006/:0

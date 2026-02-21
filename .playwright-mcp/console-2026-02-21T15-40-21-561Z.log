@@ -1,0 +1,16 @@
+[    8552ms] [ERROR] TypeError: (0 , _headlessChart.PieChart) is not a function
+    at $csb$eval (https://2-19-8-sandpack.codesandbox.io/App.js:19:43)
+    at J (https://2-19-8-sandpack.codesandbox.io/static/js/sandbox.8a7d01a44.js:1:159097)
+    at K.evaluate (https://2-19-8-sandpack.codesandbox.io/static/js/sandbox.8a7d01a44.js:1:171816)
+    at je.evaluateTranspiledModule (https://2-19-8-sandpack.codesandbox.io/static/js/sandbox.8a7d01a44.js:1:182197)
+    at c (https://2-19-8-sandpack.codesandbox.io/static/js/sandbox.8a7d01a44.js:1:171431)
+    at $csb$eval (https://2-19-8-sandpack.codesandbox.io/index.js:7:35)
+    at J (https://2-19-8-sandpack.codesandbox.io/static/js/sandbox.8a7d01a44.js:1:159097)
+    at K.evaluate (https://2-19-8-sandpack.codesandbox.io/static/js/sandbox.8a7d01a44.js:1:171816)
+    at je.evaluateTranspiledModule (https://2-19-8-sandpack.codesandbox.io/static/js/sandbox.8a7d01a44.js:1:182197)
+    at je.evaluateModule (https://2-19-8-sandpack.codesandbox.io/static/js/sandbox.8a7d01a44.js:1:181696)
+    at https://2-19-8-sandpack.codesandbox.io/static/js/sandbox.8a7d01a44.js:1:354442
+    at Generator.next (<anonymous>)
+    at n (https://2-19-8-sandpack.codesandbox.io/static/js/vendors~sandbox.ecbcf4e6a.chunk.js:1:607)
+    at u (https://2-19-8-sandpack.codesandbox.io/static/js/vendors~sandbox.ecbcf4e6a.chunk.js:1:818) @ https://2-19-8-sandpack.codesandbox.io/static/js/vendors~sandbox-startup.ca8a95b40.chunk.js:0
+[   83587ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_TIMED_OUT @ https://col.csbops.io/data/sandpack:0
