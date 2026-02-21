@@ -1,0 +1,157 @@
+---
+nav_group: "차트 가이드"
+nav_order: 14
+title: "Candlestick Chart"
+description: "캔들스틱 차트 생성 및 커스터마이징 가이드"
+---
+
+# Candlestick Chart
+
+캔들스틱 차트는 각 기간의 시가, 고가, 저가, 종가(OHLC) 값을 보여주는 금융 데이터를 표시합니다. 주식 시장과 금융 데이터 분석의 표준 차트 유형입니다.
+
+## 인터페이스
+
+### CandlestickChart Props
+
+```typescript
+interface CandlestickChartProps {
+  // 필수 속성
+  data: CandlestickChartData;
+
+  // 선택 속성
+  custom?: Partial<CandlestickChartCustom>;
+  title?: string;
+  getScale?: (data: CandlestickChartData) => CandlestickChartScale;
+}
+```
+
+### 데이터 구조
+
+```typescript
+type CandlestickChartDataPoint = {
+  open: number;      // 시가
+  high: number;      // 고가
+  low: number;       // 저가
+  close: number;     // 종가
+};
+
+type CandlestickChartData = {
+  labels: string[];                      // 기간 라벨
+  datasets: CandlestickChartDataPoint[]; // OHLC 데이터 포인트
+  title?: string;                        // 차트 제목
+};
+
+type CandlestickChartScale = {
+  min: number;     // 최소값
+  max: number;     // 최대값
+  step: number;    // 단계 간격
+};
+```
+
+## 기본 사용법
+
+```javascript
+import Widget from '@meursyphus/flitter-react';
+import { CandlestickChart } from '@meursyphus/headless-chart';
+
+const data = {
+  labels: ['월', '화', '수', '목', '금'],
+  datasets: [
+    { open: 100, high: 110, low: 95, close: 108 },
+    { open: 108, high: 115, low: 105, close: 112 },
+    { open: 112, high: 118, low: 100, close: 103 },
+    { open: 103, high: 107, low: 98, close: 105 },
+    { open: 105, high: 120, low: 104, close: 118 }
+  ],
+  title: '주가'
+};
+
+function BasicCandlestickChart() {
+  return (
+    <Widget
+      width="600px"
+      height="400px"
+      widget={CandlestickChart({ data })}
+    />
+  );
+}
+```
+
+## 차트 구성 요소
+
+Candlestick Chart는 다음과 같은 계층 구조로 구성됩니다:
+
+```
+CandlestickChart
+└── Layout (전체 레이아웃)
+    ├── Title (차트 제목)
+    ├── Legend (범례 항목)
+    └── Plot (플롯 영역)
+        ├── XAxis (X축)
+        ├── YAxis (Y축)
+        ├── Grid (그리드 라인)
+        └── Series (데이터 시리즈)
+            └── Candlestick (개별 캔들스틱)
+```
+
+## 커스터마이징 가능한 요소
+
+`custom` prop을 통해 다음 구성 요소를 커스터마이징할 수 있습니다:
+
+| 컴포넌트 | 인자 | 설명 |
+|----------|------|------|
+| `layout` | `{ title, legends, plot }` | 전체 차트 레이아웃 |
+| `plot` | `{ xAxis, yAxis, series, grid }` | 플롯 영역 |
+| `series` | `{ candlesticks }` | 데이터 시리즈 컨테이너 |
+| `candlestick` | `{ open, high, low, close, label, index }` | 개별 캔들스틱 |
+| `legend` | `{ name, index }` | 범례 항목 |
+| `title` | `{ name }` | 차트 제목 |
+| `dataLabel` | `{ value, label, legend }` | 데이터 라벨 |
+| `xAxis` | `{ line, labels, tick }` | X축 구조 |
+| `yAxis` | `{ line, labels, tick }` | Y축 구조 |
+| `xAxisLabel` | `{ name, index }` | X축 라벨 |
+| `yAxisLabel` | `{ name, index }` | Y축 라벨 |
+| `xAxisLine` | - | X축 라인 |
+| `yAxisLine` | - | Y축 라인 |
+| `xAxisTick` | - | X축 틱 마크 |
+| `yAxisTick` | - | Y축 틱 마크 |
+| `grid` | `{ xLine, yLine }` | 그리드 컨테이너 |
+| `gridXLine` | - | 수직 그리드 라인 |
+| `gridYLine` | - | 수평 그리드 라인 |
+
+## 실제 사용 예제
+
+### 1. 커스텀 캔들스틱 색상
+
+```javascript
+const coloredCandlestick = CandlestickChart({
+  data,
+  custom: {
+    candlestick: ({ open, high, low, close, label, index }) => {
+      const isUp = close >= open;
+      const color = isUp ? '#22c55e' : '#ef4444';
+      // 상승은 초록색, 하락은 빨간색의 커스텀 캔들스틱 렌더링
+    }
+  }
+});
+```
+
+### 2. 커스텀 그리드 스타일
+
+```javascript
+const styledChart = CandlestickChart({
+  data,
+  custom: {
+    gridYLine: () => Container({
+      height: 1,
+      color: 'rgba(0, 0, 0, 0.05)'
+    })
+  }
+});
+```
+
+## 다음 단계
+
+- 더 많은 예제는 [데모 페이지](/charts/candlestick)를 참고하세요
+- 상승/하락 지표를 위해 캔들스틱 색상을 커스터마이징하세요
+- 완전한 금융 분석을 위해 아래에 거래량 막대를 추가하세요

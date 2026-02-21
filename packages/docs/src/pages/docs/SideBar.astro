@@ -93,15 +93,17 @@ const normalizedPathname = normalizePath(url.pathname);
   }
 
   .nav-group {
-    margin-bottom: 2rem;
+    margin-bottom: 1.75rem;
   }
 
   .nav-group-title {
-    font-size: 1.125rem;
+    font-size: 0.75rem;
     font-weight: 700;
-    color: var(--neu-text);
-    margin-bottom: 0.75rem;
-    padding-left: 0.5rem;
+    color: var(--neu-text-secondary);
+    margin-bottom: 0.625rem;
+    padding-left: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
   }
 
   .nav-list {
@@ -110,32 +112,29 @@ const normalizedPathname = normalizePath(url.pathname);
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 2px;
   }
 
   .nav-link {
     display: block;
-    padding: 0.625rem 1rem;
-    font-size: 0.9375rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
     color: var(--neu-text-secondary);
     text-decoration: none;
-    border-radius: 12px;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 8px;
+    transition: all 0.15s ease;
     position: relative;
   }
 
   .nav-link:hover {
     color: var(--neu-text);
-    background: var(--neu-bg);
-    box-shadow: var(--neu-shadow-sm);
-    transform: translateX(2px);
+    background: rgba(255, 255, 255, 0.05);
   }
 
   .nav-link.active {
     color: var(--neu-accent);
     font-weight: 600;
-    background: var(--neu-bg);
-    box-shadow: var(--neu-shadow-inset);
+    background: rgba(97, 218, 251, 0.08);
   }
 
   .nav-link.active::before {
@@ -150,9 +149,8 @@ const normalizedPathname = normalizePath(url.pathname);
     border-radius: 0 2px 2px 0;
   }
 
-  /* Scrollbar styling */
   .sidebar-nav::-webkit-scrollbar {
-    width: 6px;
+    width: 4px;
   }
 
   .sidebar-nav::-webkit-scrollbar-track {
@@ -160,12 +158,11 @@ const normalizedPathname = normalizePath(url.pathname);
   }
 
   .sidebar-nav::-webkit-scrollbar-thumb {
-    background-color: var(--neu-shadow-dark);
+    background-color: rgba(255, 255, 255, 0.1);
     border-radius: 3px;
-    opacity: 0.3;
   }
 
   .sidebar-nav::-webkit-scrollbar-thumb:hover {
-    opacity: 0.5;
+    background-color: rgba(255, 255, 255, 0.18);
   }
 </style>

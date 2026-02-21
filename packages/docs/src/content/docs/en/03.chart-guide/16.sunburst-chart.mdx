@@ -1,0 +1,163 @@
+---
+nav_group: "Chart Guide"
+nav_order: 16
+title: "Sunburst Chart"
+description: "Guide to creating and customizing sunburst charts"
+---
+
+# Sunburst Chart
+
+Sunburst charts display hierarchical data as concentric rings, where each ring represents a level in the hierarchy. They extend pie charts to show parent-child relationships, making them ideal for visualizing multi-level categorical breakdowns.
+
+## Interface
+
+### SunburstChart Props
+
+```typescript
+interface SunburstChartProps {
+  // Required properties
+  data: SunburstChartData;
+
+  // Optional properties
+  custom?: Partial<SunburstCustom>;
+  title?: string;
+}
+```
+
+### Data Structure
+
+```typescript
+type SunburstNode = {
+  label: string;               // Node label
+  value?: number;              // Node value (leaf nodes)
+  color?: string;              // Optional custom color
+  children?: SunburstNode[];   // Child nodes
+};
+
+type SunburstChartData = {
+  root: SunburstNode;    // Root node of the hierarchy
+  title?: string;        // Chart title
+};
+
+type FlatSegment = {
+  node: SunburstNode;    // Reference to the node
+  depth: number;         // Depth level in the hierarchy
+  startAngle: number;    // Start angle of the segment
+  endAngle: number;      // End angle of the segment
+  color: string;         // Segment color
+};
+```
+
+## Basic Usage
+
+```javascript
+import Widget from '@meursyphus/flitter-react';
+import { SunburstChart } from '@meursyphus/headless-chart';
+
+const data = {
+  root: {
+    label: 'Total',
+    children: [
+      {
+        label: 'Category A',
+        children: [
+          { label: 'A-1', value: 30 },
+          { label: 'A-2', value: 20 }
+        ]
+      },
+      {
+        label: 'Category B',
+        children: [
+          { label: 'B-1', value: 25 },
+          { label: 'B-2', value: 15 },
+          { label: 'B-3', value: 10 }
+        ]
+      }
+    ]
+  },
+  title: 'Hierarchical Data'
+};
+
+function BasicSunburstChart() {
+  return (
+    <Widget
+      width="500px"
+      height="500px"
+      widget={SunburstChart({ data })}
+    />
+  );
+}
+```
+
+## Chart Components
+
+Sunburst Chart consists of the following hierarchical structure:
+
+```
+SunburstChart
+└── Layout (overall layout)
+    ├── Title (chart title)
+    ├── Legend (legend)
+    │   └── LegendItem (legend items)
+    └── Sunburst (sunburst area)
+        └── Segment (individual arc segment)
+```
+
+## Customizable Elements
+
+You can customize the following components through the `custom` prop:
+
+| Component | Args | Description |
+|-----------|------|-------------|
+| `layout` | `{ title, sunburst, legend }` | Overall chart layout |
+| `title` | `{ name }` | Chart title |
+| `legend` | `{ items }` | Legend container |
+| `legendItem` | `{ label, color }` | Individual legend item |
+| `sunburst` | `{ segments }` | Sunburst container (receives FlatSegment[]) |
+| `segment` | `{ segment }` | Individual arc segment (receives FlatSegment) |
+
+## Real-World Usage Examples
+
+### 1. Custom Segment Colors by Depth
+
+```javascript
+const depthColoredSunburst = SunburstChart({
+  data,
+  custom: {
+    segment: ({ segment }) => {
+      const depthColors = ['#3b82f6', '#60a5fa', '#93c5fd'];
+      const color = depthColors[segment.depth] || '#bfdbfe';
+      // Custom arc segment rendering with depth-based colors
+    }
+  }
+});
+```
+
+### 2. Custom Legend
+
+```javascript
+const legendedSunburst = SunburstChart({
+  data,
+  custom: {
+    legendItem: ({ label, color }) => {
+      return Row({
+        children: [
+          Container({
+            width: 12,
+            height: 12,
+            decoration: new BoxDecoration({ color, borderRadius: BorderRadius.circular(2) })
+          }),
+          SizedBox({ width: 6 }),
+          Text(label, { style: new TextStyle({ fontSize: 12, color: '#374151' }) })
+        ]
+      });
+    }
+  }
+});
+```
+
+## Next Steps
+
+- For more examples, check out the [demo page](/charts/sunburst)
+- Use color variations by depth level for better readability
+- Add interactive drill-down for exploring hierarchies

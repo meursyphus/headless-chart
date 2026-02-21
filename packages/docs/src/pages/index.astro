@@ -152,7 +152,7 @@ const charts = [
     padding: 6rem 2rem 4rem;
     overflow: hidden;
   }
-  
+
   .hero-content {
     position: relative;
     max-width: 800px;
@@ -160,8 +160,11 @@ const charts = [
     padding: 3rem;
     text-align: center;
     z-index: 1;
+    background: rgba(22, 33, 62, 0.6);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
   }
-  
+
   .hero-badge {
     display: inline-block;
     padding: 0.5rem 1.5rem;
@@ -172,7 +175,7 @@ const charts = [
     letter-spacing: 0.05em;
     text-transform: uppercase;
   }
-  
+
   .hero-title {
     font-size: clamp(2.5rem, 6vw, 4rem);
     font-weight: 800;
@@ -182,11 +185,11 @@ const charts = [
     flex-direction: column;
     gap: 0.5rem;
   }
-  
+
   .title-line {
     display: block;
   }
-  
+
   .hero-description {
     font-size: clamp(1.125rem, 3vw, 1.375rem);
     color: var(--neu-text-secondary);
@@ -194,35 +197,33 @@ const charts = [
     max-width: 600px;
     line-height: 1.8;
   }
-  
+
   .hero-icon {
     display: inline-block;
     margin-right: 0.5rem;
     font-size: 1.25em;
   }
-  
+
   .hero-actions {
     display: flex;
     gap: 1rem;
     justify-content: center;
     flex-wrap: wrap;
   }
-  
+
   .neu-button.primary {
     background: linear-gradient(135deg, var(--neu-accent) 0%, var(--neu-accent-light) 100%);
-    color: white;
-    box-shadow: 
-      8px 8px 16px rgba(123, 97, 255, 0.2),
-      -8px -8px 16px rgba(255, 255, 255, 0.7);
+    color: #0f0f1a;
+    font-weight: 600;
+    border: none;
+    box-shadow: 0 4px 16px rgba(97, 218, 251, 0.25);
   }
-  
+
   .neu-button.primary:hover {
-    transform: translateY(-3px);
-    box-shadow: 
-      12px 12px 24px rgba(123, 97, 255, 0.3),
-      -12px -12px 24px rgba(255, 255, 255, 0.8);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(97, 218, 251, 0.35);
   }
-  
+
   /* Animated background orbs */
   .hero-orbs {
     position: absolute;
@@ -230,43 +231,43 @@ const charts = [
     overflow: hidden;
     z-index: 0;
   }
-  
+
   .orb {
     position: absolute;
     border-radius: 50%;
-    filter: blur(80px);
-    opacity: 0.3;
+    filter: blur(100px);
+    opacity: 0.25;
     animation: float 20s infinite ease-in-out;
   }
-  
+
   .orb-1 {
     width: 400px;
     height: 400px;
-    background: linear-gradient(135deg, var(--neu-accent), var(--neu-accent-light));
+    background: linear-gradient(135deg, #61dafb, #a78bfa);
     top: -200px;
     left: -200px;
     animation-delay: 0s;
   }
-  
+
   .orb-2 {
     width: 300px;
     height: 300px;
-    background: linear-gradient(135deg, #7b61ff, #b794f6);
+    background: linear-gradient(135deg, #f472b6, #a78bfa);
     bottom: -150px;
     right: -150px;
     animation-delay: 7s;
   }
-  
+
   .orb-3 {
     width: 250px;
     height: 250px;
-    background: linear-gradient(135deg, #9d8bff, #e9d5ff);
+    background: linear-gradient(135deg, #34d399, #61dafb);
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     animation-delay: 14s;
   }
-  
+
   @keyframes float {
     0%, 100% {
       transform: translate(0, 0) scale(1);
@@ -282,7 +283,7 @@ const charts = [
   .charts-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 2rem;
+    gap: 1.5rem;
     padding: 2rem;
     max-width: 1400px;
     margin: 0 auto;
@@ -290,7 +291,7 @@ const charts = [
 
   .chart-card {
     position: relative;
-    border-radius: 20px;
+    border-radius: 16px;
     overflow: hidden;
     text-decoration: none;
     color: inherit;
@@ -298,7 +299,7 @@ const charts = [
     animation: fadeInUp 0.6s ease-out forwards;
     opacity: 0;
   }
-  
+
   @keyframes fadeInUp {
     from {
       opacity: 0;
@@ -311,10 +312,11 @@ const charts = [
   }
 
   .chart-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: var(--neu-shadow-lg);
+    transform: translateY(-4px);
+    border-color: var(--neu-accent);
+    box-shadow: var(--glow-accent);
   }
-  
+
   .chart-card:hover .chart-hover-indicator {
     transform: translateX(0);
     opacity: 1;
@@ -323,11 +325,12 @@ const charts = [
   .chart-image {
     width: 100%;
     aspect-ratio: 1.2;
-    background: var(--neu-bg-alt);
+    background: var(--surface-3);
     padding: 1rem;
     display: flex;
     align-items: center;
     justify-content: center;
+    border-bottom: 1px solid var(--border-color);
   }
 
   .chart-image img {
@@ -336,9 +339,9 @@ const charts = [
     object-fit: contain;
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  
+
   .chart-card:hover .chart-image img {
-    transform: scale(1.05);
+    transform: scale(1.03);
   }
 
   .chart-info {
@@ -347,7 +350,7 @@ const charts = [
 
   .chart-info h2 {
     margin: 0;
-    font-size: 1.25rem;
+    font-size: 1.125rem;
     color: var(--neu-text);
     margin-bottom: 0.5rem;
     font-weight: 600;
@@ -356,19 +359,19 @@ const charts = [
   .chart-info p {
     margin: 0;
     color: var(--neu-text-secondary);
-    font-size: 0.95rem;
+    font-size: 0.875rem;
     line-height: 1.6;
   }
-  
+
   .chart-hover-indicator {
     position: absolute;
     bottom: 1.5rem;
     right: 1.5rem;
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
-    background: var(--neu-bg);
-    box-shadow: var(--neu-shadow-sm);
+    background: var(--surface-1);
+    border: 1px solid var(--border-color);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -376,7 +379,7 @@ const charts = [
     opacity: 0;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  
+
   .chart-hover-indicator svg {
     color: var(--neu-accent);
   }
@@ -385,28 +388,28 @@ const charts = [
     .hero {
       padding: 4rem 1rem 3rem;
     }
-    
+
     .hero-content {
       padding: 2rem;
     }
-    
+
     .hero-actions {
       flex-direction: column;
       width: 100%;
     }
-    
+
     .neu-button {
       width: 100%;
       text-align: center;
     }
-    
+
     .charts-grid {
       grid-template-columns: 1fr;
       padding: 1rem;
     }
-    
+
     .orb {
-      filter: blur(60px);
+      filter: blur(80px);
     }
   }
 </style>

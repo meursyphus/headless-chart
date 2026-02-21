@@ -72,19 +72,21 @@ const groupedTutorials = sortedCharts.reduce(
 
 <style>
   .toc-container {
-    padding: 1.5rem;
+    padding: 1.25rem;
     font-size: 0.875rem;
   }
 
   .toc-group {
-    margin-bottom: 2rem;
+    margin-bottom: 1.75rem;
   }
 
   .toc-group-title {
-    margin-bottom: 0.75rem;
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--neu-text);
+    margin-bottom: 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--neu-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
   }
 
   .toc-list {
@@ -93,30 +95,28 @@ const groupedTutorials = sortedCharts.reduce(
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 2px;
   }
 
   .toc-link {
     display: block;
-    padding: 0.625rem 1rem;
-    font-size: 0.875rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8125rem;
     color: var(--neu-text-secondary);
     text-decoration: none;
-    border-radius: 12px;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    background: var(--neu-bg);
+    border-radius: 6px;
+    transition: all 0.15s ease;
+    background: transparent;
   }
 
   .toc-link:hover {
     color: var(--neu-text);
-    box-shadow: var(--neu-shadow-sm);
-    transform: translateX(2px);
+    background: rgba(255, 255, 255, 0.05);
   }
 
   .toc-link.active {
     color: var(--neu-accent);
     font-weight: 500;
-    box-shadow: var(--neu-shadow-inset);
-    background: var(--neu-bg);
+    background: rgba(97, 218, 251, 0.08);
   }
 </style>

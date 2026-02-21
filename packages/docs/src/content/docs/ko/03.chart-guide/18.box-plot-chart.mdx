@@ -1,0 +1,203 @@
+---
+nav_group: "차트 가이드"
+nav_order: 18
+title: "Box Plot Chart"
+description: "박스 플롯 차트 생성 및 커스터마이징 가이드"
+---
+
+# Box Plot Chart
+
+박스 플롯 차트(상자 수염 그림이라고도 함)는 사분위수를 통해 수치 데이터의 분포를 표시합니다. 최소값, 제1사분위수(Q1), 중앙값, 제3사분위수(Q3), 최대값 및 이상치를 보여주므로 카테고리 간 분포를 비교하는 데 이상적입니다.
+
+## 인터페이스
+
+### BoxPlotChart Props
+
+```typescript
+interface BoxPlotChartProps {
+  // 필수 속성
+  data: BoxPlotChartData;
+
+  // 선택 속성
+  custom?: Partial<BoxPlotChartCustom>;
+  title?: string;
+  getScale?: (data: BoxPlotChartData) => BoxPlotChartScale;
+}
+```
+
+### 데이터 구조
+
+```typescript
+type BoxPlotDataPoint = {
+  min: number;          // 최소값 (하위 수염)
+  q1: number;           // 제1사분위수 (25번째 백분위수)
+  median: number;       // 중앙값 (50번째 백분위수)
+  q3: number;           // 제3사분위수 (75번째 백분위수)
+  max: number;          // 최대값 (상위 수염)
+  outliers?: number[];  // 선택적 이상치 값
+};
+
+type BoxPlotChartData = {
+  labels: string[];                                    // 카테고리 라벨
+  datasets: {
+    legend: string;           // 데이터셋 이름
+    data: BoxPlotDataPoint[]; // 박스 플롯 데이터 포인트
+  }[];
+};
+
+type BoxPlotChartScale = {
+  min: number;     // 최소값
+  max: number;     // 최대값
+  step: number;    // 단계 간격
+};
+```
+
+## 기본 사용법
+
+```javascript
+import Widget from '@meursyphus/flitter-react';
+import { BoxPlotChart } from '@meursyphus/headless-chart';
+
+const data = {
+  labels: ['그룹 A', '그룹 B', '그룹 C', '그룹 D'],
+  datasets: [
+    {
+      legend: '실험',
+      data: [
+        { min: 10, q1: 25, median: 35, q3: 45, max: 60, outliers: [5, 70] },
+        { min: 15, q1: 30, median: 40, q3: 50, max: 65 },
+        { min: 20, q1: 35, median: 45, q3: 55, max: 70, outliers: [10] },
+        { min: 12, q1: 28, median: 38, q3: 48, max: 62 }
+      ]
+    }
+  ]
+};
+
+function BasicBoxPlotChart() {
+  return (
+    <Widget
+      width="600px"
+      height="400px"
+      widget={BoxPlotChart({ data })}
+    />
+  );
+}
+```
+
+## 차트 구성 요소
+
+Box Plot Chart는 다음과 같은 계층 구조로 구성됩니다:
+
+```
+BoxPlotChart
+└── Layout (전체 레이아웃)
+    ├── Title (차트 제목)
+    ├── Legend (범례 항목)
+    └── Plot (플롯 영역)
+        ├── XAxis (X축)
+        ├── YAxis (Y축)
+        ├── Grid (그리드 라인)
+        └── Series (데이터 시리즈)
+            └── BoxPlotGroup (그룹화된 박스 플롯)
+                ├── BoxPlot (개별 박스 플롯)
+                └── Outlier (이상치 포인트)
+```
+
+## 커스터마이징 가능한 요소
+
+`custom` prop을 통해 다음 구성 요소를 커스터마이징할 수 있습니다:
+
+| 컴포넌트 | 인자 | 설명 |
+|----------|------|------|
+| `layout` | `{ title, legends, plot }` | 전체 차트 레이아웃 |
+| `plot` | `{ xAxis, yAxis, series, grid }` | 플롯 영역 |
+| `series` | `{ boxPlotGroups }` | 데이터 시리즈 컨테이너 |
+| `boxPlotGroup` | `{ boxPlots, index, label, dataPoints }` | 그룹화된 박스 플롯 |
+| `boxPlot` | `{ dataPoint, index, legend, label }` | 개별 박스 플롯 |
+| `outlier` | `{ value, index, legend, label }` | 이상치 포인트 |
+| `legend` | `{ name, index }` | 범례 항목 |
+| `title` | `{ name }` | 차트 제목 |
+| `xAxis` | `{ line, labels, tick }` | X축 구조 |
+| `yAxis` | `{ line, labels, tick }` | Y축 구조 |
+| `xAxisLabel` | `{ name, index }` | X축 라벨 |
+| `yAxisLabel` | `{ name, index }` | Y축 라벨 |
+| `xAxisLine` | - | X축 라인 |
+| `yAxisLine` | - | Y축 라인 |
+| `xAxisTick` | - | X축 틱 마크 |
+| `yAxisTick` | - | Y축 틱 마크 |
+| `grid` | `{ xLine, yLine }` | 그리드 컨테이너 |
+| `gridXLine` | - | 수직 그리드 라인 |
+| `gridYLine` | - | 수평 그리드 라인 |
+
+## 실제 사용 예제
+
+### 1. 커스텀 박스 플롯 스타일
+
+```javascript
+const styledBoxPlot = BoxPlotChart({
+  data,
+  custom: {
+    boxPlot: ({ dataPoint, index, legend, label }) => {
+      // 커스텀 박스 플롯 렌더링:
+      // - Q1에서 Q3까지 색상이 있는 상자
+      // - 중앙값 라인
+      // - 최소에서 최대까지의 수염
+    }
+  }
+});
+```
+
+### 2. 커스텀 이상치 스타일
+
+```javascript
+const outlierStyled = BoxPlotChart({
+  data,
+  custom: {
+    outlier: ({ value, index, legend, label }) => {
+      return Container({
+        width: 8,
+        height: 8,
+        decoration: new BoxDecoration({
+          shape: 'circle',
+          color: '#ef4444',
+          border: Border.all({ color: '#b91c1c', width: 1 })
+        })
+      });
+    }
+  }
+});
+```
+
+### 3. 다중 데이터셋 비교
+
+```javascript
+const comparisonData = {
+  labels: ['1월', '2월', '3월'],
+  datasets: [
+    {
+      legend: '2024',
+      data: [
+        { min: 10, q1: 20, median: 30, q3: 40, max: 50 },
+        { min: 15, q1: 25, median: 35, q3: 45, max: 55 },
+        { min: 12, q1: 22, median: 32, q3: 42, max: 52 }
+      ]
+    },
+    {
+      legend: '2025',
+      data: [
+        { min: 18, q1: 28, median: 38, q3: 48, max: 58 },
+        { min: 20, q1: 30, median: 40, q3: 50, max: 60 },
+        { min: 22, q1: 32, median: 42, q3: 52, max: 62 }
+      ]
+    }
+  ]
+};
+
+const comparisonChart = BoxPlotChart({ data: comparisonData });
+```
+
+## 다음 단계
+
+- 더 많은 예제는 [데모 페이지](/charts/box-plot)를 참고하세요
+- 여러 데이터셋을 사용하여 분포를 나란히 비교하세요
+- 쉬운 식별을 위해 독특한 스타일로 이상치를 강조하세요

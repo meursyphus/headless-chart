@@ -101,11 +101,11 @@ const { headings } = Astro.props;
   }
 
   .toc-title {
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--neu-text);
+    letter-spacing: 0.08em;
+    color: var(--neu-text-secondary);
     margin-bottom: 1rem;
     padding-left: 0.5rem;
   }
@@ -122,21 +122,22 @@ const { headings } = Astro.props;
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.125rem;
+    gap: 1px;
+    border-left: 1px solid var(--border-color);
   }
 
   .toc-link {
     display: block;
-    padding: 0.5rem 0.75rem;
-    font-size: 0.875rem;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.8125rem;
     color: var(--neu-text-secondary);
     text-decoration: none;
-    border-radius: 8px;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.15s ease;
     position: relative;
+    margin-left: -1px;
+    border-left: 2px solid transparent;
   }
 
-  /* Indent based on heading depth */
   .toc-link[data-depth="2"] {
     padding-left: 1.5rem;
   }
@@ -151,29 +152,14 @@ const { headings } = Astro.props;
 
   .toc-link:hover {
     color: var(--neu-text);
-    background: var(--neu-bg-alt);
   }
 
   .toc-link.active {
     color: var(--neu-accent);
     font-weight: 600;
-    background: var(--neu-bg);
-    box-shadow: var(--neu-shadow-inset);
+    border-left-color: var(--neu-accent);
   }
 
-  .toc-link.active::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 2px;
-    height: 70%;
-    background: var(--neu-accent);
-    border-radius: 1px;
-  }
-
-  /* Scrollbar styling */
   .toc-nav::-webkit-scrollbar {
     width: 4px;
   }
@@ -183,16 +169,14 @@ const { headings } = Astro.props;
   }
 
   .toc-nav::-webkit-scrollbar-thumb {
-    background-color: var(--neu-shadow-dark);
+    background-color: rgba(255, 255, 255, 0.1);
     border-radius: 2px;
-    opacity: 0.3;
   }
 
   .toc-nav::-webkit-scrollbar-thumb:hover {
-    opacity: 0.5;
+    background-color: rgba(255, 255, 255, 0.18);
   }
 
-  /* Mobile styles */
   @media (max-width: 1024px) {
     .toc-wrapper {
       position: static;
@@ -200,7 +184,7 @@ const { headings } = Astro.props;
     }
 
     .toc-title {
-      font-size: 1rem;
+      font-size: 0.875rem;
       margin-bottom: 1.5rem;
     }
   }

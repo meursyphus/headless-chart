@@ -56,40 +56,39 @@ const fullCanonicalUrl = `${BASE_ORIGIN}${Astro.url.pathname}`;
 
 <style is:global>
 :root {
-  --header: 64px; /* 헤더 높이 */
-  --px: 64px; /* 좌우 패딩 */
-  
-  /* Neumorphic Design System */
-  --neu-bg: #e6e7ee;
-  --neu-bg-alt: #f0f0f3;
-  --neu-text: #31344b;
-  --neu-text-secondary: #44476a;
-  --neu-accent: #7b61ff;
-  --neu-accent-light: #9d8bff;
-  
-  /* Neumorphic Shadows */
-  --neu-shadow-light: #ffffff;
-  --neu-shadow-dark: #c8cad0;
-  --neu-shadow-inset-light: #ffffff;
-  --neu-shadow-inset-dark: #a3a5aa;
-  
-  /* Shadow Values */
-  --neu-shadow-sm: 
-    6px 6px 12px var(--neu-shadow-dark),
-    -6px -6px 12px var(--neu-shadow-light);
-  --neu-shadow-md: 
-    12px 12px 24px var(--neu-shadow-dark),
-    -12px -12px 24px var(--neu-shadow-light);
-  --neu-shadow-lg: 
-    20px 20px 40px var(--neu-shadow-dark),
-    -20px -20px 40px var(--neu-shadow-light);
-  --neu-shadow-inset: 
-    inset 6px 6px 12px var(--neu-shadow-inset-dark),
-    inset -6px -6px 12px var(--neu-shadow-inset-light);
+  --header: 64px;
+  --px: 64px;
+
+  /* Dark Theme Design System */
+  --neu-bg: #1a1a2e;
+  --neu-bg-alt: #16213e;
+  --neu-text: #e2e8f0;
+  --neu-text-secondary: #94a3b8;
+  --neu-accent: #61dafb;
+  --neu-accent-light: #a78bfa;
+
+  /* Surface colors */
+  --surface-1: #0f3460;
+  --surface-2: #1a1a2e;
+  --surface-3: #16213e;
+  --border-color: rgba(97, 218, 251, 0.12);
+  --border-color-hover: rgba(97, 218, 251, 0.25);
+
+  /* Shadows for dark theme */
+  --neu-shadow-dark: rgba(0, 0, 0, 0.4);
+  --neu-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --neu-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.3);
+  --neu-shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --neu-shadow-inset: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+
+  /* Glow effects */
+  --glow-accent: 0 0 20px rgba(97, 218, 251, 0.15);
+  --glow-purple: 0 0 20px rgba(167, 139, 250, 0.15);
 }
 
 html, body {
-  margin:0; padding:0;
+  margin: 0;
+  padding: 0;
   font-family: 'Inter', sans-serif;
   color: var(--neu-text);
   min-height: 100vh;
@@ -99,9 +98,9 @@ html, body {
 
 body {
   background: var(--neu-bg);
-  background-image: 
-    radial-gradient(ellipse at top left, rgba(123, 97, 255, 0.03) 0%, transparent 50%),
-    radial-gradient(ellipse at bottom right, rgba(123, 97, 255, 0.02) 0%, transparent 50%);
+  background-image:
+    radial-gradient(ellipse at top left, rgba(97, 218, 251, 0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom right, rgba(167, 139, 250, 0.04) 0%, transparent 50%);
 }
 
 .layout {
@@ -111,7 +110,6 @@ body {
   margin: 0 auto;
   min-height: 100vh;
   padding-top: var(--header);
-
 }
 
 ::-webkit-scrollbar {
@@ -121,60 +119,60 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 255, 255, 0.1);
   border-radius: 20px;
   border: 2px solid transparent;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(0, 0, 0, 0.15);
+  background-color: rgba(255, 255, 255, 0.18);
 }
 
 .glass {
-  background: rgba(230, 231, 238, 0.6);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(22, 33, 62, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
 }
 
-/* Neumorphic Components */
+/* Card Components */
 .neu-card {
-  background: var(--neu-bg);
-  border-radius: 20px;
-  box-shadow: var(--neu-shadow-md);
+  background: var(--neu-bg-alt);
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .neu-card:hover {
-  box-shadow: var(--neu-shadow-sm);
+  border-color: var(--border-color-hover);
 }
 
 .neu-button {
-  background: var(--neu-bg);
-  border: none;
-  border-radius: 12px;
+  background: var(--neu-bg-alt);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
   padding: 12px 24px;
   color: var(--neu-text);
   font-weight: 500;
-  box-shadow: var(--neu-shadow-sm);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
 }
 
 .neu-button:hover {
-  box-shadow: var(--neu-shadow-md);
-  transform: translateY(-2px);
+  border-color: var(--border-color-hover);
+  background: var(--surface-1);
+  transform: translateY(-1px);
 }
 
 .neu-button:active {
-  box-shadow: var(--neu-shadow-inset);
   transform: translateY(0);
+  background: var(--surface-3);
 }
 
 .neu-inset {
-  background: var(--neu-bg);
-  border-radius: 12px;
-  box-shadow: var(--neu-shadow-inset);
+  background: rgba(15, 52, 96, 0.4);
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
 }
 
 /* Gradient Text */

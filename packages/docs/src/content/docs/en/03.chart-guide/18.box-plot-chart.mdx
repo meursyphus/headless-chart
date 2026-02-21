@@ -1,0 +1,203 @@
+---
+nav_group: "Chart Guide"
+nav_order: 18
+title: "Box Plot Chart"
+description: "Guide to creating and customizing box plot charts"
+---
+
+# Box Plot Chart
+
+Box plot charts (also known as box-and-whisker plots) display the distribution of numerical data through quartiles. They show the minimum, first quartile (Q1), median, third quartile (Q3), maximum, and outliers, making them ideal for comparing distributions across categories.
+
+## Interface
+
+### BoxPlotChart Props
+
+```typescript
+interface BoxPlotChartProps {
+  // Required properties
+  data: BoxPlotChartData;
+
+  // Optional properties
+  custom?: Partial<BoxPlotChartCustom>;
+  title?: string;
+  getScale?: (data: BoxPlotChartData) => BoxPlotChartScale;
+}
+```
+
+### Data Structure
+
+```typescript
+type BoxPlotDataPoint = {
+  min: number;          // Minimum value (lower whisker)
+  q1: number;           // First quartile (25th percentile)
+  median: number;       // Median (50th percentile)
+  q3: number;           // Third quartile (75th percentile)
+  max: number;          // Maximum value (upper whisker)
+  outliers?: number[];  // Optional outlier values
+};
+
+type BoxPlotChartData = {
+  labels: string[];                                    // Category labels
+  datasets: {
+    legend: string;           // Dataset name
+    data: BoxPlotDataPoint[]; // Box plot data points
+  }[];
+};
+
+type BoxPlotChartScale = {
+  min: number;     // Minimum value
+  max: number;     // Maximum value
+  step: number;    // Step interval
+};
+```
+
+## Basic Usage
+
+```javascript
+import Widget from '@meursyphus/flitter-react';
+import { BoxPlotChart } from '@meursyphus/headless-chart';
+
+const data = {
+  labels: ['Group A', 'Group B', 'Group C', 'Group D'],
+  datasets: [
+    {
+      legend: 'Experiment',
+      data: [
+        { min: 10, q1: 25, median: 35, q3: 45, max: 60, outliers: [5, 70] },
+        { min: 15, q1: 30, median: 40, q3: 50, max: 65 },
+        { min: 20, q1: 35, median: 45, q3: 55, max: 70, outliers: [10] },
+        { min: 12, q1: 28, median: 38, q3: 48, max: 62 }
+      ]
+    }
+  ]
+};
+
+function BasicBoxPlotChart() {
+  return (
+    <Widget
+      width="600px"
+      height="400px"
+      widget={BoxPlotChart({ data })}
+    />
+  );
+}
+```
+
+## Chart Components
+
+Box Plot Chart consists of the following hierarchical structure:
+
+```
+BoxPlotChart
+└── Layout (overall layout)
+    ├── Title (chart title)
+    ├── Legend (legend items)
+    └── Plot (plot area)
+        ├── XAxis (X-axis)
+        ├── YAxis (Y-axis)
+        ├── Grid (grid lines)
+        └── Series (data series)
+            └── BoxPlotGroup (grouped box plots)
+                ├── BoxPlot (individual box plot)
+                └── Outlier (outlier points)
+```
+
+## Customizable Elements
+
+You can customize the following components through the `custom` prop:
+
+| Component | Args | Description |
+|-----------|------|-------------|
+| `layout` | `{ title, legends, plot }` | Overall chart layout |
+| `plot` | `{ xAxis, yAxis, series, grid }` | Plot area |
+| `series` | `{ boxPlotGroups }` | Data series container |
+| `boxPlotGroup` | `{ boxPlots, index, label, dataPoints }` | Grouped box plots |
+| `boxPlot` | `{ dataPoint, index, legend, label }` | Individual box plot |
+| `outlier` | `{ value, index, legend, label }` | Outlier point |
+| `legend` | `{ name, index }` | Legend item |
+| `title` | `{ name }` | Chart title |
+| `xAxis` | `{ line, labels, tick }` | X-axis structure |
+| `yAxis` | `{ line, labels, tick }` | Y-axis structure |
+| `xAxisLabel` | `{ name, index }` | X-axis label |
+| `yAxisLabel` | `{ name, index }` | Y-axis label |
+| `xAxisLine` | - | X-axis line |
+| `yAxisLine` | - | Y-axis line |
+| `xAxisTick` | - | X-axis tick mark |
+| `yAxisTick` | - | Y-axis tick mark |
+| `grid` | `{ xLine, yLine }` | Grid container |
+| `gridXLine` | - | Vertical grid line |
+| `gridYLine` | - | Horizontal grid line |
+
+## Real-World Usage Examples
+
+### 1. Custom Box Plot Style
+
+```javascript
+const styledBoxPlot = BoxPlotChart({
+  data,
+  custom: {
+    boxPlot: ({ dataPoint, index, legend, label }) => {
+      // Custom box plot rendering with:
+      // - Colored box from Q1 to Q3
+      // - Median line
+      // - Whiskers from min to max
+    }
+  }
+});
+```
+
+### 2. Custom Outlier Style
+
+```javascript
+const outlierStyled = BoxPlotChart({
+  data,
+  custom: {
+    outlier: ({ value, index, legend, label }) => {
+      return Container({
+        width: 8,
+        height: 8,
+        decoration: new BoxDecoration({
+          shape: 'circle',
+          color: '#ef4444',
+          border: Border.all({ color: '#b91c1c', width: 1 })
+        })
+      });
+    }
+  }
+});
+```
+
+### 3. Multiple Datasets Comparison
+
+```javascript
+const comparisonData = {
+  labels: ['Jan', 'Feb', 'Mar'],
+  datasets: [
+    {
+      legend: '2024',
+      data: [
+        { min: 10, q1: 20, median: 30, q3: 40, max: 50 },
+        { min: 15, q1: 25, median: 35, q3: 45, max: 55 },
+        { min: 12, q1: 22, median: 32, q3: 42, max: 52 }
+      ]
+    },
+    {
+      legend: '2025',
+      data: [
+        { min: 18, q1: 28, median: 38, q3: 48, max: 58 },
+        { min: 20, q1: 30, median: 40, q3: 50, max: 60 },
+        { min: 22, q1: 32, median: 42, q3: 52, max: 62 }
+      ]
+    }
+  ]
+};
+
+const comparisonChart = BoxPlotChart({ data: comparisonData });
+```
+
+## Next Steps
+
+- For more examples, check out the [demo page](/charts/box-plot)
+- Use multiple datasets to compare distributions side by side
+- Highlight outliers with distinctive styles for easy identification

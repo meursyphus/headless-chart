@@ -1,0 +1,147 @@
+---
+nav_group: "차트 가이드"
+nav_order: 15
+title: "Sankey Chart"
+description: "생키 차트 생성 및 커스터마이징 가이드"
+---
+
+# Sankey Chart
+
+생키 차트는 노드 간의 흐름 양을 시각화합니다. 각 링크의 너비는 흐름 양에 비례하며, 에너지 전환, 예산 흐름 또는 사용자 탐색 경로를 보여주는 데 이상적입니다.
+
+## 인터페이스
+
+### SankeyChart Props
+
+```typescript
+interface SankeyChartProps {
+  // 필수 속성
+  data: SankeyChartData;
+
+  // 선택 속성
+  custom?: Partial<SankeyChartCustom>;
+  title?: string;
+}
+```
+
+### 데이터 구조
+
+```typescript
+type SankeyChartData = {
+  nodes: {
+    id: string;         // 고유 노드 식별자
+    label: string;      // 표시 라벨
+    color?: string;     // 선택적 커스텀 색상
+  }[];
+  links: {
+    source: string;     // 소스 노드 id
+    target: string;     // 타겟 노드 id
+    value: number;      // 흐름 양
+  }[];
+  title?: string;       // 차트 제목
+};
+```
+
+## 기본 사용법
+
+```javascript
+import Widget from '@meursyphus/flitter-react';
+import { SankeyChart } from '@meursyphus/headless-chart';
+
+const data = {
+  nodes: [
+    { id: 'solar', label: '태양광' },
+    { id: 'wind', label: '풍력' },
+    { id: 'hydro', label: '수력' },
+    { id: 'electricity', label: '전력' },
+    { id: 'residential', label: '가정용' },
+    { id: 'commercial', label: '상업용' }
+  ],
+  links: [
+    { source: 'solar', target: 'electricity', value: 100 },
+    { source: 'wind', target: 'electricity', value: 80 },
+    { source: 'hydro', target: 'electricity', value: 60 },
+    { source: 'electricity', target: 'residential', value: 150 },
+    { source: 'electricity', target: 'commercial', value: 90 }
+  ],
+  title: '에너지 흐름'
+};
+
+function BasicSankeyChart() {
+  return (
+    <Widget
+      width="700px"
+      height="400px"
+      widget={SankeyChart({ data })}
+    />
+  );
+}
+```
+
+## 차트 구성 요소
+
+Sankey Chart는 다음과 같은 계층 구조로 구성됩니다:
+
+```
+SankeyChart
+└── Layout (전체 레이아웃)
+    ├── Title (차트 제목)
+    └── Sankey (생키 다이어그램 영역)
+        ├── Node (개별 노드)
+        ├── Link (흐름 연결)
+        └── NodeLabel (노드 라벨)
+```
+
+## 커스터마이징 가능한 요소
+
+`custom` prop을 통해 다음 구성 요소를 커스터마이징할 수 있습니다:
+
+| 컴포넌트 | 인자 | 설명 |
+|----------|------|------|
+| `layout` | `{ title, sankey }` | 전체 차트 레이아웃 |
+| `sankey` | `{ nodes, links, nodeLabels }` | 생키 다이어그램 컨테이너 |
+| `node` | `{ id, label, color, x, y, width, height }` | 개별 노드 사각형 |
+| `link` | `{ source, target, value, sourceX, sourceY, sourceHeight, targetX, targetY, targetHeight, color }` | 노드 간 흐름 연결 |
+| `nodeLabel` | `{ id, label, x, y, width, height, column, totalColumns }` | 노드 라벨 텍스트 |
+| `title` | `{ name }` | 차트 제목 |
+
+## 실제 사용 예제
+
+### 1. 커스텀 노드 색상
+
+```javascript
+const coloredSankey = SankeyChart({
+  data: {
+    nodes: [
+      { id: 'solar', label: '태양광', color: '#f59e0b' },
+      { id: 'wind', label: '풍력', color: '#3b82f6' },
+      { id: 'electricity', label: '전력', color: '#8b5cf6' },
+      { id: 'residential', label: '가정용', color: '#10b981' }
+    ],
+    links: [
+      { source: 'solar', target: 'electricity', value: 100 },
+      { source: 'wind', target: 'electricity', value: 80 },
+      { source: 'electricity', target: 'residential', value: 180 }
+    ]
+  }
+});
+```
+
+### 2. 커스텀 링크 스타일
+
+```javascript
+const styledSankey = SankeyChart({
+  data,
+  custom: {
+    link: ({ source, target, value, color }) => {
+      // 값에 따른 투명도가 있는 커스텀 곡선 링크 렌더링
+    }
+  }
+});
+```
+
+## 다음 단계
+
+- 더 많은 예제는 [데모 페이지](/charts/sankey)를 참고하세요
+- 색상 코딩을 사용하여 관련 흐름을 그룹화하세요
+- 정확한 흐름 양을 보여주는 툴팁을 추가하세요

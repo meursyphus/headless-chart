@@ -1,0 +1,159 @@
+---
+nav_group: "차트 가이드"
+nav_order: 17
+title: "Waterfall Chart"
+description: "워터폴 차트 생성 및 커스터마이징 가이드"
+---
+
+# Waterfall Chart
+
+워터폴 차트는 초기 값이 일련의 양수 및 음수 변화에 의해 어떻게 영향을 받는지 보여줍니다. 손익계산서, 예산 변화 또는 순차적 누적 데이터를 시각화하기 위해 재무 분석에서 일반적으로 사용됩니다.
+
+## 인터페이스
+
+### WaterfallChart Props
+
+```typescript
+interface WaterfallChartProps {
+  // 필수 속성
+  data: WaterfallChartData;
+
+  // 선택 속성
+  custom?: Partial<WaterfallChartCustom>;
+  title?: string;
+  getScale?: (data: WaterfallChartData) => WaterfallChartScale;
+}
+```
+
+### 데이터 구조
+
+```typescript
+type WaterfallChartData = {
+  labels: string[];        // 카테고리 라벨
+  values: number[];        // 변화 값 (양수 또는 음수)
+  totalIndices?: number[]; // 합계를 나타내는 인덱스
+  title?: string;          // 차트 제목
+};
+
+type WaterfallChartScale = {
+  min: number;     // 최소값
+  max: number;     // 최대값
+  step: number;    // 단계 간격
+};
+```
+
+## 기본 사용법
+
+```javascript
+import Widget from '@meursyphus/flitter-react';
+import { WaterfallChart } from '@meursyphus/headless-chart';
+
+const data = {
+  labels: ['시작', '매출', '비용', '세금', '순이익'],
+  values: [1000, 500, -300, -100, 0],
+  totalIndices: [0, 4],
+  title: '수익 분석'
+};
+
+function BasicWaterfallChart() {
+  return (
+    <Widget
+      width="600px"
+      height="400px"
+      widget={WaterfallChart({ data })}
+    />
+  );
+}
+```
+
+## 차트 구성 요소
+
+Waterfall Chart는 다음과 같은 계층 구조로 구성됩니다:
+
+```
+WaterfallChart
+└── Layout (전체 레이아웃)
+    ├── Title (차트 제목)
+    ├── Legend (범례 항목)
+    └── Plot (플롯 영역)
+        ├── XAxis (X축)
+        ├── YAxis (Y축)
+        ├── Grid (그리드 라인)
+        └── Series (데이터 시리즈)
+            ├── Bar (증가/감소/합계 막대)
+            └── Connector (막대 간 연결선)
+```
+
+## 커스터마이징 가능한 요소
+
+`custom` prop을 통해 다음 구성 요소를 커스터마이징할 수 있습니다:
+
+| 컴포넌트 | 인자 | 설명 |
+|----------|------|------|
+| `layout` | `{ title, legends, plot }` | 전체 차트 레이아웃 |
+| `plot` | `{ xAxis, yAxis, series, grid }` | 플롯 영역 |
+| `series` | `{ bars, connectors }` | 데이터 시리즈 컨테이너 |
+| `bar` | `{ value, cumulative, index, label, type }` | 개별 막대 (type: 'increase' \| 'decrease' \| 'total') |
+| `connector` | `{ fromCumulative, toCumulative, index }` | 막대 간 연결선 |
+| `legend` | `{ name, index }` | 범례 항목 |
+| `title` | `{ name }` | 차트 제목 |
+| `dataLabel` | `{ value, label, type }` | 데이터 라벨 (type: 'increase' \| 'decrease' \| 'total') |
+| `xAxis` | `{ line, labels, tick }` | X축 구조 |
+| `yAxis` | `{ line, labels, tick }` | Y축 구조 |
+| `xAxisLabel` | `{ name, index }` | X축 라벨 |
+| `yAxisLabel` | `{ name, index }` | Y축 라벨 |
+| `xAxisLine` | - | X축 라인 |
+| `yAxisLine` | - | Y축 라인 |
+| `xAxisTick` | - | X축 틱 마크 |
+| `yAxisTick` | - | Y축 틱 마크 |
+| `grid` | `{ xLine, yLine }` | 그리드 컨테이너 |
+| `gridXLine` | - | 수직 그리드 라인 |
+| `gridYLine` | - | 수평 그리드 라인 |
+
+## 실제 사용 예제
+
+### 1. 유형별 커스텀 막대 색상
+
+```javascript
+const coloredWaterfall = WaterfallChart({
+  data,
+  custom: {
+    bar: ({ value, cumulative, index, label, type }) => {
+      const colors = {
+        increase: '#22c55e',
+        decrease: '#ef4444',
+        total: '#3b82f6'
+      };
+      return Container({
+        decoration: new BoxDecoration({
+          color: colors[type],
+          borderRadius: BorderRadius.circular(2)
+        })
+      });
+    }
+  }
+});
+```
+
+### 2. 커스텀 연결선
+
+```javascript
+const styledWaterfall = WaterfallChart({
+  data,
+  custom: {
+    connector: ({ fromCumulative, toCumulative, index }) => {
+      return Container({
+        height: 1,
+        color: '#9ca3af',
+        // 점선 연결선
+      });
+    }
+  }
+});
+```
+
+## 다음 단계
+
+- 더 많은 예제는 [데모 페이지](/charts/waterfall)를 참고하세요
+- `totalIndices`를 사용하여 요약 막대를 표시하세요
+- 명확한 시각적 구분을 위해 증가와 감소에 색상을 구분하세요

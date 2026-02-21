@@ -1,0 +1,128 @@
+---
+nav_group: "차트 가이드"
+nav_order: 7
+title: "Pie Chart"
+description: "파이 차트 생성 및 커스터마이징 가이드"
+---
+
+# Pie Chart
+
+파이 차트는 데이터를 원형의 비례적인 조각으로 표현합니다. 전체에서 각 부분의 상대적 구성 비율을 보여주는 데 이상적이며, 부분과 전체를 쉽게 비교할 수 있습니다.
+
+## 인터페이스
+
+### PieChart Props
+
+```typescript
+interface PieChartProps {
+  // 필수 속성
+  data: PieChartData;
+
+  // 선택 속성
+  custom?: Partial<PieChartCustom>;
+  title?: string;
+  innerRadius?: number;    // 도넛 스타일을 위한 내부 반지름 (0 = 완전한 파이)
+  colors?: string[];       // 커스텀 색상 팔레트
+}
+```
+
+### 데이터 구조
+
+```typescript
+type PieChartData = {
+  labels: string[];      // 각 조각의 라벨
+  values: number[];      // 각 조각의 값
+  title?: string;        // 차트 제목
+};
+```
+
+## 기본 사용법
+
+```javascript
+import Widget from '@meursyphus/flitter-react';
+import { PieChart } from '@meursyphus/headless-chart';
+
+const data = {
+  labels: ['크롬', '파이어폭스', '사파리', '엣지', '기타'],
+  values: [65, 15, 10, 7, 3],
+  title: '브라우저 점유율'
+};
+
+function BasicPieChart() {
+  return (
+    <Widget
+      width="500px"
+      height="400px"
+      widget={PieChart({ data })}
+    />
+  );
+}
+```
+
+## 차트 구성 요소
+
+Pie Chart는 다음과 같은 계층 구조로 구성됩니다:
+
+```
+PieChart
+└── Layout (전체 레이아웃)
+    ├── Title (차트 제목)
+    ├── Pie (파이 영역)
+    │   ├── Slice (개별 조각)
+    │   └── DataLabel (데이터 라벨)
+    └── Legend (범례 항목)
+```
+
+## 커스터마이징 가능한 요소
+
+`custom` prop을 통해 다음 구성 요소를 커스터마이징할 수 있습니다:
+
+| 컴포넌트 | 인자 | 설명 |
+|----------|------|------|
+| `layout` | `{ title, pie, legends }` | 전체 차트 레이아웃 |
+| `pie` | `{ slices, dataLabels }` | 조각과 라벨을 포함하는 파이 컨테이너 |
+| `slice` | `{ index, label, value, percentage, startAngle, sweepAngle }` | 개별 파이 조각 |
+| `legend` | `{ name, index }` | 범례 항목 |
+| `title` | `{ name }` | 차트 제목 |
+| `dataLabel` | `{ label, value, percentage, index }` | 각 조각의 데이터 라벨 |
+
+## 실제 사용 예제
+
+### 1. 도넛 차트
+
+```javascript
+const donutChart = PieChart({
+  data,
+  innerRadius: 0.6,  // 60% 내부 반지름으로 도넛 형태 생성
+  custom: {
+    slice: ({ label, value, percentage, startAngle, sweepAngle, index }) => {
+      // 커스텀 조각 렌더링
+    }
+  }
+});
+```
+
+### 2. 커스텀 데이터 라벨
+
+```javascript
+const labeledPie = PieChart({
+  data,
+  custom: {
+    dataLabel: ({ label, value, percentage, index }) => {
+      return Text(`${label}: ${percentage.toFixed(1)}%`, {
+        style: new TextStyle({
+          fontSize: 12,
+          fontWeight: 'bold',
+          color: '#374151'
+        })
+      });
+    }
+  }
+});
+```
+
+## 다음 단계
+
+- 더 많은 예제는 [데모 페이지](/charts/pie)를 참고하세요
+- `innerRadius`를 사용하여 도넛 차트를 만들어보세요
+- 범례와 함께 사용하면 데이터 라벨링이 더 좋아집니다
