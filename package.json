@@ -8,6 +8,7 @@
     "build": "npm run build --workspace=@meursyphus/headless-chart",
     "start": "npm run dev",
     "docs:start": "npm run dev",
+    "docs": "npm run dev --workspace=docs-new",
     "docs:build": "npm run build --workspace=docs",
     "predocs:build": "npm run build",
     "lunaria:build": "lunaria build && cp -r dist/lunaria/index.html packages/docs/public/lunaria.html",

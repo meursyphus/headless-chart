@@ -1,6 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { HeatmapChart } from "../charts";
 import { ChartWrapper } from "./ChartWrapper";
+import {
+  Text,
+  Container,
+  EdgeInsets,
+  TextStyle,
+  Padding,
+  Stack,
+  Positioned,
+} from "@meursyphus/flitter";
 
 const meta: Meta = {
   title: "Specialized/HeatmapChart",
@@ -8,15 +17,84 @@ const meta: Meta = {
 export default meta;
 
 const data = {
-  xLabels: ["Mon", "Tue", "Wed", "Thu", "Fri"],
-  yLabels: ["Morning", "Afternoon", "Evening"],
+  xLabels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+  yLabels: ["Seoul", "Seattle", "Sydney", "Moscow", "Jungfrau"],
   values: [
-    [3, 7, 5, 9, 2],
-    [8, 4, 6, 3, 7],
-    [1, 5, 9, 4, 8],
+    [-3.5, -1.1, 4.0, 11.3, 17.5, 21.5, 24.9, 25.2, 20.4, 13.9, 6.6, -0.6],
+    [3.8, 5.6, 7.0, 9.1, 12.4, 15.3, 17.5, 17.8, 15.0, 10.6, 6.4, 3.7],
+    [22.1, 22.0, 20.9, 18.3, 15.2, 12.8, 11.8, 13.0, 15.2, 17.6, 19.4, 21.2],
+    [-10.3, -9.1, -4.1, 4.4, 12.2, 16.3, 18.5, 16.7, 10.9, 4.2, -2.0, -7.5],
+    [-13.2, -13.7, -13.1, -10.3, -6.1, -3.2, 0.0, -0.1, -1.8, -4.5, -9.0, -10.9],
   ],
 };
 
 export const Default: StoryObj = {
-  render: () => <ChartWrapper widget={HeatmapChart({ data })} />,
+  render: () => (
+    <ChartWrapper
+      title="Average Temperature"
+      description="Inspired by Toast"
+      widget={HeatmapChart({
+        data,
+        custom: {
+          layout: ({ plot }: any) =>
+            Container({
+              padding: EdgeInsets.only({ left: 70, bottom: 30, top: 30, right: 30 }),
+              child: Stack({
+                children: [
+                  Positioned({
+                    top: 0,
+                    right: 0,
+                    child: Text("Inspired by Toast", {
+                      style: new TextStyle({
+                        fontSize: 13,
+                        color: "#999999",
+                        fontFamily: "Noto Sans JP",
+                      }),
+                    }),
+                  }),
+                  plot,
+                ],
+              }),
+            }),
+          xAxisLabel: ({ name }: any) =>
+            Padding({
+              padding: EdgeInsets.only({ top: 1 }),
+              child: Text(name, {
+                style: new TextStyle({
+                  fontFamily: "Noto Sans JP",
+                  fontSize: 11,
+                  color: "#666666",
+                }),
+              }),
+            }),
+          yAxisLabel: ({ name }: any) =>
+            Padding({
+              padding: EdgeInsets.only({ right: 1 }),
+              child: Text(name, {
+                style: new TextStyle({
+                  fontFamily: "Noto Sans JP",
+                  fontSize: 11,
+                  color: "#666666",
+                }),
+              }),
+            }),
+          xAxisTick: () => Container({ height: 6, width: 1, color: "#DDDDDD" }),
+          yAxisTick: () => Container({ height: 1, width: 6, color: "#DDDDDD" }),
+          xAxisLine: () => Container({ color: "#BBBBBB", width: Infinity, height: 1 }),
+          yAxisLine: () => Container({ color: "#BBBBBB", width: 1, height: Infinity }),
+          segment: ({ value }: any, { scale }: any) => {
+            const ratio = (value - scale.min) / (scale.max - scale.min);
+            const r = Math.round(220 - 30 * ratio);
+            const g = Math.round((220 - 30 * ratio) * (1 - ratio));
+            const b = Math.round(30 * (1 - ratio));
+            return Container({
+              width: Infinity,
+              height: Infinity,
+              color: `rgba(${r}, ${g}, ${b}, 0.8)`,
+            });
+          },
+        },
+      })}
+    />
+  ),
 };

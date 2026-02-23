@@ -1,177 +1,27 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500&display=swap');
 
-/* ===== Preview Area ===== */
 .sb-show-main {
-  background: #0f0f23 !important;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-/* ===== Story Canvas ===== */
-.docs-story > div {
-  background: #0f0f23 !important;
-}
-
-/* ===== Chart Container Animation ===== */
 .chart-container {
-  background: linear-gradient(135deg, #16213e 0%, #1a1a2e 100%);
-  border: 1px solid rgba(97, 218, 251, 0.12);
-  border-radius: 16px;
-  padding: 32px;
-  animation: fadeInUp 0.6s ease-out;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
-  position: relative;
-  overflow: hidden;
-}
-
-.chart-container::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(97, 218, 251, 0.3), transparent);
-}
-
-.chart-container:hover {
-  border-color: rgba(97, 218, 251, 0.25);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 20px rgba(97, 218, 251, 0.08);
-  transform: translateY(-2px);
-}
-
-/* ===== Chart Title ===== */
-.chart-title {
-  font-family: 'Inter', sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  color: #e2e8f0;
-  margin-bottom: 16px;
-  letter-spacing: -0.01em;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.chart-title::before {
-  content: '';
-  display: inline-block;
-  width: 3px;
-  height: 16px;
-  background: linear-gradient(180deg, #61dafb, #a78bfa);
-  border-radius: 2px;
-}
-
-/* ===== Chart Description ===== */
-.chart-description {
-  font-family: 'Inter', sans-serif;
-  font-size: 13px;
-  color: #94a3b8;
-  margin-bottom: 20px;
-  line-height: 1.5;
-}
-
-/* ===== Code Block Styling ===== */
-.chart-code {
-  background: #0a0a1a;
-  border: 1px solid rgba(97, 218, 251, 0.1);
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
   border-radius: 12px;
-  padding: 20px;
-  margin-top: 24px;
-  overflow-x: auto;
-  animation: fadeInUp 0.6s ease-out 0.2s both;
+  padding: 24px;
 }
 
-.chart-code pre {
-  margin: 0;
-  font-family: 'JetBrains Mono', 'Fira Code', monospace;
-  font-size: 13px;
-  line-height: 1.7;
-  color: #e2e8f0;
+.chart-title {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333333;
+  margin-bottom: 4px;
 }
 
-.chart-code .keyword { color: #c792ea; }
-.chart-code .string { color: #c3e88d; }
-.chart-code .number { color: #f78c6c; }
-.chart-code .function { color: #82aaff; }
-.chart-code .comment { color: #546e7a; }
-.chart-code .tag { color: #f07178; }
-.chart-code .attr { color: #ffcb6b; }
-
-/* ===== Animations ===== */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes slideInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
-}
-
-/* ===== Stagger children ===== */
-.chart-container > *:nth-child(1) { animation: fadeIn 0.4s ease-out 0.1s both; }
-.chart-container > *:nth-child(2) { animation: fadeIn 0.4s ease-out 0.2s both; }
-.chart-container > *:nth-child(3) { animation: fadeIn 0.4s ease-out 0.3s both; }
-
-/* ===== Docs page overrides ===== */
-.sbdocs-wrapper {
-  background: #0f0f23 !important;
-}
-
-.sbdocs-content {
-  max-width: 1200px !important;
-}
-
-/* Source code in docs */
-.docblock-source {
-  background: #0a0a1a !important;
-  border: 1px solid rgba(97, 218, 251, 0.1) !important;
-  border-radius: 12px !important;
-}
-
-.prismjs {
-  background: #0a0a1a !important;
-  color: #e2e8f0 !important;
-}
-
-/* ===== Scrollbar ===== */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: #0f0f23;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(97, 218, 251, 0.2);
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(97, 218, 251, 0.35);
+.chart-description {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 12px;
+  color: #999999;
+  margin-bottom: 16px;
 }

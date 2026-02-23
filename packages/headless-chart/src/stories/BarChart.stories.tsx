@@ -1,80 +1,73 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { BarChart } from "../charts";
 import { ChartWrapper } from "./ChartWrapper";
-import { Source } from "@storybook/addon-docs/blocks";
+import { cartesianToastCustom, toastColors } from "./toastCustom";
+import {
+  Container,
+  EdgeInsets,
+  BoxDecoration,
+  SizedBox,
+} from "@meursyphus/flitter";
 
 const meta: Meta = {
   title: "Cartesian/BarChart",
-  parameters: {
-    docs: {
-      description: {
-        component:
-          "A flexible bar chart supporting vertical and horizontal orientations with multiple datasets.",
-      },
-    },
-  },
 };
 export default meta;
 
 const data = {
-  labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+  labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
   datasets: [
-    { legend: "Revenue", values: [120, 150, 180, 90, 200, 170] },
-    { legend: "Expenses", values: [80, 100, 130, 70, 150, 120] },
+    { legend: "Seoul", values: [65, 59, 80, 81, 56, 55, 40] },
+    { legend: "Seattle", values: [28, 48, 40, 19, 86, 27, 90] },
+    { legend: "Sydney", values: [35, 25, 30, 45, 35, 40, 25] },
   ],
 };
 
 export const Vertical: StoryObj = {
   render: () => (
     <ChartWrapper
-      widget={BarChart({ data })}
-      title="Vertical Bar Chart"
-      description="Compare values across categories with grouped vertical bars."
+      title="Monthly Temperature"
+      description="Inspired by Toast"
+      widget={BarChart({
+        data,
+        custom: {
+          ...cartesianToastCustom,
+          bar: ({ legend }) => {
+            const idx = data.datasets.findIndex((d) => d.legend === legend);
+            return Container({
+              margin: EdgeInsets.symmetric({ horizontal: 1 }),
+              decoration: new BoxDecoration({
+                color: toastColors[idx % toastColors.length],
+              }),
+            });
+          },
+        },
+      })}
     />
   ),
-  parameters: {
-    docs: {
-      source: {
-        code: `import { BarChart } from "headless-chart";
-
-const data = {
-  labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-  datasets: [
-    { legend: "Revenue", values: [120, 150, 180, 90, 200, 170] },
-    { legend: "Expenses", values: [80, 100, 130, 70, 150, 120] },
-  ],
-};
-
-const widget = BarChart({ data });`,
-      },
-    },
-  },
 };
 
 export const Horizontal: StoryObj = {
   render: () => (
     <ChartWrapper
-      widget={BarChart({ data, direction: "horizontal" })}
-      title="Horizontal Bar Chart"
-      description="Horizontal orientation is great for long category labels."
+      title="Monthly Temperature (Horizontal)"
+      description="Inspired by Toast"
+      widget={BarChart({
+        data,
+        direction: "horizontal",
+        custom: {
+          ...cartesianToastCustom,
+          bar: ({ legend }) => {
+            const idx = data.datasets.findIndex((d) => d.legend === legend);
+            return Container({
+              margin: EdgeInsets.symmetric({ vertical: 1 }),
+              decoration: new BoxDecoration({
+                color: toastColors[idx % toastColors.length],
+              }),
+            });
+          },
+        },
+      })}
     />
   ),
-  parameters: {
-    docs: {
-      source: {
-        code: `import { BarChart } from "headless-chart";
-
-const widget = BarChart({
-  data: {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-    datasets: [
-      { legend: "Revenue", values: [120, 150, 180, 90, 200, 170] },
-      { legend: "Expenses", values: [80, 100, 130, 70, 150, 120] },
-    ],
-  },
-  direction: "horizontal",
-});`,
-      },
-    },
-  },
 };

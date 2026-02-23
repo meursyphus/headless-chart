@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { StackedBarChart } from "../charts";
 import { ChartWrapper } from "./ChartWrapper";
+import { cartesianToastCustom, toastColors } from "./toastCustom";
+import { Container, BoxDecoration } from "@meursyphus/flitter";
 
 const meta: Meta = {
   title: "Cartesian/StackedBarChart",
@@ -17,13 +19,48 @@ const data = {
 };
 
 export const Vertical: StoryObj = {
-  render: () => <ChartWrapper widget={StackedBarChart({ data })} />,
+  render: () => (
+    <ChartWrapper
+      title="Quarterly Sales by Category"
+      description="Inspired by Toast"
+      widget={StackedBarChart({
+        data,
+        custom: {
+          ...cartesianToastCustom,
+          bar: ({ legend }: any) => {
+            const idx = data.datasets.findIndex((d) => d.legend === legend);
+            return Container({
+              decoration: new BoxDecoration({
+                color: toastColors[idx % toastColors.length],
+              }),
+            });
+          },
+        },
+      })}
+    />
+  ),
 };
 
 export const Horizontal: StoryObj = {
   render: () => (
     <ChartWrapper
-      widget={StackedBarChart({ data, direction: "horizontal" })}
+      title="Quarterly Sales (Horizontal)"
+      description="Inspired by Toast"
+      widget={StackedBarChart({
+        data,
+        direction: "horizontal",
+        custom: {
+          ...cartesianToastCustom,
+          bar: ({ legend }: any) => {
+            const idx = data.datasets.findIndex((d) => d.legend === legend);
+            return Container({
+              decoration: new BoxDecoration({
+                color: toastColors[idx % toastColors.length],
+              }),
+            });
+          },
+        },
+      })}
     />
   ),
 };

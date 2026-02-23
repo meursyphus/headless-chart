@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { CandlestickChart } from "../charts";
 import { ChartWrapper } from "./ChartWrapper";
+import { cartesianToastCustom } from "./toastCustom";
 
 const meta: Meta = {
   title: "Cartesian/CandlestickChart",
@@ -19,5 +20,16 @@ const data = {
 };
 
 export const Default: StoryObj = {
-  render: () => <ChartWrapper widget={CandlestickChart({ data })} />,
+  render: () => (
+    <ChartWrapper
+      title="Stock Price"
+      description="Inspired by Toast"
+      widget={CandlestickChart({
+        data,
+        custom: {
+          ...cartesianToastCustom,
+        },
+      })}
+    />
+  ),
 };
