@@ -1,0 +1,257 @@
+---
+nav_group: "Bubble"
+nav_order: 1
+title: "Toast"
+description: "A headless-chart example inspired by AgChart"
+image: /bubble-chart/agchart.png
+files:
+  App.js: |
+    import Widget from "@meursyphus/flitter-react";
+    import { BubbleChart } from "@meursyphus/headless-chart";
+    import {
+      VerticalDirection,
+      Opacity,
+      Text,
+      BoxDecoration,
+      Column,
+      Container,
+      EdgeInsets,
+      Row,
+      SizedBox,
+      TextStyle,
+      Padding,
+      MainAxisSize,
+      MainAxisAlignment,
+      Stack,
+      Positioned,
+      Alignment,
+      CrossAxisAlignment,
+      FractionallySizedBox,
+      Curves,
+      CurvedAnimation,
+      AnimationController,
+      Tween,
+      StatefulWidget,
+      State,
+      ConstraintsTransformBox,
+      Transform,
+    } from "@meursyphus/flitter";
+    
+    const data = {
+        datasets: [
+          {
+            legend: 'Population',
+            data: [
+              { x: 139.7514, y: 35.685, value: 35676000, label: 'Tokyo' },
+              { x: -73.9249, y: 40.6943, value: 19354922, label: 'New York' },
+              { x: -99.131, y: 19.4424, value: 19028000, label: 'Mexico City' },
+              { x: 72.857, y: 19.017, value: 18978000, label: 'Mumbai' },
+              { x: -46.625, y: -23.5587, value: 18845000, label: 'Sao Paulo' },
+              { x: 77.23, y: 28.67, value: 15926000, label: 'Delhi' },
+              { x: 121.4365, y: 31.2165, value: 14987000, label: 'Shanghai' },
+              { x: 88.3247, y: 22.495, value: 14787000, label: 'Kolkata' },
+              { x: -118.4068, y: 34.1139, value: 12815475, label: 'Los Angeles' },
+              { x: 90.4086, y: 23.7231, value: 12797394, label: 'Dhaka' },
+              { x: -58.3975, y: -34.6025, value: 12795000, label: 'Buenos Aires' },
+              { x: 66.99, y: 24.87, value: 12130000, label: 'Karachi' },
+              { x: 31.25, y: 30.05, value: 11893000, label: 'Cairo' },
+              { x: -43.225, y: -22.925, value: 11748000, label: 'Rio de Janeiro' },
+              { x: 135.4601, y: 34.75, value: 11294000, label: 'Osaka' },
+              { x: 116.3883, y: 39.9289, value: 11106000, label: 'Beijing' },
+              { x: 120.9822, y: 14.6042, value: 11100000, label: 'Manila' },
+              { x: 37.6155, y: 55.7522, value: 10452000, label: 'Moscow' },
+              { x: 29.01, y: 41.105, value: 10061000, label: 'Istanbul' },
+              { x: 2.3333, y: 48.8667, value: 9904000, label: 'Paris' }
+            ]
+          }
+      ]
+    };
+    
+    class AnimatedBubble extends StatefulWidget {
+      value;
+      label;
+      legend;
+      index;
+      color;
+      scale;
+    
+      constructor({ value, label, legend, index, color, scale }) {
+        super();
+        this.value = value;
+        this.label = label;
+        this.legend = legend;
+        this.index = index;
+        this.color = color;
+        this.scale = scale;
+      }
+    
+      createState() {
+        return new AnimatedBubbleState();
+      }
+    }
+    
+    class AnimatedBubbleState extends State {
+      initState(context) {
+        this.animationController = new AnimationController({ duration: 300 });
+        this.animationController.addListener(() => {
+          this.setState();
+        });
+        const tween = new Tween({ begin: 0, end: 1 });
+        this.scaleAnimation = tween.animated(
+          new CurvedAnimation({
+            parent: this.animationController,
+            curve: Curves.easeInOut,
+          })
+        );
+        this.animationController.forward();
+      }
+    
+      build(context) {
+        const { value, color, scale } = this.widget;
+        const normValue = (value - scale.value.min) / (scale.value.max - scale.value.min);
+        const radius = 5 + normValue * 20;
+    
+        return Opacity({
+          opacity: 0.8,
+          child: Transform.scale({
+            scale: this.scaleAnimation.value,
+            child: Container({
+              width: radius * 5,
+              height: radius * 5,
+              decoration: new BoxDecoration({
+                color: color,
+                shape: "circle",
+              }),
+            }),
+          }),
+        });
+      }
+    }
+    
+    const chart = BubbleChart({
+      data,
+      getScale: () => ({
+        x: {
+          min: -100,
+          max: 100,
+          step: 50,
+        },
+        y: {
+          min: -200,
+          max: 200,
+          step: 100,
+        },
+        value: {
+          min: 0,
+          max: Math.max(...data.map(({ x, y }) => Math.max(x, y))),
+          step: 50,
+        }
+      })
+      custom: {
+        layout: ({ title, legends, plot }) =>
+          Container({
+            padding: EdgeInsets.only({ left: 70, bottom: 50, right: 30, top: 30 }),
+            child: Stack({
+              children: [
+                Positioned({
+                  top: 0,
+                  right: 0,
+                  child: Text("Bubble Chart Example", {
+                    style: new TextStyle({
+                      fontSize: 14,
+                      color: "#999999",
+                      fontFamily: "Noto Sans JP",
+                    }),
+                  }),
+                }),
+                plot,
+              ],
+            }),
+          }),
+    
+        xAxisLabel: ({ name }) =>
+          Padding({
+            padding: EdgeInsets.only({ top: 1 }),
+            child: Text(name, {
+              style: new TextStyle({
+                fontFamily: "Noto Sans JP",
+                fontSize: 10,
+                color: "#666666",
+              }),
+            }),
+          }),
+    
+        yAxisLabel: ({ name }) =>
+          Padding({
+            padding: EdgeInsets.only({ right: 1 }),
+            child: Text(name, {
+              style: new TextStyle({
+                fontFamily: "Noto Sans JP",
+                fontSize: 10,
+                color: "#666666",
+              }),
+            }),
+          }),
+    
+        legend: ({ name }) => {
+          const legendIndex = data.datasets.findIndex(d => d.legend === name);
+          const color = defaultColors[legendIndex % defaultColors.length];
+          return Padding({
+            padding: EdgeInsets.symmetric({ horizontal: 8 }),
+            child: Row({
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container({
+                  width: 12,
+                  height: 12,
+                  decoration: new BoxDecoration({
+                    color: color,
+                    borderRadius: 6,
+                  }),
+                }),
+                SizedBox({ width: 4 }),
+                Text(name, {
+                  style: new TextStyle({
+                    fontFamily: "Noto Sans JP",
+                    fontSize: 12,
+                    color: "#666666",
+                  }),
+                }),
+              ],
+            }),
+          });
+        },
+    
+        bubble: ({ value, label, legend, index }, { scale }) => {
+          const legendIndex = index;
+          const color = "#4682B4";
+          return new AnimatedBubble({ value, label, legend, index, color, scale });
+        },
+    
+        xAxisLabel: ({ name }) =>
+          Padding({
+            padding: EdgeInsets.only({ top: 1 }),
+            child: Text(`${name}`), {
+              style: new TextStyle({
+                fontFamily: "Noto Sans JP",
+                fontSize: 10,
+                color: "#666666",
+              }),
+            }),
+          }),
+      },
+    });
+    
+    export default function App() {
+      return <Widget
+        width="auto"
+        height="500px"
+        widget={chart}
+        renderer="svg"
+      />
+    }
+---
+
+# Bubble Chart Example
+
+A headless-chart example inspired by Toast UI Chart.
